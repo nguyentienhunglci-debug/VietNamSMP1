@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="https://cdn.discordapp.com/attachments/1384903646877319178/1406764638267510844/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photoroom_1.png?ex=68a3a72a&is=68a255aa&hm=378f1e0383c692a196e268dc1de57a4e928ad9dbfa6ff6dfab3f47ce9ca72c98&" alt="VietnamSMP Logo">
+            </div>
+            <h1 class="server-title">VIETNAMSMP</h1>
+        </div>
+        </header>
+
+    <main class="main-content">
+        <div class="left-section">
+            <div class="button-grid">
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
+                    <span class="item-text">SMP</span>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
+                    <span class="item-text">BOXPVP</span>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-envelope"></i></div>
+                    <span class="item-text">Hỗ trợ</span>
+                </a>
+                <a href="https://discord.gg/BsTBC3dqFw" target="_blank" class="grid-item">
+                    <div class="item-icon"><i class="fab fa-discord"></i></div>
+                    <span class="item-text">Discord</span>
+                </a>
+                <a href="#" class="grid-item" id="how-to-join-btn">
+                    <div class="item-icon"><i class="fas fa-book"></i></div>
+                    <span class="item-text">Cách vào</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="info-box-ip">
+                <div class="tabs">
+                    <div class="tab active" data-target="pc-content">Máy tính (PC)</div>
+                    <div class="tab" data-target="pe-content">Điện thoại (PE)</div>
+                </div>
+
+                <div id="pc-content" class="ip-content active-content">
+                    <div class="ip-container">
+                        <div class="ip-title">Địa chỉ máy chủ</div>
+                        <span class="ip-address" id="ip-pc">
+                            IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="pe-content" class="ip-content">
+                    <div class="pe-container">
+                        <div class="pe-item">
+                            <div class="ip-title">Địa chỉ IP</div>
+                            <span class="ip-address" id="ip-pe">
+                                IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
+                            </span>
+                        </div>
+                        <div class="pe-item">
+                            <div class="ip-title">Port</div>
+                            <span class="ip-address" id="port-pe">
+                                Port: 27191 <i class="fa-solid fa-clone"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Phiên bản: 1.16.5 đến 1.22</p>
+        </div>
+    </footer>
+</div>
+
+<div id="how-to-join-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Hướng dẫn tham gia</h2>
+        <div class="modal-tabs">
+            <div class="modal-tab active" data-target="register-content">Đăng kí</div>
+            <div class="modal-tab" data-target="login-content">Đăng nhập</div>
+            <div class="modal-tab" data-target="password-content">Đổi mật khẩu</div>
+        </div>
+        <div class="modal-body">
+            <div id="register-content" class="modal-tab-content active">
+                <h3>Lệnh đăng kí</h3>
+                <p>Để tạo tài khoản, bạn vào server và gõ lệnh sau:</p>
+                <code>/register &lt;mật khẩu&gt; &lt;nhập lại mật khẩu&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/register 123456 123456</code></p>
+            </div>
+            <div id="login-content" class="modal-tab-content">
+                <h3>Lệnh đăng nhập</h3>
+                <p>Để đăng nhập vào tài khoản đã tạo, bạn gõ lệnh sau:</p>
+                <code>/login &lt;mật khẩu&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/login 123456</code></p>
+            </div>
+            <div id="password-content" class="modal-tab-content">
+                <h3>Lệnh đổi mật khẩu</h3>
+                <p>Để thay đổi mật khẩu, bạn gõ lệnh sau:</p>
+                <code>/changepassword &lt;mật khẩu cũ&gt; &lt;mật khẩu mới&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/changepassword 123456 654321</code></p>
+            </div>
+        </div>
+    </div>
+</div>
