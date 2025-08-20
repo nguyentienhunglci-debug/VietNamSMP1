@@ -1,7 +1,7 @@
 /* --- GIAO DIỆN NỀN KEM - ĐIỂM NHẤN NÂU SẪM --- */
 :root {
-    --accent-brown: #ffed00; /* MÀU NÂU SẪM LÀM ĐIỂM NHẤN */
-    --background-cream: #fdfaf5; /* Nền vàng kem */
+    --accent-brown: #6d4c41; /* MÀU NÂU SẪM LÀM ĐIỂM NHẤN */
+    --background-cream: #FFFFE0; /* --- ĐÃ THAY ĐỔI: Nền vàng nhạt --- */
     --background-white: #ffffff;
     --text-dark: #3d3d3d;
     --text-muted: #7a7a7a;
@@ -331,5 +331,6 @@ body {
     margin: 10px 0;
     white-space: pre-wrap;
 }
+
 
 
