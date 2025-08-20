@@ -1,4 +1,3 @@
-// --- TOÀN BỘ JAVASCRIPT ĐƯỢC ĐẶT Ở ĐÂY ---
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- LOGIC: CHUYỂN TAB IP ADDRESS ---
@@ -96,5 +95,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- PHẦN LOGIC CỦA MODAL DISCORD ĐÃ BỊ XOÁ ---
+    // --- LOGIC: MỞ LIVECHAT KHI NHẤN NÚT HỖ TRỢ ---
+    const supportButton = document.getElementById('support-btn');
+
+    // Chờ cho LiveChat sẵn sàng rồi mới gán sự kiện
+    window.addEventListener('load', function() {
+        if (supportButton && window.LiveChatWidget) {
+            supportButton.addEventListener('click', function(event) {
+                // Ngăn trang nhảy lên đầu khi nhấn vào link #
+                event.preventDefault(); 
+                
+                // Gọi API của LiveChat để mở cửa sổ chat
+                window.LiveChatWidget.call('maximize');
+            });
+        }
+    });
 });
