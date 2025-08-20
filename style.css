@@ -1,50 +1,37 @@
+/* --- Container chính --- */
+.container {
+    border-radius: 16px; /* Bo tròn khung lớn bên ngoài */
+    /* ... các thuộc tính khác giữ nguyên ... */
+}
+
+/* --- Các nút bấm bên trái --- */
+.grid-item {
+    border-radius: 12px; /* Bo tròn các nút */
+    /* ... các thuộc tincác giữ nguyên ... */
+}
+
 /* --- Hộp thông tin IP bên phải --- */
 .info-box-ip {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 12px; /* Bo tròn hộp IP */
+    /* ... các thuộc tính khác giữ nguyên ... */
 }
 
-/* THAY ĐỔI BẮT ĐẦU TỪ ĐÂY */
-
-.tabs {
-    display: flex;
-    /* Chỉ giữ lại đường viền dưới để tạo ranh giới với nội dung */
-    border-bottom: 1px solid #dee2e6; 
-}
-
+/* --- Tab (PC/PE) --- */
 .tab {
-    padding: 10px 20px;
-    cursor: pointer;
-    background: none;
-    
-    /* Bỏ hết các đường viền riêng của từng tab */
-    border: none; 
-    border-bottom: 3px solid transparent; /* Chuẩn bị cho hiệu ứng gạch chân */
-    
-    font-size: 16px;
-    font-weight: 500;
-    color: #868e96; /* Màu chữ cho tab không được chọn */
-    
-    /* Hiệu ứng chuyển động mượt mà */
-    transition: color 0.3s, border-color 0.3s;
-    margin-bottom: -1px; /* Bí quyết để gạch chân của tab active đè lên viền chung */
+    /* Bo tròn 2 góc trên của các tab */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    /* ... các thuộc tính khác giữ nguyên ... */
 }
 
-.tab:hover {
-    color: #495057; /* Chữ đậm màu hơn khi di chuột vào */
+/* --- Ô hiển thị địa chỉ IP --- */
+.ip-address {
+    border-radius: 8px; /* Bo tròn ô chứa IP */
+    /* ... các thuộc tính khác giữ nguyên ... */
 }
 
-.tab.active {
-    color: #495057; /* Màu chữ cho tab được chọn */
-    font-weight: 700; /* In đậm chữ */
-    border-bottom-color: #c8a97e; /* Gạch chân màu nâu vàng nổi bật */
-}
-
-/* KẾT THÚC THAY ĐỔI */
-
-.ip-content {
-    display: none;
-    padding-top: 20px; /* Thêm khoảng cách với phần tab ở trên */
+/* --- Tùy chọn: Bo tròn cả cho Modal --- */
+.modal-content {
+    border-radius: 16px;
+    /* ... các thuộc tính khác giữ nguyên ... */
 }
