@@ -1,37 +1,66 @@
-/* --- Container chính --- */
-.container {
-    border-radius: 16px; /* Bo tròn khung lớn bên ngoài */
-    /* ... các thuộc tính khác giữ nguyên ... */
-}
-
-/* --- Các nút bấm bên trái --- */
-.grid-item {
-    border-radius: 12px; /* Bo tròn các nút */
-    /* ... các thuộc tincác giữ nguyên ... */
-}
-
 /* --- Hộp thông tin IP bên phải --- */
 .info-box-ip {
-    border-radius: 12px; /* Bo tròn hộp IP */
-    /* ... các thuộc tính khác giữ nguyên ... */
+    background-color: #ffffff; /* Nền trắng sạch sẽ */
+    border-radius: 12px;
+    padding: 20px;
+    /* Thêm hiệu ứng đổ bóng mềm mại */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0; /* Thêm một đường viền rất nhạt */
 }
 
-/* --- Tab (PC/PE) --- */
+/* --- Khu vực chứa các tab --- */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ phân cách rất nhạt */
+    margin-bottom: 25px; /* Tăng khoảng cách với nội dung dưới */
+}
+
+/* --- Nút Tab (chung) --- */
 .tab {
-    /* Bo tròn 2 góc trên của các tab */
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    /* ... các thuộc tính khác giữ nguyên ... */
+    flex-grow: 1; /* Chia đều không gian cho các tab */
+    text-align: center; /* Căn giữa chữ */
+    padding: 12px 15px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent; /* Gạch chân "ẩn" */
+    font-size: 16px;
+    font-weight: 500;
+    color: #ab9d8d; /* Màu chữ nâu nhạt cho tab không active */
+    transition: all 0.3s ease;
+    margin-bottom: -1px; /* Kỹ thuật để gạch chân đè lên đường kẻ chung */
+}
+
+/* --- Nút Tab (khi được chọn) --- */
+.tab.active {
+    color: #333; /* Chữ màu đen đậm */
+    font-weight: 700; /* In đậm */
+    border-bottom-color: #a67c52; /* Gạch chân màu nâu đậm */
+}
+
+/* Ẩn hiệu ứng hover trên tab đang active */
+.tab.active:hover {
+    color: #333;
+}
+
+/* --- Tiêu đề "Địa chỉ máy chủ" --- */
+.ip-title {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
 }
 
 /* --- Ô hiển thị địa chỉ IP --- */
 .ip-address {
-    border-radius: 8px; /* Bo tròn ô chứa IP */
-    /* ... các thuộc tính khác giữ nguyên ... */
-}
-
-/* --- Tùy chọn: Bo tròn cả cho Modal --- */
-.modal-content {
-    border-radius: 16px;
-    /* ... các thuộc tính khác giữ nguyên ... */
+    background-color: #f5efe6; /* Nền màu be nhạt */
+    border: none; /* Bỏ viền */
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
 }
