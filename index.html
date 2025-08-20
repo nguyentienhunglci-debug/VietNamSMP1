@@ -1,3 +1,269 @@
+Hưng
+nguyentienhungsaygex
+Trực tuyến
+
+Hưng — 18/08/2025 12:55 CH
+Hình ảnh
+Hình ảnh
+Sukidesu Arata — 18/08/2025 12:56 CH
+chắc v, ko dc thì thử
+hrphuc_2k11
+Hưng — 18/08/2025 12:56 CH
+mới chuyển thử 10k
+xem nhận đc k
+Sukidesu Arata — 18/08/2025 12:56 CH
+dc
+Hưng — 18/08/2025 12:56 CH
+Hình ảnh
+Sukidesu Arata — 18/08/2025 12:57 CH
+chuyển nốt đi
+ok
+Hưng — 18/08/2025 12:57 CH
+r
+call chỉ t
+Sukidesu Arata
+ đã bắt đầu cuộc gọi kéo dài trong một giờ. — 18/08/2025 12:57 CH
+Hưng — 18/08/2025 1:01 CH
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+Mở rộng
+message.txt
+6 KB
+/* --- GIAO DIỆN NỀN KEM - ĐIỂM NHẤN NÂU SẪM --- */
+        :root {
+            --accent-brown: #6d4c41; /* MÀU NÂU SẪM LÀM ĐIỂM NHẤN */
+            --background-cream: #fdfaf5; /* Nền vàng kem */
+            --background-white: #ffffff;
+            --text-dark: #3d3d3d;
+Mở rộng
+message.txt
+10 KB
+// --- TOÀN BỘ JAVASCRIPT ĐƯỢC ĐẶT Ở ĐÂY ---
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- LOGIC: CHUYỂN TAB IP ADDRESS ---
+    const ipTabs = document.querySelectorAll('.tab');
+    const ipContents = document.querySelectorAll('.ip-content');
+
+    ipTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            ipTabs.forEach(t => t.classList.remove('active'));
+            ipContents.forEach(c => c.classList.remove('active-content'));
+
+            const targetId = tab.getAttribute('data-target');
+            tab.classList.add('active');
+            document.getElementById(targetId).classList.add('active-content');
+        });
+    });
+
+    // --- LOGIC: SAO CHÉP VÀO CLIPBOARD ---
+    function showToast(message) {
+        const existingToast = document.querySelector('.toast-message');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    function copyToClipboard(textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('Đã sao chép: ' + textToCopy);
+        }).catch(err => {
+            console.error('Lỗi khi sao chép:', err);
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('Đã sao chép: ' + textToCopy);
+            } catch (err) {
+                showToast('Lỗi khi sao chép!');
+            }
+            document.body.removeChild(tempInput);
+        });
+    }
+
+    document.getElementById('ip-pc').addEventListener('click', () => copyToClipboard('vietnamsmp.fun'));
+    document.getElementById('ip-pe').addEventListener('click', () => copyToClipboard('vietnamsmp.fun'));
+    document.getElementById('port-pe').addEventListener('click', () => copyToClipboard('27191'));
+
+    // --- LOGIC: ĐIỀU KHIỂN MODAL "CÁCH VÀO" ---
+    const howToJoinModal = document.getElementById('how-to-join-modal');
+    const howToJoinBtn = document.getElementById('how-to-join-btn');
+    const howToJoinCloseBtn = howToJoinModal.querySelector('.close-button');
+    const modalTabs = howToJoinModal.querySelectorAll('.modal-tab');
+    const modalContents = howToJoinModal.querySelectorAll('.modal-tab-content');
+
+    howToJoinBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        howToJoinModal.style.display = 'block';
+    });
+
+    howToJoinCloseBtn.addEventListener('click', () => {
+        howToJoinModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == howToJoinModal) {
+            howToJoinModal.style.display = 'none';
+        }
+    });
+
+    modalTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const currentActiveContent = howToJoinModal.querySelector('.modal-tab-content.active');
+            if(currentActiveContent) {
+                currentActiveContent.classList.remove('active');
+            }
+
+            modalTabs.forEach(t => t.classList.remove('active'));
+
+            tab.classList.add('active');
+            const targetId = tab.getAttribute('data-target');
+            const newActiveContent = howToJoinModal.querySelector(#${targetId});
+
+            if(newActiveContent) {
+                 newActiveContent.classList.add('active');
+            }
+        });
+    });
+
+    // --- PHẦN LOGIC CỦA MODAL DISCORD ĐÃ BỊ XOÁ ---
+});
+nguyentienhunglci12
+nguyentienhunglci@gmail.com
+Hưng — 18/08/2025 1:11 CH
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+Mở rộng
+message.txt
+6 KB
+/* --- GIAO DIỆN NỀN KEM - ĐIỂM NHẤN NÂU SẪM --- */
+:root {
+    --accent-brown: #6d4c41; /* MÀU NÂU SẪM LÀM ĐIỂM NHẤN */
+    --background-cream: #fdfaf5; /* Nền vàng kem */
+    --background-white: #ffffff;
+    --text-dark: #3d3d3d;
+Mở rộng
+message.txt
+8 KB
+// --- TOÀN BỘ JAVASCRIPT ĐƯỢC ĐẶT Ở ĐÂY ---
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- LOGIC: CHUYỂN TAB IP ADDRESS ---
+    const ipTabs = document.querySelectorAll('.tab');
+    const ipContents = document.querySelectorAll('.ip-content');
+
+    ipTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            ipTabs.forEach(t => t.classList.remove('active'));
+            ipContents.forEach(c => c.classList.remove('active-content'));
+
+            const targetId = tab.getAttribute('data-target');
+            tab.classList.add('active');
+            document.getElementById(targetId).classList.add('active-content');
+        });
+    });
+
+    // --- LOGIC: SAO CHÉP VÀO CLIPBOARD ---
+    function showToast(message) {
+        const existingToast = document.querySelector('.toast-message');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    function copyToClipboard(textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast('Đã sao chép: ' + textToCopy);
+        }).catch(err => {
+            console.error('Lỗi khi sao chép:', err);
+            const tempInput = document.createElement('textarea');
+            tempInput.value = textToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            try {
+                document.execCommand('copy');
+                showToast('Đã sao chép: ' + textToCopy);
+            } catch (err) {
+                showToast('Lỗi khi sao chép!');
+            }
+            document.body.removeChild(tempInput);
+        });
+    }
+
+    document.getElementById('ip-pc').addEventListener('click', () => copyToClipboard('vietnamsmp.fun'));
+    document.getElementById('ip-pe').addEventListener('click', () => copyToClipboard('vietnamsmp.fun'));
+    document.getElementById('port-pe').addEventListener('click', () => copyToClipboard('27191'));
+
+    // --- LOGIC: ĐIỀU KHIỂN MODAL "CÁCH VÀO" ---
+    const howToJoinModal = document.getElementById('how-to-join-modal');
+    const howToJoinBtn = document.getElementById('how-to-join-btn');
+    const howToJoinCloseBtn = howToJoinModal.querySelector('.close-button');
+    const modalTabs = howToJoinModal.querySelectorAll('.modal-tab');
+    const modalContents = howToJoinModal.querySelectorAll('.modal-tab-content');
+
+    howToJoinBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        howToJoinModal.style.display = 'block';
+    });
+
+    howToJoinCloseBtn.addEventListener('click', () => {
+        howToJoinModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        if (event.target == howToJoinModal) {
+            howToJoinModal.style.display = 'none';
+        }
+    });
+
+    modalTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const currentActiveContent = howToJoinModal.querySelector('.modal-tab-content.active');
+            if(currentActiveContent) {
+                currentActiveContent.classList.remove('active');
+            }
+
+            modalTabs.forEach(t => t.classList.remove('active'));
+
+            tab.classList.add('active');
+            const targetId = tab.getAttribute('data-target');
+            const newActiveContent = howToJoinModal.querySelector(#${targetId});
+
+            if(newActiveContent) {
+                 newActiveContent.classList.add('active');
+            }
+        });
+    });
+
+    // --- PHẦN LOGIC CỦA MODAL DISCORD ĐÃ BỊ XOÁ ---
+});
+Sukidesu Arata — 18/08/2025 1:32 CH
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -5,10 +271,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIETNAMSMP</title>
 
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Custom JS -->
     <script src="script.js" defer></script>
 </head>
 <body>
@@ -25,66 +294,57 @@
     <main class="main-content">
         <div class="left-section">
             <div class="button-grid">
-                <button type="button" class="grid-item">
-                    <div class="item-icon"><i class="fas fa-globe-americas" aria-hidden="true"></i></div>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
                     <span class="item-text">SMP</span>
-                </button>
-                <button type="button" class="grid-item">
-                    <div class="item-icon"><i class="fas fa-globe-americas" aria-hidden="true"></i></div>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
                     <span class="item-text">BOXPVP</span>
-                </button>
-                <button type="button" class="grid-item">
-                    <div class="item-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-envelope"></i></div>
                     <span class="item-text">Hỗ trợ</span>
-                </button>
+                </a>
                 <a href="https://discord.gg/BsTBC3dqFw" target="_blank" class="grid-item">
-                    <div class="item-icon"><i class="fab fa-discord" aria-hidden="true"></i></div>
+                    <div class="item-icon"><i class="fab fa-discord"></i></div>
                     <span class="item-text">Discord</span>
                 </a>
-                <button type="button" class="grid-item" id="how-to-join-btn">
-                    <div class="item-icon"><i class="fas fa-book" aria-hidden="true"></i></div>
+                <a href="#" class="grid-item" id="how-to-join-btn">
+                    <div class="item-icon"><i class="fas fa-book"></i></div>
                     <span class="item-text">Cách vào</span>
-                </button>
+                </a>
             </div>
         </div>
 
         <div class="right-section">
             <div class="info-box-ip">
-                <div class="tabs" role="tablist" aria-label="IP Server">
-                    <button class="tab active" role="tab" aria-selected="true" aria-controls="pc-content" data-target="pc-content">Máy tính (PC)</button>
-                    <button class="tab" role="tab" aria-selected="false" aria-controls="pe-content" data-target="pe-content">Điện thoại (PE)</button>
+                <div class="tabs">
+                    <div class="tab active" data-target="pc-content">Máy tính (PC)</div>
+                    <div class="tab" data-target="pe-content">Điện thoại (PE)</div>
                 </div>
 
-                <div id="pc-content" role="tabpanel" class="ip-content active-content">
+                <div id="pc-content" class="ip-content active-content">
                     <div class="ip-container">
                         <div class="ip-title">Địa chỉ máy chủ</div>
                         <span class="ip-address" id="ip-pc">
-                            IP: vietnamsmp.fun
-                            <button class="copy-button" aria-label="Sao chép địa chỉ IP máy tính">
-                                <i class="fa-solid fa-clone" aria-hidden="true"></i>
-                            </button>
+                            IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
                         </span>
                     </div>
                 </div>
 
-                <div id="pe-content" role="tabpanel" class="ip-content" hidden>
+                <div id="pe-content" class="ip-content">
                     <div class="pe-container">
                         <div class="pe-item">
                             <div class="ip-title">Địa chỉ IP</div>
                             <span class="ip-address" id="ip-pe">
-                                IP: vietnamsmp.fun
-                                <button class="copy-button" aria-label="Sao chép địa chỉ IP điện thoại">
-                                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
-                                </button>
+                                IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
                             </span>
                         </div>
                         <div class="pe-item">
                             <div class="ip-title">Port</div>
                             <span class="ip-address" id="port-pe">
-                                Port: 27191
-                                <button class="copy-button" aria-label="Sao chép Port">
-                                    <i class="fa-solid fa-clone" aria-hidden="true"></i>
-                                </button>
+                                Port: 27191 <i class="fa-solid fa-clone"></i>
                             </span>
                         </div>
                     </div>
@@ -100,28 +360,441 @@
     </footer>
 </div>
 
-<div id="how-to-join-modal" class="modal" hidden> <div class="modal-content">
-        <button class="close-button" aria-label="Đóng">&times;</button>
+<div id="how-to-join-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
         <h2>Hướng dẫn tham gia</h2>
-        <div class="modal-tabs" role="tablist" aria-label="Hướng dẫn tài khoản">
-            <button class="modal-tab active" role="tab" aria-selected="true" aria-controls="register-content" data-target="register-content">Đăng kí</button>
-            <button class="modal-tab" role="tab" aria-selected="false" aria-controls="login-content" data-target="login-content">Đăng nhập</button>
-            <button class="modal-tab" role="tab" aria-selected="false" aria-controls="password-content" data-target="password-content">Đổi mật khẩu</button>
+... (Còn31 dòng dòng)
+Thu gọn
+index (4).html
+6 KB
+nguyentienhunglci-debug/VietNamSMP
+Hưng — 18/08/2025 1:39 CH
+https://nguyentienhunglci-debug.github.io/VietNamSMP1/
+Sukidesu Arata — 18/08/2025 1:47 CH
+https://info.vietnamsmp.fun/
+Hưng — 18/08/2025 4:06 CH
+ê m
+xong web r
+xem k
+https://info.vietnamsmp.fun/?cw_configurator=true
+Sukidesu Arata — 18/08/2025 5:27 CH
+như cớt v
+bắt login nx
+tìm cái nào tích hợp vào web luôn ấy
+Hưng — 18/08/2025 5:54 CH
+mệt quá
+thế thoi
+Sukidesu Arata — 18/08/2025 5:54 CH
+=))
+Hưng — 19/08/2025 6:21 CH
+Hình ảnh
+ê
+tí đổi envent là Vanllina
+thêm 1 mục nữa là box pvp
+Sukidesu Arata — 19/08/2025 6:22 CH
+@_@
+m nhiều host v à
+Hưng — 19/08/2025 6:22 CH
+b2.asaka.asia:26274
+box làm sau
+lm valiina tr
+ít pl
+dưới 10 cái
+:)))
+Sukidesu Arata — 19/08/2025 6:22 CH
+cấp cho t host này , ko thì ko ghép vào dc
+Hưng — 19/08/2025 6:22 CH
+ok
+gmail
+Sukidesu Arata — 19/08/2025 6:22 CH
+quachminhphuc1412@gmail.com
+Sukidesu Arata — 19/08/2025 6:29 CH
+ip này của vanila hay box
+Hưng — 19/08/2025 6:29 CH
+vanllia
+boxx chuaw cos host
+ko b làm box :)))
+Sukidesu Arata — 19/08/2025 6:30 CH
+😒
+Hưng — 19/08/2025 6:30 CH
+t có file vnpvp này
+Sukidesu Arata — 19/08/2025 6:30 CH
+đù ghê v
+Hưng — 19/08/2025 6:30 CH
+nặng quá t ko tải đc
+bên TQ TẢI UP FILE LÂU
+m up hộ t đi ngon thì dùng 
+:))
+Sukidesu Arata — 19/08/2025 6:31 CH
+dc, gửi t
+Hưng — 19/08/2025 6:31 CH
+https://gofile.io/d/kykoz1
+Q401fL4n3RoRGLpBTBLK.zip
+7.4 GB
+Hình ảnh
+Sukidesu Arata — 19/08/2025 6:32 CH
+công tổng lại 10k nhá :trollge: , có j config sơ sơ lại mấy file cho =))
+Hưng — 19/08/2025 6:32 CH
+ok :)))
+Sukidesu Arata — 19/08/2025 6:32 CH
+ê mà ko lấy thẻ siêu tốc đâu đó nhá , vừa lâu mà còn vừa chiết khấu cao nx 
+Hưng — 19/08/2025 6:33 CH
+b r dmd
+Sukidesu Arata — 19/08/2025 6:33 CH
+🤓
+r , có file boxpvp r h sao
+Hưng — 19/08/2025 6:39 CH
+đó là duler j ấy
+đ ph box
+box chưa làm
+Sukidesu Arata — 19/08/2025 6:39 CH
+duler là j :aepederp:
+Hưng — 19/08/2025 6:39 CH
+ê m lắp vô cái máy m r đưa tên miền t xem như nào đc k :)))
+như vnpvp ấy
+ko ph box
+Sukidesu Arata — 19/08/2025 6:39 CH
+ồ
+Sukidesu Arata — 19/08/2025 6:39 CH
+😒
+Hưng — 19/08/2025 6:39 CH
+Hình ảnh
+Sukidesu Arata — 19/08/2025 6:40 CH
+hay làm khổ t qua
+Hưng — 19/08/2025 6:40 CH
+còn host đéo đâu
+tài nguyên free mà
+có anti cheat hơi ngon đấy
+config sever pvp mà
+Hưng — 19/08/2025 7:20 CH
+nối chưa
+burrh add t voo panel đi
+để màu ấy v
+Sukidesu Arata — 19/08/2025 7:21 CH
+R, reset proxy đi
+Hưng — 19/08/2025 7:21 CH
+Hình ảnh
+lấy con này làm vanil đi
+Sukidesu Arata — 19/08/2025 7:21 CH
+Tí đi, t đg học
+Hưng — 19/08/2025 8:17 CH
+ee
+ê
+ê
+@Sukidesu Arata
+Hình ảnh
+để npc này nối vô host kia đi
+Hưng — 19/08/2025 8:48 CH
+alo
+Sukidesu Arata — 19/08/2025 8:53 CH
+alo
+ms về
+Hưng — 19/08/2025 8:54 CH
+ddaay
+nối hộ
+Sukidesu Arata — 19/08/2025 8:54 CH
+ok
+Sukidesu Arata — 19/08/2025 9:29 CH
+add r đó
+Hưng — Hôm qua lúc 9:40 CH
+ê
+ê
+Sukidesu Arata — Hôm qua lúc 9:40 CH
+huh
+Hưng — Hôm qua lúc 9:40 CH
+cái tệp vnpvp ấy
+add vô máy m thử
+xem có ngon k
+Sukidesu Arata — Hôm qua lúc 9:41 CH
+D:\all hon tap\tamthoi人才反作弊配置>java -Xms6G -Xmx6G -jar server.jar nogui
+[ULoader] Starting ULoader (Git: d6240f7)
+[ULoader] Currently verifying. This will be a quick process.
+[ULoader] For assistance with the setup, refer to our discord channel #install-guide.
+[ULoader] Console listens for text input..
+[ULoader] Enter your key (accessible via /mylicenses on our discord server):
+:stupid:
+Hưng — Hôm qua lúc 9:42 CH
+gif  v trời
+Sukidesu Arata — Hôm qua lúc 9:42 CH
+ai bt
+bật lên nó v 
+Hưng — Hôm qua lúc 9:42 CH
+có mở đc seve k
+Sukidesu Arata — Hôm qua lúc 9:42 CH
+ko
+hình như cần có licen key ấy =))
+Hưng — Hôm qua lúc 9:43 CH
+tháo cái cần key ra là ổn'
+chắc pl pre
+Sukidesu Arata — Hôm qua lúc 9:44 CH
+ko phải plugin, cái software hay j á =))
+Hưng — Hôm qua lúc 9:44 CH
+nghe chả hiểu j :))
+Sukidesu Arata — Hôm qua lúc 9:45 CH
+ai bt , nói  chung là ko dc =vv
+Hưng — Hôm qua lúc 9:45 CH
+ok
+ê m
+Sukidesu Arata — Hôm qua lúc 9:45 CH
+j nx
+r chuyển 10k cho t chx
+Hưng — Hôm qua lúc 9:45 CH
+tải lên host kia hộ t
+:)))
+r mà
+Sukidesu Arata — Hôm qua lúc 9:45 CH
+tải j
+Hưng — Hôm qua lúc 9:45 CH
+uhc
+đg load
+Sukidesu Arata — Hôm qua lúc 9:46 CH
+vnsmp đó á
+Hưng — Hôm qua lúc 9:46 CH
+ko
+tải lên host mới á
+cái qua m nối ấy
+Sukidesu Arata — Hôm qua lúc 9:46 CH
+tải cái j lên host mới ?
+Hưng — Hôm qua lúc 9:46 CH
+Hình ảnh
+Sukidesu Arata — Hôm qua lúc 9:46 CH
+ồ, host vanilla á hả
+Hưng — Hôm qua lúc 9:47 CH
+đr
+ko mở valina nữa
+disk ngốn
+Sukidesu Arata — Hôm qua lúc 9:47 CH
+ồ
+Hưng — Hôm qua lúc 10:06 CH
+Loại tệp đính kèm: archive
+uhc.zip
+182.04 MB
+Sukidesu Arata — Hôm qua lúc 10:53 CH
+xoá hết file vannila cũ à
+Hưng — Hôm qua lúc 10:53 CH
+đr
+Sukidesu Arata — Hôm qua lúc 11:00 CH
+on r đó
+cần nối ko
+Sukidesu Arata — Hôm qua lúc 11:50 CH
+m đã chuyễn đâu -_-
+Hưng — Hôm qua lúc 11:50 CH
+gửi mã
+chắc chưa xn otp
+Sukidesu Arata — Hôm qua lúc 11:50 CH
+Hình ảnh
+Hưng — Hôm qua lúc 11:51 CH
+r ddaay
+Sukidesu Arata — Hôm qua lúc 11:52 CH
+ok
+chuyển file lên r đó, cần nối vào proxy ko
+Hưng — Hôm qua lúc 11:53 CH
+nhớ là m nối r mà
+uar
+Hình ảnh
+Sukidesu Arata — Hôm qua lúc 11:53 CH
+file mới mà -_-
+Hưng — Hôm qua lúc 11:53 CH
+à
+:wtf:
+có
+Sukidesu Arata — Hôm qua lúc 11:53 CH
+ok
+r đó
+Hưng — Hôm qua lúc 11:55 CH
+ok
+Sukidesu Arata — Hôm qua lúc 11:55 CH
+lm j nx ko
+Hưng — Hôm qua lúc 11:56 CH
+m làm t cái sever giống donut smp đi
+y hệt
+Sukidesu Arata — Hôm qua lúc 11:57 CH
+😒
+cái lòn j nữa đếy
+=))
+Hưng — Hôm qua lúc 11:57 CH
+trộm file của donut đi
+Sukidesu Arata — Hôm qua lúc 11:58 CH
+m bị rảnh nữa à =))
+Hưng — Hôm qua lúc 11:59 CH
+ee
+hết hè r
+nghỉ làm sever đi
+hè năm sau m với t comback
+Sukidesu Arata — Hôm qua lúc 11:59 CH
+hả? sao
+=)))
+Hưng — Hôm qua lúc 11:59 CH
+giờ mem đi hết r
+Sukidesu Arata — 12:00 SA
+chứ m ko duy trì server nx ak =))
+Hưng — 12:00 SA
+sắp r
+Sukidesu Arata — 12:00 SA
+t thì ms mua file thk khoa =))
+Hưng — 12:00 SA
+hè năm sau comback
+Sukidesu Arata — 12:00 SA
+:stupid:
+Hưng — 12:00 SA
+giờ m mua làm xong cx ko còn ai chơi
+Sukidesu Arata — 12:01 SA
+thì cx tận dụng file th, t có cần trả tiền host đâu =))
+Hưng — 12:01 SA
+vc ko mất tiền host :))
+s ko mất v
+Sukidesu Arata — 12:02 SA
+t dc ông admin ticket bên asaka tài trợ mà =))
+Hưng — 12:02 SA
+cấu hình như nào v
+Sukidesu Arata — 12:02 SA
+800 cpu vs 12gb ram thì phải
+Hưng — 12:03 SA
+ngon ta
+m nói j mà đc tài trợ v
+Sukidesu Arata — 12:04 SA
+ai bt , hồi đó đang đi ăn xin tiền mua host =)) r tự dưng đâu ra ổng nhảy ra kêu là chia host cho =)) vs dk chia 50% lợi nhuận =))
+Hưng — 12:04 SA
+đù
+gói j v
+Sukidesu Arata — 12:06 SA
+ko bt , thấy ip là b6 =)) ko bt basic hay balance nx =)) 
+Hưng — 12:06 SA
+ok
+﻿
+Sukidesu Arata
+sukidesu1412
+Suki
+ 
+ 
+ 
+ 
+ 
+ 
+ʜᴇ /ʜɪᴍ - 🇻🇳 - ѕᴜᴋɪᴀʀᴀᴛᴀ
+ɪ ᴀᴍ ᴀ ᴘɴɢᴛᴜʙᴇʀ ᴀɴᴅ ᴏᴡɴᴇʀ ᴏꜰ ᴄʜɪʟʟ ᴠᴇʀѕᴇ
+ʟɪɴᴋ ʙɪᴏ: https://sukiarata.chillverse.site/
+ᴄʜɪʟʟ ᴠᴇʀѕᴇ ᴍɪɴᴇᴄʀᴀꜰᴛ ѕᴇʀᴠᴇʀ: https://discord.chillverse.top/
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIETNAMSMP</title>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Custom JS -->
+    <script src="script.js" defer></script>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/Sukidesu-Arata/image/refs/heads/main/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photoroom_1.png" alt="VietnamSMP Logo">
+            </div>
+            <h1 class="server-title">VIETNAMSMP</h1>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="left-section">
+            <div class="button-grid">
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
+                    <span class="item-text">SMP</span>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
+                    <span class="item-text">BOXPVP</span>
+                </a>
+                <a href="#" class="grid-item">
+                    <div class="item-icon"><i class="fas fa-envelope"></i></div>
+                    <span class="item-text">Hỗ trợ</span>
+                </a>
+                <a href="https://discord.gg/BsTBC3dqFw" target="_blank" class="grid-item">
+                    <div class="item-icon"><i class="fab fa-discord"></i></div>
+                    <span class="item-text">Discord</span>
+                </a>
+                <a href="#" class="grid-item" id="how-to-join-btn">
+                    <div class="item-icon"><i class="fas fa-book"></i></div>
+                    <span class="item-text">Cách vào</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="right-section">
+            <div class="info-box-ip">
+                <div class="tabs">
+                    <div class="tab active" data-target="pc-content">Máy tính (PC)</div>
+                    <div class="tab" data-target="pe-content">Điện thoại (PE)</div>
+                </div>
+
+                <div id="pc-content" class="ip-content active-content">
+                    <div class="ip-container">
+                        <div class="ip-title">Địa chỉ máy chủ</div>
+                        <span class="ip-address" id="ip-pc">
+                            IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <div id="pe-content" class="ip-content">
+                    <div class="pe-container">
+                        <div class="pe-item">
+                            <div class="ip-title">Địa chỉ IP</div>
+                            <span class="ip-address" id="ip-pe">
+                                IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
+                            </span>
+                        </div>
+                        <div class="pe-item">
+                            <div class="ip-title">Port</div>
+                            <span class="ip-address" id="port-pe">
+                                Port: 27191 <i class="fa-solid fa-clone"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-info">
+            <p>Phiên bản: 1.16.5 đến 1.22</p>
+        </div>
+    </footer>
+</div>
+
+<div id="how-to-join-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Hướng dẫn tham gia</h2>
+        <div class="modal-tabs">
+            <div class="modal-tab active" data-target="register-content">Đăng kí</div>
+            <div class="modal-tab" data-target="login-content">Đăng nhập</div>
+            <div class="modal-tab" data-target="password-content">Đổi mật khẩu</div>
         </div>
         <div class="modal-body">
-            <div id="register-content" class="modal-tab-content active" role="tabpanel">
+            <div id="register-content" class="modal-tab-content active">
                 <h3>Lệnh đăng kí</h3>
                 <p>Để tạo tài khoản, bạn vào server và gõ lệnh sau:</p>
                 <code>/register &lt;mật khẩu&gt; &lt;nhập lại mật khẩu&gt;</code>
                 <p><strong>Ví dụ:</strong> <code>/register 123456 123456</code></p>
             </div>
-            <div id="login-content" class="modal-tab-content" role="tabpanel" hidden>
+            <div id="login-content" class="modal-tab-content">
                 <h3>Lệnh đăng nhập</h3>
                 <p>Để đăng nhập vào tài khoản đã tạo, bạn gõ lệnh sau:</p>
                 <code>/login &lt;mật khẩu&gt;</code>
                 <p><strong>Ví dụ:</strong> <code>/login 123456</code></p>
             </div>
-            <div id="password-content" class="modal-tab-content" role="tabpanel" hidden>
+            <div id="password-content" class="modal-tab-content">
                 <h3>Lệnh đổi mật khẩu</h3>
                 <p>Để thay đổi mật khẩu, bạn gõ lệnh sau:</p>
                 <code>/changepassword &lt;mật khẩu cũ&gt; &lt;mật khẩu mới&gt;</code>
