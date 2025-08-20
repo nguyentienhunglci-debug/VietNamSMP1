@@ -1,269 +1,66 @@
-<!DOCTYPE html>
-
-<html lang="vi">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>VIETNAMSMP</title>
-
-
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-
-
-        <link rel="stylesheet" href="style.css">
-
-
-
-        <script src="script.js" defer></script>
-
-</head>
-
-<body>
-
-<div class="container">
-
-    <header class="header">
-
-        <div class="header-left">
-
-            <div class="logo">
-
-                <img src="https://raw.githubusercontent.com/Sukidesu-Arata/image/refs/heads/main/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photoroom_1.png" alt="VietnamSMP Logo">
-
-            </div>
-
-            <h1 class="server-title">VIETNAMSMP</h1>
-
-        </div>
-
-    </header>
-
-
-
-    <main class="main-content">
-
-        <div class="left-section">
-
-            <div class="button-grid">
-
-                <a href="#" class="grid-item">
-
-                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
-
-                    <span class="item-text">SMP</span>
-
-                </a>
-
-                <a href="#" class="grid-item">
-
-                    <div class="item-icon"><i class="fas fa-globe-americas"></i></div>
-
-                    <span class="item-text">BOXPVP</span>
-
-                </a>
-
-                <a href="#" class="grid-item">
-
-                    <div class="item-icon"><i class="fas fa-envelope"></i></div>
-
-                    <span class="item-text">Hỗ trợ</span>
-
-                </a>
-
-                <a href="https://discord.gg/BsTBC3dqFw" target="_blank" class="grid-item">
-
-                    <div class="item-icon"><i class="fab fa-discord"></i></div>
-
-                    <span class="item-text">Discord</span>
-
-                </a>
-
-                <a href="#" class="grid-item" id="how-to-join-btn">
-
-                    <div class="item-icon"><i class="fas fa-book"></i></div>
-
-                    <span class="item-text">Cách vào</span>
-
-                </a>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="right-section">
-
-            <div class="info-box-ip">
-
-                <div class="tabs">
-
-                    <div class="tab active" data-target="pc-content">Máy tính (PC)</div>
-
-                    <div class="tab" data-target="pe-content">Điện thoại (PE)</div>
-
-                </div>
-
-
-
-                <div id="pc-content" class="ip-content active-content">
-
-                    <div class="ip-container">
-
-                        <div class="ip-title">Địa chỉ máy chủ</div>
-
-                        <span class="ip-address" id="ip-pc">
-
-                            IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-
-                <div id="pe-content" class="ip-content">
-
-                    <div class="pe-container">
-
-                        <div class="pe-item">
-
-                            <div class="ip-title">Địa chỉ IP</div>
-
-                            <span class="ip-address" id="ip-pe">
-
-                                IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
-
-                            </span>
-
-                        </div>
-
-                        <div class="pe-item">
-
-                            <div class="ip-title">Port</div>
-
-                            <span class="ip-address" id="port-pe">
-
-                                Port: 27191 <i class="fa-solid fa-clone"></i>
-
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </main>
-
-
-
-    <footer class="footer">
-
-        <div class="footer-info">
-
-            <p>Phiên bản: 1.20 đến 1.21.4</p>
-
-        </div>
-
-    </footer>
-
-</div>
-
-
-
-<div id="how-to-join-modal" class="modal">
-
-    <div class="modal-content">
-
-        <span class="close-button">&times;</span>
-
-        <h2>Hướng dẫn tham gia</h2>
-
-        <div class="modal-tabs">
-
-            <div class="modal-tab active" data-target="register-content">Đăng kí</div>
-
-            <div class="modal-tab" data-target="login-content">Đăng nhập</div>
-
-            <div class="modal-tab" data-target="password-content">Đổi mật khẩu</div>
-
-        </div>
-
-        <div class="modal-body">
-
-            <div id="register-content" class="modal-tab-content active">
-
-                <h3>Lệnh đăng kí</h3>
-
-                <p>Để tạo tài khoản, bạn vào server và gõ lệnh sau:</p>
-
-                <code>/register &lt;mật khẩu&gt; &lt;nhập lại mật khẩu&gt;</code>
-
-                <p><strong>Ví dụ:</strong> <code>/register 123456 123456</code></p>
-
-            </div>
-
-            <div id="login-content" class="modal-tab-content">
-
-                <h3>Lệnh đăng nhập</h3>
-
-                <p>Để đăng nhập vào tài khoản đã tạo, bạn gõ lệnh sau:</p>
-
-                <code>/login &lt;mật khẩu&gt;</code>
-
-                <p><strong>Ví dụ:</strong> <code>/login 123456</code></p>
-
-            </div>
-
-            <div id="password-content" class="modal-tab-content">
-
-                <h3>Lệnh đổi mật khẩu</h3>
-
-                <p>Để thay đổi mật khẩu, bạn gõ lệnh sau:</p>
-
-                <code>/changepassword &lt;mật khẩu cũ&gt; &lt;mật khẩu mới&gt;</code>
-
-                <p><strong>Ví dụ:</strong> <code>/changepassword 123456 654321</code></p>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<script>
-
-    window.__lc = window.__lc || {};
-
-    window.__lc.license = 19272136;
-
-    window.__lc.integration_name = "manual_onboarding";
-
-    window.__lc.product_name = "livechat";
-
-    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-
-</script>
-
-<noscript><a href="https://www.livechat.com/chat-with/19272136/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-
-</body>
-
-</html>
+/* --- Hộp thông tin IP bên phải --- */
+.info-box-ip {
+    background-color: #ffffff; /* Nền trắng sạch sẽ */
+    border-radius: 12px;
+    padding: 20px;
+    /* Thêm hiệu ứng đổ bóng mềm mại */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f0f0f0; /* Thêm một đường viền rất nhạt */
+}
+
+/* --- Khu vực chứa các tab --- */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ phân cách rất nhạt */
+    margin-bottom: 25px; /* Tăng khoảng cách với nội dung dưới */
+}
+
+/* --- Nút Tab (chung) --- */
+.tab {
+    flex-grow: 1; /* Chia đều không gian cho các tab */
+    text-align: center; /* Căn giữa chữ */
+    padding: 12px 15px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent; /* Gạch chân "ẩn" */
+    font-size: 16px;
+    font-weight: 500;
+    color: #ab9d8d; /* Màu chữ nâu nhạt cho tab không active */
+    transition: all 0.3s ease;
+    margin-bottom: -1px; /* Kỹ thuật để gạch chân đè lên đường kẻ chung */
+}
+
+/* --- Nút Tab (khi được chọn) --- */
+.tab.active {
+    color: #333; /* Chữ màu đen đậm */
+    font-weight: 700; /* In đậm */
+    border-bottom-color: #a67c52; /* Gạch chân màu nâu đậm */
+}
+
+/* Ẩn hiệu ứng hover trên tab đang active */
+.tab.active:hover {
+    color: #333;
+}
+
+/* --- Tiêu đề "Địa chỉ máy chủ" --- */
+.ip-title {
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+/* --- Ô hiển thị địa chỉ IP --- */
+.ip-address {
+    background-color: #f5efe6; /* Nền màu be nhạt */
+    border: none; /* Bỏ viền */
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
+}
