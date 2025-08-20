@@ -36,17 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Đã sao chép: ' + textToCopy);
         }).catch(err => {
             console.error('Lỗi khi sao chép:', err);
-            const tempInput = document.createElement('textarea');
-            tempInput.value = textToCopy;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            try {
-                document.execCommand('copy');
-                showToast('Đã sao chép: ' + textToCopy);
-            } catch (err) {
-                showToast('Lỗi khi sao chép!');
-            }
-            document.body.removeChild(tempInput);
         });
     }
 
@@ -78,13 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     modalTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            const currentActiveContent = howToJoinModal.querySelector('.modal-tab-content.active');
-            if(currentActiveContent) {
-                currentActiveContent.classList.remove('active');
-            }
-            
             modalTabs.forEach(t => t.classList.remove('active'));
-
+            modalContents.forEach(c => c.classList.remove('active'));
+            
             tab.classList.add('active');
             const targetId = tab.getAttribute('data-target');
             const newActiveContent = howToJoinModal.querySelector(`#${targetId}`);
@@ -98,14 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- LOGIC: MỞ LIVECHAT KHI NHẤN NÚT HỖ TRỢ ---
     const supportButton = document.getElementById('support-btn');
 
-    // Chờ cho LiveChat sẵn sàng rồi mới gán sự kiện
+    // Chờ cho trang và LiveChat sẵn sàng rồi mới gán sự kiện
     window.addEventListener('load', function() {
-        if (supportButton && window.LiveChatWidget) {
+        if (supportButton && typeof window.LiveChatWidget !== 'undefined') {
             supportButton.addEventListener('click', function(event) {
-                // Ngăn trang nhảy lên đầu khi nhấn vào link #
                 event.preventDefault(); 
-                
-                // Gọi API của LiveChat để mở cửa sổ chat
                 window.LiveChatWidget.call('maximize');
             });
         }
