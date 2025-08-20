@@ -105,7 +105,7 @@ body {
 
 .item-icon {
     font-size: 48px; /* --- ĐÃ THAY ĐỔI: Tăng kích thước icon cho to hơn --- */
-    color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu icon sang vàng sáng --- */
+    color: #e7ff00 ; /* --- ĐÃ THAY ĐỔI: Đổi màu icon sang vàng sáng --- */
     margin-bottom: 10px;
 }
 
@@ -331,4 +331,5 @@ body {
     margin: 10px 0;
     white-space: pre-wrap;
 }
+
 
