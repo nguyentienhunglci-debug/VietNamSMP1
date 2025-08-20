@@ -8,13 +8,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="style.css">
+
+    <script src="script.js" defer></script>
 </head>
 <body>
 <div class="container">
     <header class="header">
         <div class="header-left">
             <div class="logo">
-                <img src="https://raw.githubusercontent.com/Sukidesu-Arata/image/refs/heads/main/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photoroom_1.png" alt="VietnamSMP Logo">
+                <img src="https://raw.githubusercontent.com/Sukidesu-Arata/image/refs/heads/main/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photor.png" alt="VietnamSMP Logo">
             </div>
             <h1 class="server-title">VIETNAMSMP</h1>
         </div>
@@ -86,23 +88,43 @@
 </div>
 
 <div id="how-to-join-modal" class="modal">
-    </div>
-
-<div id="discord-chat-modal" class="modal">
-    <div class="modal-content modal-discord">
+    <div class="modal-content">
         <span class="close-button">&times;</span>
-        <h2>Kênh Hỗ Trợ</h2>
-        <div class="widgetbot-container">
-            <widgetbot
-              server="1360306108593344562"
-              channel="1407831999804342272"
-            ></widgetbot>
-            <script src="https://cdn.jsdelivr.net/npm/@widgetbot/html-embed"></script>
+        <h2>Hướng dẫn tham gia</h2>
+        <div class="modal-tabs">
+            <div class="modal-tab active" data-target="register-content">Đăng kí</div>
+            <div class="modal-tab" data-target="login-content">Đăng nhập</div>
+            <div class="modal-tab" data-target="password-content">Đổi mật khẩu</div>
+        </div>
+        <div class="modal-body">
+            <div id="register-content" class="modal-tab-content active">
+                <h3>Lệnh đăng kí</h3>
+                <p>Để tạo tài khoản, bạn vào server và gõ lệnh sau:</p>
+                <code>/register &lt;mật khẩu&gt; &lt;nhập lại mật khẩu&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/register 123456 123456</code></p>
+            </div>
+            <div id="login-content" class="modal-tab-content">
+                <h3>Lệnh đăng nhập</h3>
+                <p>Để đăng nhập vào tài khoản đã tạo, bạn gõ lệnh sau:</p>
+                <code>/login &lt;mật khẩu&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/login 123456</code></p>
+            </div>
+            <div id="password-content" class="modal-tab-content">
+                <h3>Lệnh đổi mật khẩu</h3>
+                <p>Để thay đổi mật khẩu, bạn gõ lệnh sau:</p>
+                <code>/changepassword &lt;mật khẩu cũ&gt; &lt;mật khẩu mới&gt;</code>
+                <p><strong>Ví dụ:</strong> <code>/changepassword 123456 654321</code></p>
+            </div>
         </div>
     </div>
 </div>
-
-<script src="script.js"></script>
+<script>
+    window.__lc = window.__lc || {};
+    window.__lc.license = 19272136;
+    window.__lc.integration_name = "manual_channels";
+    window.__lc.product_name = "livechat";
+    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
+</script>
+<noscript><a href="https://www.livechat.com/chat-with/19272136/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
 </body>
 </html>
-
