@@ -16,16 +16,34 @@
         .news-article:last-child {
             border-bottom: none;
         }
-        /* === CODE ĐÃ SỬA: LÀM TIÊU ĐỀ TO HƠN === */
         .news-article h2 {
             color: var(--accent-brown);
-            font-size: 1.7em; /* Tăng kích thước chữ của tiêu đề */
+            font-size: 1.7em; 
         }
         .news-article .meta {
             font-size: 14px;
             color: var(--text-muted);
             margin-bottom: 10px;
         }
+
+        /* === CSS CHO NÚT QUAY LẠI === */
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 18px;
+            background-color: var(--background-cream);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--accent-brown);
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .back-button:hover {
+            background-color: #f0e9dd;
+        }
+        /* ============================ */
+
     </style>
 </head>
 <body>
@@ -46,7 +64,6 @@
             <h2>Thông báo: Tạm đóng máy chủ và hẹn gặp lại vào mùa hè 2026</h2>
             <p class="meta">Ngày đăng: 21/08/2025</p>
             <p>Lời đầu tiên, Ban Quản Trị VIETNAMSMP xin gửi lời cảm ơn chân thành đến tất cả các bạn đã đồng hành cùng máy chủ trong suốt thời gian qua.</p>
-            
             <p>Chúng tôi rất tiếc phải thông báo rằng máy chủ sẽ chính thức <strong>tạm đóng cửa</strong> để bảo trì và nâng cấp, dự kiến sẽ <strong>mở lại vào mùa hè năm sau (2026)</strong>.</p>
             <p><strong>Nguyên nhân của quyết định này là do:</strong></p>
             <ul>
@@ -57,21 +74,12 @@
             <p>Một lần nữa, xin chân thành cảm ơn sự ủng hộ của các bạn. Hãy giữ liên lạc qua máy chủ Discord để cập nhật những thông tin mới nhất nhé. Hẹn gặp lại!</p>
         </article>
         
-        <article class="news-article">
-            <h2>🎁 Sự kiện Trung Thu - Rước đèn săn quà</h2>
-            <p class="meta">Ngày đăng: 15/08/2025</p>
-            <p>Nhân dịp Tết Trung Thu sắp tới, Ban Quản Trị sẽ tổ chức một sự kiện đặc biệt với nhiều phần quà hấp dẫn. Thông tin chi tiết về sự kiện sẽ được cập nhật sớm nhất trên trang Discord của server.</p>
-        </article>
+        </main>
 
-        <article class="news-article">
-            <h2>⚠️ Thông báo bảo trì máy chủ</h2>
-            <p class="meta">Ngày đăng: 10/08/2025</p>
-            <p>Máy chủ sẽ tiến hành bảo trì định kỳ để nâng cấp hệ thống và sửa lỗi. Thời gian dự kiến: từ 02:00 đến 04:00 sáng ngày 22/08/2025. Các bạn vui lòng sắp xếp thời gian để không bị ảnh hưởng nhé.</p>
-        </article>
-        
-    </main>
-
-</div>
+    <footer class="footer">
+         <a href="index.html" class="back-button">&laquo; Quay lại trang chủ</a>
+    </footer>
+    </div>
 
 </body>
 </html>
