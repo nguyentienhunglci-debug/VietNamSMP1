@@ -58,7 +58,8 @@ body {
     font-size: 3em;
     font-weight: bold;
     margin: 0;
-    color: var(--accent-brown);
+    color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu chữ sang vàng sáng --- */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4); /* --- ĐÃ THÊM: Bóng đổ cho chữ nổi bật --- */
 }
 
 /* Main Content */
@@ -99,12 +100,12 @@ body {
 .grid-item:hover {
     transform: translateY(-4px);
     box-shadow: 0 6px 16px rgba(149, 157, 165, 0.2);
-    border-color: var(--accent-brown);
+    border-color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu viền khi di chuột vào cho hợp tông */
 }
 
 .item-icon {
-    font-size: 40px;
-    color: var(--accent-brown);
+    font-size: 48px; /* --- ĐÃ THAY ĐỔI: Tăng kích thước icon cho to hơn --- */
+    color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu icon sang vàng sáng --- */
     margin-bottom: 10px;
 }
 
@@ -146,7 +147,7 @@ body {
 
 .tab.active {
     background-color: var(--background-white);
-    border-bottom-color: var(--accent-brown);
+    border-bottom-color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu tab active cho hợp tông */
     color: var(--text-dark);
     font-weight: bold;
 }
@@ -199,7 +200,7 @@ body {
 
 .ip-address .fa-clone {
     margin-left: 5px;
-    color: var(--accent-brown);
+    color: var(--text-dark);
 }
 
 /* Footer */
@@ -285,7 +286,7 @@ body {
 }
 .modal-content h2 { 
     margin-top: 0; 
-    color: var(--accent-brown); 
+    color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu tiêu đề trong modal cho hợp tông */
     text-align: center; 
     margin-bottom: 20px; 
 }
@@ -306,7 +307,7 @@ body {
     background-color: var(--background-cream); 
 }
 .modal-tab.active { 
-    border-bottom-color: var(--accent-brown); 
+    border-bottom-color: #FFD700; /* --- ĐÃ THAY ĐỔI: Đổi màu tab active trong modal cho hợp tông */
     color: var(--text-dark); 
     font-weight: bold; 
 }
