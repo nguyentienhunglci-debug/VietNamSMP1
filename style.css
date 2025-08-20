@@ -1,109 +1,3 @@
-/* --- Cài đặt chung & Font chữ --- */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #fdfaf6;
-    color: #4a4a4a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-/* --- Container chính --- */
-.container {
-    width: 100%;
-    max-width: 900px;
-    background-color: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-}
-
-/* --- Header --- */
-.header {
-    padding: 20px 30px;
-    border-bottom: 1px solid #eee;
-}
-
-.header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo img {
-    width: 50px;
-    height: 50px;
-}
-
-.server-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
-}
-
-/* --- Nội dung chính (Quan trọng nhất) --- */
-.main-content {
-    /* Đây là phần quan trọng nhất để tạo layout 2 cột */
-    display: flex;
-    padding: 30px;
-    gap: 30px;
-}
-
-.left-section {
-    flex: 1; /* Chia cột bên trái */
-}
-
-.right-section {
-    flex: 2; /* Chia cột bên phải, rộng hơn */
-}
-
-/* --- Lưới các nút bấm bên trái --- */
-.button-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* 1 cột */
-    gap: 15px;
-}
-
-.grid-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 12px;
-    text-decoration: none;
-    color: #495057;
-    font-size: 16px;
-    font-weight: 500;
-    transition: background-color 0.3s, transform 0.2s;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-}
-
-.grid-item:hover {
-    background-color: #e9ecef;
-    transform: translateY(-2px);
-}
-
-.item-icon {
-    font-size: 20px;
-    width: 25px;
-    text-align: center;
-    color: #868e96;
-}
-
 /* --- Hộp thông tin IP bên phải --- */
 .info-box-ip {
     background-color: #f8f9fa;
@@ -112,65 +6,45 @@ body {
     padding: 20px;
 }
 
+/* THAY ĐỔI BẮT ĐẦU TỪ ĐÂY */
+
 .tabs {
     display: flex;
-    border-bottom: 1px solid #dee2e6;
-    margin-bottom: 20px;
+    /* Chỉ giữ lại đường viền dưới để tạo ranh giới với nội dung */
+    border-bottom: 1px solid #dee2e6; 
 }
 
 .tab {
     padding: 10px 20px;
     cursor: pointer;
     background: none;
-    border: none;
+    
+    /* Bỏ hết các đường viền riêng của từng tab */
+    border: none; 
+    border-bottom: 3px solid transparent; /* Chuẩn bị cho hiệu ứng gạch chân */
+    
     font-size: 16px;
     font-weight: 500;
-    color: #868e96;
-    border-bottom: 3px solid transparent;
+    color: #868e96; /* Màu chữ cho tab không được chọn */
+    
+    /* Hiệu ứng chuyển động mượt mà */
     transition: color 0.3s, border-color 0.3s;
+    margin-bottom: -1px; /* Bí quyết để gạch chân của tab active đè lên viền chung */
+}
+
+.tab:hover {
+    color: #495057; /* Chữ đậm màu hơn khi di chuột vào */
 }
 
 .tab.active {
-    color: #495057;
-    border-bottom-color: #c8a97e;
+    color: #495057; /* Màu chữ cho tab được chọn */
+    font-weight: 700; /* In đậm chữ */
+    border-bottom-color: #c8a97e; /* Gạch chân màu nâu vàng nổi bật */
 }
+
+/* KẾT THÚC THAY ĐỔI */
 
 .ip-content {
-    display: none; /* Ẩn tất cả nội dung IP */
-}
-
-.ip-content.active-content {
-    display: block; /* Chỉ hiện nội dung của tab được chọn */
-}
-
-.ip-title {
-    font-size: 14px;
-    color: #868e96;
-    margin-bottom: 8px;
-}
-
-.ip-address {
-    font-size: 18px;
-    font-weight: 500;
-    background-color: #fff;
-    padding: 12px 15px;
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    word-break: break-all;
-}
-
-.pe-container .pe-item:not(:last-child) {
-    margin-bottom: 15px;
-}
-
-/* --- Footer --- */
-.footer {
-    text-align: center;
-    padding: 20px;
-    font-size: 14px;
-    color: #868e96;
-    border-top: 1px solid #eee;
+    display: none;
+    padding-top: 20px; /* Thêm khoảng cách với phần tab ở trên */
 }
