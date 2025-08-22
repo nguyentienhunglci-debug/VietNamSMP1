@@ -100,14 +100,14 @@
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
                     <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
                         <span class="text-lg md:text-xl font-mono">IP: <span id="server-ip">vietnamsmp.fun</span></span>
-                        <button onclick="copyToClipboard('play.vnsmp.fun', 'IP')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép</button>
+                        <button onclick="copyToClipboard('vietnamsmp.fun', 'IP')" class="btn-minecraft text-white font-bold py-2 px-4 rounded-md">Sao chép</button>
                     </div>
                     <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
                         <span class="text-lg md:text-xl font-mono">Port: <span id="server-port">25144</span></span>
-                        <button onclick="copyToClipboard('25144', 'Port')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép</button>
+                        <button onclick="copyToClipboard('25144', 'Port')" class="btn-minecraft text-white font-bold py-2 px-4 rounded-md">Sao chép</button>
                     </div>
                 </div>
-                <p class="text-lg mt-4">1.20 đến 1.21.4</p>
+                <p class="text-lg mt-4">Phiên bản: <span class="font-bold text-yellow-400">1.20 - 1.21.4</span></p>
             </section>
             
             <!-- Announcements Section -->
@@ -115,19 +115,19 @@
                 <h2 class="text-4xl font-heading text-center mb-8">Thông Báo Mới Nhất</h2>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
-                        <h3 class="text-xl font-bold text-amber-400 mb-2">Sự Kiện X2 Nạp vào 2/9/2025</h3>
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Sự Kiện X2 Nạp (2/9 - 10/9)</h3>
                         <p class="text-gray-400 text-sm mb-4">22/08/2025</p>
-                        <p class="text-gray-300">Khi nạp tiền vào ngày 2/9/2025 sẽ được x2 nạp đến 10/9/2025.</p>
+                        <p class="text-gray-300">Nhân dịp lễ, server khuyến mãi X2 giá trị nạp thẻ từ ngày 02/09 đến hết ngày 10/09/2025.</p>
                     </div>
                     <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
-                        <h3 class="text-xl font-bold text-amber-400 mb-2">Sever sẽ thêm vũ khí  huyển thoại vào những ngày sắp tới./h3>
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Vũ Khí Huyền Thoại Sắp Ra Mắt</h3>
                         <p class="text-gray-400 text-sm mb-4">20/08/2025</p>
-                        <p class="text-gray-300">Sever s</p>
+                        <p class="text-gray-300">Hệ thống vũ khí mới với những chỉ số và kỹ năng đặc biệt sẽ sớm được cập nhật. Hãy chờ đón!</p>
                     </div>
                     <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
-                        <h3 class="text-xl font-bold text-amber-400 mb-2">Bảo Trì Server Định Kỳ</h3>
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Bảo Trì Hàng Ngày</h3>
                         <p class="text-gray-400 text-sm mb-4">15/08/2025</p>
-                        <p class="text-gray-300">Server sẽ tiến hành bảo trì vào 4:00 sáng đến 4:30 hàng ngày.</p>
+                        <p class="text-gray-300">Server sẽ tiến hành bảo trì nhanh từ 4:00 đến 4:30 sáng hàng ngày để đảm bảo sự ổn định.</p>
                     </div>
                 </div>
             </section>
@@ -136,8 +136,8 @@
         <!-- Store Page -->
         <div id="page-store" class="hidden">
             <section class="text-center mb-12">
-                <h1 class="text-5xl md:text-6xl font-heading mb-4">Cửa Hàng Vật Phẩm</h1>
-                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Sở hữu những vật phẩm và đặc quyền độc nhất để nâng cao trải nghiệm của bạn!</p>
+                <h1 class="text-5xl md:text-6xl font-heading mb-4">Cửa Hàng Ranks</h1>
+                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Sở hữu những đặc quyền độc nhất để nâng cao trải nghiệm của bạn!</p>
             </section>
              <div id="store-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
         </div>
@@ -153,7 +153,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-amber-400 mb-2">2. Cấm gian lận dưới mọi hình thức</h2>
-                        <p>Nghiêm cấm sử dụng hack, cheat,Admin phát hiện ban 15 phút đền 1 ngày .</p>
+                        <p>Nghiêm cấm sử dụng hack, cheat. Admin phát hiện sẽ xử phạt từ ban 15 phút đến 1 ngày tùy mức độ.</p>
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-amber-400 mb-2">3. Không lạm dụng lỗi game (Dupe)</h2>
@@ -169,7 +169,6 @@
                 <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="w-24 h-24 mx-auto mb-6">
                 <h1 class="text-5xl md:text-6xl font-heading mb-4">Tham gia cộng đồng Discord!</h1>
                 <p class="text-lg md:text-xl text-gray-300 mb-8">Kết nối với những người chơi khác, nhận thông báo mới nhất và nhận hỗ trợ nhanh nhất từ đội ngũ admin.</p>
-                <!-- UPDATED: Discord Invite Link -->
                 <a href="https://discord.gg/ZpeqXps74N" target="_blank" class="inline-block text-xl font-bold px-10 py-4 rounded-lg btn-minecraft">Tham Gia Ngay</a>
             </section>
         </div>
@@ -195,14 +194,12 @@
                         <!-- Card Top-up -->
                         <div class="bg-gray-900/50 p-4 rounded-lg">
                             <h4 class="font-bold text-lg text-center mb-2">Nạp Thẻ Cào</h4>
-                            <!-- UPDATED: New card image -->
                             <img src="https://i.ibb.co/Cqd4Ttq/im1age.png" alt="Hướng dẫn nạp thẻ" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
                             <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/napthe</code> rồi làm theo hướng dẫn.</p>
                         </div>
                         <!-- Bank Transfer -->
                         <div class="bg-gray-900/50 p-4 rounded-lg">
                             <h4 class="font-bold text-lg text-center mb-2">Chuyển Khoản (Bank/Momo)</h4>
-                             <!-- UPDATED: New bank image -->
                             <img src="https://i.ibb.co/cKywLXwm/image.png" alt="Hướng dẫn nạp bank" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
                              <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/bank &lt;số tiền&gt;</code> để lấy thông tin chuyển khoản.</p>
                         </div>
@@ -225,7 +222,7 @@
 
     <script>
         // --- Dữ liệu Store ---
-        const storeItemsData = [ { name: "Rank VIP", price: 200, image: "https://placehold.co/300x300/fbbf24/ffffff?text=VIP", description: "Tag [VIP] đặc biệt. Thời hạn: 2 tuần." }, { name: "Rank VIP+", price: 40, image: "https://placehold.co/300x300/f59e0b/ffffff?text=VIP%2B", description: "Tag [VIP+], có thể đổi màu tên. Thời hạn: 1 tháng." }, { name: "Rank MVP", price: 80, image: "https://placehold.co/300x300/3b82f6/ffffff?text=MVP", description: "Tag [MVP] xanh dương, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank MVP+", price: 100, image: "https://placehold.co/300x300/22c55e/ffffff?text=MVP%2B", description: "Nâng cấp từ MVP, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ELITE", price: 150, image: "https://placehold.co/300x300/14b8a6/ffffff?text=ELITE", description: "Tag [ELITE] cao cấp, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank LEGENDARY", price: 20, image: "https://placehold.co/300x300/ef4444/ffffff?text=LEGEND", description: "Tag [LEGENDARY] huyền thoại, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank IMMORTAL", price: 250, image: "https://placehold.co/300x300/a855f7/ffffff?text=IMMORTAL", description: "Tag [IMMORTAL] bất tử, /fly tại spawn, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ROYAL", price: 500, image: "https://placehold.co/300x300/facc15/ffffff?text=ROYAL", description: "Quyền năng tối thượng! /fly tại spawn, nhận 5,000 Xu mỗi tuần. Thời hạn: 3 tháng." } ];
+        const storeItemsData = [ { name: "Rank VIP", price: 20000, image: "https://placehold.co/300x300/fbbf24/ffffff?text=VIP", description: "Tag [VIP] đặc biệt. Thời hạn: 2 tuần." }, { name: "Rank VIP+", price: 40000, image: "https://placehold.co/300x300/f59e0b/ffffff?text=VIP%2B", description: "Tag [VIP+], có thể đổi màu tên. Thời hạn: 1 tháng." }, { name: "Rank MVP", price: 80000, image: "https://placehold.co/300x300/3b82f6/ffffff?text=MVP", description: "Tag [MVP] xanh dương, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank MVP+", price: 100000, image: "https://placehold.co/300x300/22c55e/ffffff?text=MVP%2B", description: "Nâng cấp từ MVP, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ELITE", price: 150000, image: "https://placehold.co/300x300/14b8a6/ffffff?text=ELITE", description: "Tag [ELITE] cao cấp, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank LEGENDARY", price: 200000, image: "https://placehold.co/300x300/ef4444/ffffff?text=LEGEND", description: "Tag [LEGENDARY] huyền thoại, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank IMMORTAL", price: 250000, image: "https://placehold.co/300x300/a855f7/ffffff?text=IMMORTAL", description: "Tag [IMMORTAL] bất tử, /fly tại spawn, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ROYAL", price: 500000, image: "https://placehold.co/300x300/facc15/ffffff?text=ROYAL", description: "Quyền năng tối thượng! /fly tại spawn, nhận 5,000 Xu mỗi tuần. Thời hạn: 3 tháng." } ];
         
         // --- Logic trang web ---
         function showPage(pageId) {
@@ -236,18 +233,13 @@
             window.scrollTo(0, 0);
         }
 
-        // UPDATED: Universal copy function
         function copyToClipboard(text, type) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            try { 
-                document.execCommand('copy'); 
-                showToast(`Đã sao chép ${type}!`);
-            } catch (err) { 
-                showToast(`Sao chép ${type} thất bại!`, true);
-            }
+            try { document.execCommand('copy'); showToast(`Đã sao chép ${type}!`); } 
+            catch (err) { showToast(`Sao chép ${type} thất bại!`, true); }
             document.body.removeChild(textArea);
         }
 
@@ -310,19 +302,5 @@
             animateParticles();
         });
     </script>
-<!-- Start of LiveChat (www.livechat.com) code -->
-<script>
-    window.__lc = window.__lc || {};
-    window.__lc.license = 19272136;
-    window.__lc.integration_name = "manual_channels";
-    window.__lc.product_name = "livechat";
-    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-</script>
-<noscript><a href="https://www.livechat.com/chat-with/19272136/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
-<!-- End of LiveChat code -->
 </body>
 </html>
-
-
-
-
