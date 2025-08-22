@@ -3,132 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIETNAMSMP</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <link rel="stylesheet" href="style.css">
-
+    <title>VNSMP - Trang Chủ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('https://i.pinimg.com/originals/a1/29/82/a129824501b4387d85dec10536253c5e.gif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        /* UPDATED: Changed font from pixel to normal bold */
+        .font-heading { 
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .backdrop-blur-md { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .bg-opacity-70 { background-color: rgba(31, 41, 55, 0.7); }
+        .bg-opacity-80 { background-color: rgba(17, 24, 39, 0.8); }
+        .nav-link { transition: all 0.3s ease; position: relative; padding-bottom: 4px; }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%; transform: translateX(-50%); background-color: #f59e0b; transition: width 0.3s ease; }
+        .nav-link.active::after, .nav-link:hover::after { width: 100%; }
+        /* UPDATED: Button color changed to yellow/amber */
+        .btn-minecraft { 
+            background-color: #f59e0b; /* amber-500 */
+            border-bottom: 4px solid #b45309; /* amber-700 */
+            color: white;
+            transition: all 0.1s ease-in-out;
+        }
+        .btn-minecraft:hover { 
+            transform: translateY(-2px); 
+            border-bottom-width: 6px; 
+            filter: brightness(1.1);
+        }
+        .btn-minecraft:active { 
+            transform: translateY(2px); 
+            border-bottom-width: 2px; 
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #d97706; }
+        #particle-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        .floating-logo { animation: float 4s ease-in-out infinite; }
+    </style>
 </head>
-<body>
-<div class="container">
-    <header class="header">
-        <div class="header-left">
-            <div class="logo">
-                <img src="https://cdn.discordapp.com/attachments/1384903646877319178/1407862431635734709/4E5CEF1D-A69B-49E2-8205-A5B729D90D01201-Photoroom_2.png?ex=68a7a590&is=68a65410&hm=86ebebff70c603615866a1ee2a251eb7740675a9ae48682880f9cf4e7f724df3&" alt="VietnamSMP Logo">
+<body class="bg-gray-900 text-white">
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="bg-gray-900/50 backdrop-blur-md sticky top-0 z-50 shadow-lg shadow-amber-500/10">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-6">
+                <a href="#" onclick="showPage('home')">
+                    <img src="https://cdn.discordapp.com/attachments/1384903646877319178/1408458671427551406/4E5CEF1D-A69B-4E92-8205-A5B729D90D01201-Photoroom_1.png?ex=663f25c7&is=663dd447&hm=55734279585641151670989f66085a8553d10076a0a030f81d5964954483863d&" alt="Server Logo" class="h-14 w-auto">
+                </a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="#" title="Facebook" class="text-gray-400 hover:text-white transition-colors">
+                        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4,2H20A2,2 0 0,1 22,4V20A2,2 0 0,1 20,22H4A2,2 0 0,1 2,20V4A2,2 0 0,1 4,2M6,6V10H10V12H8V18H10V16H14V18H16V12H14V10H18V6H14V10H10V6H6Z"></path></svg>
+                    </a>
+                    <a href="#" title="Discord" onclick="showPage('discord')" class="text-gray-400 hover:text-white transition-colors">
+                         <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M189.5 20h-134C44.2 20 35 29.2 35 40.6v135.2c0 11.4 9.2 20.6 20.5 20.6h113.4l-5.3-18.5 12.8 11.9 12.1 11.2 21.5 19V40.6c0-11.4-9.2-20.6-20.5-20.6zm-38.6 130.6s-3.6-4.3-6.6-8.1c13.1-3.7 18.1-11.9 18.1-11.9-4.1 2.7-8 4.6-11.5 5.9-5 2.1-9.8 3.5-14.5 4.3-9.6 1.8-18.4 1.3-25.9-.1-5.7-1.1-10.6-2.7-14.7-4.3-2.3-.9-4.8-2-7.3-3.4-.3-.2-.6-.3-.9-.5-.2-.1-.3-.2-.4-.3-1.8-1-2.8-1.7-2.8-1.7s4.8 8 17.5 11.8c-3 3.8-6.7 8.3-6.7 8.3-22.1-.7-30.5-15.2-30.5-15.2 0-32.2 14.4-58.3 14.4-58.3 14.4-10.8 28.1-10.5 28.1-10.5l1 1.2c-18 5.2-26.3 13.1-26.3 13.1s2.2-1.2 5.9-2.9c10.7-4.7 19.2-6 22.7-6.3.6-.1 1.1-.2 1.7-.2 6.1-.8 13-1 20.2-.2 9.5 1.1 19.7 3.9 30.1 9.6 0 0-7.9-7.5-24.9-12.7l1.4-1.6s13.7-.3 28.1 10.5c0 0 14.4 26.1 14.4 58.3 0 0-8.5 14.5-30.6 15.2z"></path></svg>
+                    </a>
+                </div>
             </div>
-            <h1 class="server-title">VIETNAMSMP</h1>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" id="nav-home" class="nav-link active" onclick="showPage('home')">Trang Chủ</a>
+                <a href="#" id="nav-store" class="nav-link" onclick="showPage('store')">Cửa Hàng</a>
+                <a href="#" id="nav-rules" class="nav-link" onclick="showPage('rules')">Quy Tắc</a>
+                <a href="#" id="nav-discord" class="nav-link" onclick="showPage('discord')">Discord</a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-white focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#" class="block py-2 text-lg" onclick="showPage('home'); closeMenu();">Trang Chủ</a>
+            <a href="#" class="block py-2 text-lg" onclick="showPage('store'); closeMenu();">Cửa Hàng</a>
+            <a href="#" class="block py-2 text-lg" onclick="showPage('rules'); closeMenu();">Quy Tắc</a>
+            <a href="#" class="block py-2 text-lg" onclick="showPage('discord'); closeMenu();">Discord</a>
         </div>
     </header>
 
-    <main class="main-content">
-        <div class="left-section">
-            <div class="button-grid">
-                <a href="#" class="grid-item" id="support-btn">
-                    <div class="item-icon"><i class="fas fa-envelope"></i></div>
-                    <span class="item-text">Hỗ trợ</span>
-                </a>
-                <a href="https://discord.gg/BsTBC3dqFw" target="_blank" class="grid-item">
-                    <div class="item-icon"><i class="fab fa-discord"></i></div>
-                    <span class="item-text">Discord</span>
-                </a>
-                <a href="#" class="grid-item" id="how-to-join-btn">
-                    <div class="item-icon"><i class="fas fa-book"></i></div>
-                    <span class="item-text">Cách vào</span>
-                </a>
-                <a href="news.html" class="grid-item">
-                    <div class="item-icon"><i class="fas fa-newspaper"></i></div>
-                    <span class="item-text">Tin tức</span>
-                </a>
-            </div>
+    <main class="container mx-auto px-6 py-12">
+        <!-- Home Page -->
+        <div id="page-home">
+            <section class="text-center bg-gray-800 bg-opacity-70 backdrop-blur-md p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-700">
+                <!-- UPDATED: Replaced image with styled text -->
+                <h1 class="text-5xl md:text-7xl font-heading mb-4 floating-logo text-amber-400">Chào Mừng Tới VNSMP!</h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">Khám phá thế giới Minecraft đầy phiêu lưu, xây dựng, chiến đấu và kết nối cùng cộng đồng game thủ Việt Nam!</p>
+                <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
+                    <span id="server-ip" class="text-xl md:text-2xl font-mono">play.vnsmp.fun</span>
+                    <button onclick="copyIP()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép IP</button>
+                </div>
+                <div class="text-emerald-400 mt-2 h-6"></div>
+                <p class="text-lg mt-4">Người chơi online: <span class="font-bold text-yellow-400">69</span> / 100</p>
+            </section>
+            
+            <!-- Announcements Section -->
+            <section class="mt-12">
+                <h2 class="text-4xl font-heading text-center mb-8">Thông Báo Mới Nhất</h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Sự Kiện Mùa Hè Bùng Nổ!</h3>
+                        <p class="text-gray-400 text-sm mb-4">22/08/2025</p>
+                        <p class="text-gray-300">Tham gia ngay sự kiện xây dựng lâu đài cát và nhận những phần thưởng độc quyền.</p>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Cập Nhật Cửa Hàng</h3>
+                        <p class="text-gray-400 text-sm mb-4">20/08/2025</p>
+                        <p class="text-gray-300">Các rank mới đã được thêm vào cửa hàng. Khám phá ngay để sở hữu sức mạnh vượt trội!</p>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-6 rounded-xl shadow-lg border border-gray-700 hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-1">
+                        <h3 class="text-xl font-bold text-amber-400 mb-2">Bảo Trì Server Định Kỳ</h3>
+                        <p class="text-gray-400 text-sm mb-4">15/08/2025</p>
+                        <p class="text-gray-300">Server sẽ tiến hành bảo trì vào 5:00 sáng thứ 7 hàng tuần để nâng cấp hệ thống.</p>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <div class="right-section">
-            <div class="info-box-ip">
-                <div class="tabs">
-                    <div class="tab active" data-target="pc-content">Máy tính (PC)</div>
-                    <div class="tab" data-target="pe-content">Điện thoại (PE)</div>
-                </div>
+        <!-- Store Page -->
+        <div id="page-store" class="hidden">
+            <section class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-heading mb-4">Cửa Hàng Vật Phẩm</h1>
+                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Sở hữu những vật phẩm và đặc quyền độc nhất để nâng cao trải nghiệm của bạn!</p>
+            </section>
+             <div id="store-items" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+        </div>
 
-                <div id="pc-content" class="ip-content active-content">
-                    <div class="ip-container">
-                        <div class="ip-title">Địa chỉ máy chủ</div>
-                        <span class="ip-address" id="ip-pc">
-                            IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
-                        </span>
+        <!-- Rules Page -->
+        <div id="page-rules" class="hidden">
+            <section class="bg-gray-800 bg-opacity-70 backdrop-blur-md p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-700 max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-heading text-center mb-8">Quy Tắc Server</h1>
+                 <div class="space-y-6 text-gray-300 text-lg">
+                    <div>
+                        <h2 class="text-2xl font-bold text-amber-400 mb-2">1. Tôn trọng tất cả mọi người</h2>
+                        <p>Không sử dụng ngôn ngữ xúc phạm, phân biệt đối xử, gây hấn với người chơi khác. Hãy xây dựng một cộng đồng văn minh.</p>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-amber-400 mb-2">2. Cấm gian lận dưới mọi hình thức</h2>
+                        <p>Nghiêm cấm sử dụng hack, cheat, auto-click, X-ray hoặc bất kỳ phần mềm thứ ba nào để trục lợi. Phát hiện sẽ bị cấm vĩnh viễn.</p>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-amber-400 mb-2">3. Không lạm dụng lỗi game (Bug)</h2>
+                        <p>Nếu phát hiện lỗi game, vui lòng báo cáo cho Admin. Việc cố tình lợi dụng lỗi để trục lợi cá nhân sẽ bị xử phạt nặng.</p>
                     </div>
                 </div>
+            </section>
+        </div>
 
-                <div id="pe-content" class="ip-content">
-                    <div class="pe-container">
-                        <div class="pe-item">
-                            <div class="ip-title">Địa chỉ IP</div>
-                            <span class="ip-address" id="ip-pe">
-                                IP: vietnamsmp.fun <i class="fa-solid fa-clone"></i>
-                            </span>
-                        </div>
-                        <div class="pe-item">
-                            <div class="ip-title">Port</div>
-                            <span class="ip-address" id="port-pe">
-                                Port: 27191 <i class="fa-solid fa-clone"></i>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Discord Page -->
+        <div id="page-discord" class="hidden">
+             <section class="text-center bg-gray-800 bg-opacity-70 backdrop-blur-md p-8 md:p-16 rounded-2xl shadow-2xl border border-gray-700 max-w-3xl mx-auto">
+                <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="w-24 h-24 mx-auto mb-6">
+                <h1 class="text-5xl md:text-6xl font-heading mb-4">Tham gia cộng đồng Discord!</h1>
+                <p class="text-lg md:text-xl text-gray-300 mb-8">Kết nối với những người chơi khác, nhận thông báo mới nhất và nhận hỗ trợ nhanh nhất từ đội ngũ admin.</p>
+                <a href="https://discord.gg/your-invite-code" target="_blank" class="inline-block text-xl font-bold px-10 py-4 rounded-lg btn-minecraft">Tham Gia Ngay</a>
+            </section>
         </div>
     </main>
 
-    <footer class="footer">
-        <div class="footer-info">
-            <p>Phiên bản: 1.20 đến 1.21.4</p>
-        </div>
+    <footer class="bg-gray-900 bg-opacity-80 mt-16 py-6 text-center text-gray-400">
+        <p>&copy; 2025 VNSMP. Mọi quyền được bảo lưu.</p>
+        <p>Trang web này không liên kết với Mojang AB.</p>
     </footer>
-</div>
 
-<div id="how-to-join-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h2>Hướng dẫn tham gia</h2>
-        <div class="modal-tabs">
-            <div class="modal-tab active" data-target="register-content">Đăng kí</div>
-            <div class="modal-tab" data-target="login-content">Đăng nhập</div>
-            <div class="modal-tab" data-target="password-content">Đổi mật khẩu</div>
-        </div>
-        <div class="modal-body">
-            <div id="register-content" class="modal-tab-content active">
-                <h3>Lệnh đăng kí</h3>
-                <p>Để tạo tài khoản, bạn vào server và gõ lệnh sau:</p>
-                <code>/register &lt;mật khẩu&gt; &lt;nhập lại mật khẩu&gt;</code>
-                <p><strong>Ví dụ:</strong> <code>/register 123456 123456</code></p>
+    <!-- How-to-Buy Modal -->
+    <div id="purchase-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 w-full max-w-2xl relative border border-gray-600">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
+            <h2 class="text-3xl font-heading mb-6 text-center" id="modal-item-name">Hướng Dẫn Mua Vật Phẩm</h2>
+            
+            <div class="space-y-6">
+                <!-- Step 1: Top Up -->
+                <div>
+                    <h3 class="text-xl font-bold text-amber-400 mb-3">Bước 1: Nạp Xu vào Server</h3>
+                    <p class="text-center bg-yellow-500/20 text-yellow-300 rounded-md py-2 mb-4">Tỷ lệ quy đổi: <span class="font-bold">1,000 VNĐ = 1 Xu</span></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Card Top-up -->
+                        <div class="bg-gray-900/50 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg text-center mb-2">Nạp Thẻ Cào</h4>
+                            <img src="https://i.imgur.com/K3p82gN.png" alt="Hướng dẫn nạp thẻ" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
+                            <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/napthe</code> rồi làm theo hướng dẫn.</p>
+                        </div>
+                        <!-- Bank Transfer -->
+                        <div class="bg-gray-900/50 p-4 rounded-lg">
+                            <h4 class="font-bold text-lg text-center mb-2">Chuyển Khoản (Bank/Momo)</h4>
+                            <img src="https://i.imgur.com/5Xh5J16.png" alt="Hướng dẫn nạp bank" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
+                             <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/bank &lt;số tiền&gt;</code> để lấy thông tin chuyển khoản.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Purchase -->
+                <div>
+                    <h3 class="text-xl font-bold text-amber-400 mb-3">Bước 2: Mua Vật Phẩm trong Game</h3>
+                    <div class="bg-gray-900/50 p-4 rounded-lg text-center">
+                        <p class="text-gray-300">Sau khi đã có đủ Xu trong tài khoản, bạn hãy vào game và sử dụng lệnh <code class="bg-gray-700 px-2 py-1 rounded">/rank</code> hoặc <code class="bg-gray-700 px-2 py-1 rounded">/mua</code> để hoàn tất giao dịch.</p>
+                    </div>
+                </div>
             </div>
-            <div id="login-content" class="modal-tab-content">
-                <h3>Lệnh đăng nhập</h3>
-                <p>Để đăng nhập vào tài khoản đã tạo, bạn gõ lệnh sau:</p>
-                <code>/login &lt;mật khẩu&gt;</code>
-                <p><strong>Ví dụ:</strong> <code>/login 123456</code></p>
-            </div>
-            <div id="password-content" class="modal-tab-content">
-                <h3>Lệnh đổi mật khẩu</h3>
-                <p>Để thay đổi mật khẩu, bạn gõ lệnh sau:</p>
-                <code>/changepassword &lt;mật khẩu cũ&gt; &lt;mật khẩu mới&gt;</code>
-                <p><strong>Ví dụ:</strong> <code>/changepassword 123456 654321</code></p>
-            </div>
+            <button onclick="closeModal()" class="w-full mt-8 text-lg font-bold px-6 py-3 rounded-lg btn-minecraft">Đã Hiểu</button>
         </div>
     </div>
-</div>
+    
+    <div id="toast-notification" class="hidden fixed bottom-5 right-5 bg-emerald-500 text-white py-3 px-6 rounded-lg shadow-lg"></div>
 
-<script src="script.js" defer></script>
+    <script>
+        // --- Dữ liệu Store ---
+        const storeItemsData = [ { name: "Rank VIP", price: 20000, image: "https://placehold.co/300x300/fbbf24/ffffff?text=VIP", description: "Tag [VIP] đặc biệt. Thời hạn: 2 tuần." }, { name: "Rank VIP+", price: 40000, image: "https://placehold.co/300x300/f59e0b/ffffff?text=VIP%2B", description: "Tag [VIP+], có thể đổi màu tên. Thời hạn: 1 tháng." }, { name: "Rank MVP", price: 80000, image: "https://placehold.co/300x300/3b82f6/ffffff?text=MVP", description: "Tag [MVP] xanh dương, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank MVP+", price: 100000, image: "https://placehold.co/300x300/22c55e/ffffff?text=MVP%2B", description: "Nâng cấp từ MVP, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ELITE", price: 150000, image: "https://placehold.co/300x300/14b8a6/ffffff?text=ELITE", description: "Tag [ELITE] cao cấp, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank LEGENDARY", price: 200000, image: "https://placehold.co/300x300/ef4444/ffffff?text=LEGEND", description: "Tag [LEGENDARY] huyền thoại, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank IMMORTAL", price: 250000, image: "https://placehold.co/300x300/a855f7/ffffff?text=IMMORTAL", description: "Tag [IMMORTAL] bất tử, /fly tại spawn, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ROYAL", price: 500000, image: "https://placehold.co/300x300/facc15/ffffff?text=ROYAL", description: "Quyền năng tối thượng! /fly tại spawn, nhận 5,000 Xu mỗi tuần. Thời hạn: 3 tháng." } ];
+        
+        // --- Logic trang web ---
+        function showPage(pageId) {
+            document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(`nav-${pageId}`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
 
-<script>
-    window.__lc = window.__lc || {};
-    window.__lc.license = 19272136;
-    window.__lc.integration_name = "manual_channels";
-    window.__lc.product_name = "livechat";
-    ;(function(n,t,c){function i(n){return e._h?e._h.apply(null,n):e._q.push(n)}var e={_q:[],_h:null,_v:"2.0",on:function(){i(["on",c.call(arguments)])},once:function(){i(["once",c.call(arguments)])},off:function(){i(["off",c.call(arguments)])},get:function(){if(!e._h)throw new Error("[LiveChatWidget] You can't use getters before load.");return i(["get",c.call(arguments)])},call:function(){i(["call",c.call(arguments)])},init:function(){var n=t.createElement("script");n.async=!0,n.type="text/javascript",n.src="https://cdn.livechatinc.com/tracking.js",t.head.appendChild(n)}};!n.__lc.asyncInit&&e.init(),n.LiveChatWidget=n.LiveChatWidget||e}(window,document,[].slice))
-</script>
-<noscript><a href="https://www.livechat.com/chat-with/19272136/" rel="nofollow">Chat with us</a>, powered by <a href="https://www.livechat.com/?welcome" rel="noopener nofollow" target="_blank">LiveChat</a></noscript>
+        function copyIP() {
+            const ip = document.getElementById('server-ip').innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = ip;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try { document.execCommand('copy'); showToast('Đã sao chép IP!'); } 
+            catch (err) { showToast('Sao chép thất bại!', true); }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast-notification');
+            toast.textContent = message;
+            toast.className = 'fixed bottom-5 right-5 text-white py-3 px-6 rounded-lg shadow-lg';
+            toast.classList.add(isError ? 'bg-red-500' : 'bg-emerald-500');
+            setTimeout(() => { toast.classList.add('hidden'); }, 3000);
+        }
+
+        function renderStoreItems() {
+            const container = document.getElementById('store-items');
+            container.innerHTML = storeItemsData.map((item, index) => `
+                <div class="bg-gray-800/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-gray-700 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-amber-500/30">
+                    <img class="w-full h-48 object-cover" src="${item.image}" alt="${item.name}" onerror="this.onerror=null;this.src='https://placehold.co/300x300/1f2937/ffffff?text=Error';">
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-white">${item.name}</h3>
+                        <p class="text-gray-400 mt-1 h-12">${item.description}</p>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="text-lg font-bold text-yellow-400">${(item.price / 1000).toLocaleString('vi-VN')}k Xu</span>
+                            <button onclick="openModal(${index})" class="font-bold px-4 py-2 rounded-lg btn-minecraft text-sm">Xem cách mua</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        const modal = document.getElementById('purchase-modal');
+        
+        function openModal(itemIndex) {
+            const item = storeItemsData[itemIndex];
+            document.getElementById('modal-item-name').innerText = `Hướng Dẫn Mua: ${item.name}`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() { modal.classList.add('hidden'); }
+
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        function closeMenu() { mobileMenu.classList.add('hidden'); }
+
+        // --- Particle Effect Logic ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particlesArray;
+        function setupCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 1 - 0.5; this.speedY = Math.random() * 1 - 0.5; } update() { if (this.x > canvas.width || this.x < 0) this.speedX = -this.speedX; if (this.y > canvas.height || this.y < 0) this.speedY = -this.speedY; this.x += this.speedX; this.y += this.speedY; } draw() { ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.fillRect(this.x, this.y, this.size, this.size); } }
+        function initParticles() { particlesArray = []; let n = (canvas.height * canvas.width) / 9000; for (let i = 0; i < n; i++) particlesArray.push(new Particle()); }
+        function animateParticles() { ctx.clearRect(0, 0, canvas.width, canvas.height); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); particlesArray[i].draw(); } requestAnimationFrame(animateParticles); }
+        window.addEventListener('resize', () => { setupCanvas(); initParticles(); });
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStoreItems();
+            showPage('home');
+            setupCanvas();
+            initParticles();
+            animateParticles();
+        });
+    </script>
 </body>
 </html>
-
-
