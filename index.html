@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VNSMP - Trang Chủ</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/C5zVXnLB/4-E5-CEF1-D-A69-B-49-E2-8205-A5-B729-D90-D01201-Photoroom-1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,12 +60,11 @@
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-6">
                 <a href="#" onclick="showPage('home')">
-                    <!-- FIXED Logo URL -->
                     <img src="https://i.ibb.co/C5zVXnLB/4-E5-CEF1-D-A69-B-49-E2-8205-A5-B729-D90-D01201-Photoroom-1.png" alt="Server Logo" class="h-14 w-auto">
                 </a>
                 <div class="hidden md:flex items-center space-x-4">
                     <a href="#" title="Facebook" class="text-gray-400 hover:text-white transition-colors">
-                        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"></svg>
+                        <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M4,2H20A2,2 0 0,1 22,4V20A2,2 0 0,1 20,22H4A2,2 0 0,1 2,20V4A2,2 0 0,1 4,2M6,6V10H10V12H8V18H10V16H14V18H16V12H14V10H18V6H14V10H10V6H6Z"></path></svg>
                     </a>
                     <a href="#" title="Discord" onclick="showPage('discord')" class="text-gray-400 hover:text-white transition-colors">
                          <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor"><path d="M189.5 20h-134C44.2 20 35 29.2 35 40.6v135.2c0 11.4 9.2 20.6 20.5 20.6h113.4l-5.3-18.5 12.8 11.9 12.1 11.2 21.5 19V40.6c0-11.4-9.2-20.6-20.5-20.6zm-38.6 130.6s-3.6-4.3-6.6-8.1c13.1-3.7 18.1-11.9 18.1-11.9-4.1 2.7-8 4.6-11.5 5.9-5 2.1-9.8 3.5-14.5 4.3-9.6 1.8-18.4 1.3-25.9-.1-5.7-1.1-10.6-2.7-14.7-4.3-2.3-.9-4.8-2-7.3-3.4-.3-.2-.6-.3-.9-.5-.2-.1-.3-.2-.4-.3-1.8-1-2.8-1.7-2.8-1.7s4.8 8 17.5 11.8c-3 3.8-6.7 8.3-6.7 8.3-22.1-.7-30.5-15.2-30.5-15.2 0-32.2 14.4-58.3 14.4-58.3 14.4-10.8 28.1-10.5 28.1-10.5l1 1.2c-18 5.2-26.3 13.1-26.3 13.1s2.2-1.2 5.9-2.9c10.7-4.7 19.2-6 22.7-6.3.6-.1 1.1-.2 1.7-.2 6.1-.8 13-1 20.2-.2 9.5 1.1 19.7 3.9 30.1 9.6 0 0-7.9-7.5-24.9-12.7l1.4-1.6s13.7-.3 28.1 10.5c0 0 14.4 26.1 14.4 58.3 0 0-8.5 14.5-30.6 15.2z"></path></svg>
@@ -95,14 +95,18 @@
         <!-- Home Page -->
         <div id="page-home">
             <section class="text-center bg-gray-800 bg-opacity-70 backdrop-blur-md p-8 md:p-12 rounded-2xl shadow-2xl border border-gray-700">
-                <!-- FIXED Logo URL -->
                 <img src="https://i.ibb.co/C5zVXnLB/4-E5-CEF1-D-A69-B-49-E2-8205-A5-B729-D90-D01201-Photoroom-1.png" alt="VNSMP Logo" class="h-20 md:h-24 w-auto mx-auto mb-4 floating-logo">
                 <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-3xl mx-auto">Khám phá thế giới Minecraft đầy phiêu lưu, xây dựng, chiến đấu và kết nối cùng cộng đồng game thủ Việt Nam!</p>
-                <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
-                    <span id="server-ip" class="text-xl md:text-2xl font-mono">play.vnsmp.fun</span>
-                    <button onclick="copyIP()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép IP</button>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                    <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
+                        <span class="text-lg md:text-xl font-mono">IP: <span id="server-ip">play.vnsmp.fun</span></span>
+                        <button onclick="copyToClipboard('play.vnsmp.fun', 'IP')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép</button>
+                    </div>
+                    <div class="bg-gray-900/50 inline-flex items-center space-x-4 p-4 rounded-lg border border-amber-500">
+                        <span class="text-lg md:text-xl font-mono">Port: <span id="server-port">25144</span></span>
+                        <button onclick="copyToClipboard('25144', 'Port')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-4 rounded-md transition duration-300">Sao chép</button>
+                    </div>
                 </div>
-                <div class="text-emerald-400 mt-2 h-6"></div>
                 <p class="text-lg mt-4">Người chơi online: <span class="font-bold text-yellow-400">69</span> / 100</p>
             </section>
             
@@ -149,7 +153,7 @@
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-amber-400 mb-2">2. Cấm gian lận dưới mọi hình thức</h2>
-                        <p>Nghiêm cấm sử dụng hack, cheat, auto-click, X-ray hoặcất kỳ phần mềm thứ ba nào để trục lợi. Phát hiện sẽ bị cấm vĩnh viễn.</p>
+                        <p>Nghiêm cấm sử dụng hack, cheat, auto-click, X-ray hoặc bất kỳ phần mềm thứ ba nào để trục lợi. Phát hiện sẽ bị cấm vĩnh viễn.</p>
                     </div>
                     <div>
                         <h2 class="text-2xl font-bold text-amber-400 mb-2">3. Không lạm dụng lỗi game (Bug)</h2>
@@ -165,7 +169,8 @@
                 <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="w-24 h-24 mx-auto mb-6">
                 <h1 class="text-5xl md:text-6xl font-heading mb-4">Tham gia cộng đồng Discord!</h1>
                 <p class="text-lg md:text-xl text-gray-300 mb-8">Kết nối với những người chơi khác, nhận thông báo mới nhất và nhận hỗ trợ nhanh nhất từ đội ngũ admin.</p>
-                <a href="https://discord.gg/AgDsDYs6CD" target="_blank" class="inline-block text-xl font-bold px-10 py-4 rounded-lg btn-minecraft">Tham Gia Ngay</a>
+                <!-- UPDATED: Discord Invite Link -->
+                <a href="https://discord.gg/ZpeqXps74N" target="_blank" class="inline-block text-xl font-bold px-10 py-4 rounded-lg btn-minecraft">Tham Gia Ngay</a>
             </section>
         </div>
     </main>
@@ -190,13 +195,15 @@
                         <!-- Card Top-up -->
                         <div class="bg-gray-900/50 p-4 rounded-lg">
                             <h4 class="font-bold text-lg text-center mb-2">Nạp Thẻ Cào</h4>
-                            <img src="https://i.imgur.com/K3p82gN.png" alt="Hướng dẫn nạp thẻ" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
+                            <!-- UPDATED: New card image -->
+                            <img src="https://i.ibb.co/Cqd4Ttq/im1age.png" alt="Hướng dẫn nạp thẻ" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
                             <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/napthe</code> rồi làm theo hướng dẫn.</p>
                         </div>
                         <!-- Bank Transfer -->
                         <div class="bg-gray-900/50 p-4 rounded-lg">
                             <h4 class="font-bold text-lg text-center mb-2">Chuyển Khoản (Bank/Momo)</h4>
-                            <img src="https://i.imgur.com/5Xh5J16.png" alt="Hướng dẫn nạp bank" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
+                             <!-- UPDATED: New bank image -->
+                            <img src="https://i.ibb.co/cKywLXwm/image.png" alt="Hướng dẫn nạp bank" class="rounded-md mx-auto mb-2 border-2 border-gray-600">
                              <p class="text-center text-gray-300">Vào game và gõ lệnh <code class="bg-gray-700 px-2 py-1 rounded">/bank &lt;số tiền&gt;</code> để lấy thông tin chuyển khoản.</p>
                         </div>
                     </div>
@@ -218,7 +225,7 @@
 
     <script>
         // --- Dữ liệu Store ---
-        const storeItemsData = [ { name: "Rank VIP", price: 20000, image: "https://placehold.co/300x300/fbbf24/ffffff?text=VIP", description: "Tag [VIP] đặc biệt. Thời hạn: 2 tuần." }, { name: "Rank VIP+", price: 40000, image: "https://placehold.co/300x300/f59e0b/ffffff?text=VIP%2B", description: "Tag [VIP+], có thể đổi màu tên. Thời hạn: 1 tháng." }, { name: "Rank MVP", price: 80000, image: "https://placehold.co/300x300/3b82f6/ffffff?text=MVP", description: "Tag [MVP] xanh dương, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank MVP+", price: 100000, image: "https://placehold.co/300x300/22c55e/ffffff?text=MVP%2B", description: "Nâng cấp từ MVP, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank VNSMP", price: 150000, image: "https://placehold.co/300x300/14b8a6/ffffff?text=VNSMP", description: "Tag [VNSMP] cao cấp, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank LEGENDARY", price: 200000, image: "https://placehold.co/300x300/ef4444/ffffff?text=LEGEND", description: "Tag [LEGENDARY] huyền thoại, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank IMMORTAL", price: 250000, image: "https://placehold.co/300x300/a855f7/ffffff?text=IMMORTAL", description: "Tag [IMMORTAL] bất tử, /fly tại spawn, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ROYAL", price: 500000, image: "https://placehold.co/300x300/facc15/ffffff?text=ROYAL", description: "Quyền năng tối thượng! /fly tại spawn, nhận 5,000 Xu mỗi tuần. Thời hạn: 3 tháng." } ];
+        const storeItemsData = [ { name: "Rank VIP", price: 20000, image: "https://placehold.co/300x300/fbbf24/ffffff?text=VIP", description: "Tag [VIP] đặc biệt. Thời hạn: 2 tuần." }, { name: "Rank VIP+", price: 40000, image: "https://placehold.co/300x300/f59e0b/ffffff?text=VIP%2B", description: "Tag [VIP+], có thể đổi màu tên. Thời hạn: 1 tháng." }, { name: "Rank MVP", price: 80000, image: "https://placehold.co/300x300/3b82f6/ffffff?text=MVP", description: "Tag [MVP] xanh dương, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank MVP+", price: 100000, image: "https://placehold.co/300x300/22c55e/ffffff?text=MVP%2B", description: "Nâng cấp từ MVP, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ELITE", price: 150000, image: "https://placehold.co/300x300/14b8a6/ffffff?text=ELITE", description: "Tag [ELITE] cao cấp, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank LEGENDARY", price: 200000, image: "https://placehold.co/300x300/ef4444/ffffff?text=LEGEND", description: "Tag [LEGENDARY] huyền thoại, /feed, 5 sethome. Thời hạn: 2 tháng." }, { name: "Rank IMMORTAL", price: 250000, image: "https://placehold.co/300x300/a855f7/ffffff?text=IMMORTAL", description: "Tag [IMMORTAL] bất tử, /fly tại spawn, /feed, 5 sethome. Thời hạn: 1 tháng." }, { name: "Rank ROYAL", price: 500000, image: "https://placehold.co/300x300/facc15/ffffff?text=ROYAL", description: "Quyền năng tối thượng! /fly tại spawn, nhận 5,000 Xu mỗi tuần. Thời hạn: 3 tháng." } ];
         
         // --- Logic trang web ---
         function showPage(pageId) {
@@ -229,14 +236,18 @@
             window.scrollTo(0, 0);
         }
 
-        function copyIP() {
-            const ip = document.getElementById('server-ip').innerText;
+        // UPDATED: Universal copy function
+        function copyToClipboard(text, type) {
             const textArea = document.createElement("textarea");
-            textArea.value = ip;
+            textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            try { document.execCommand('copy'); showToast('Đã sao chép IP!'); } 
-            catch (err) { showToast('Sao chép thất bại!', true); }
+            try { 
+                document.execCommand('copy'); 
+                showToast(`Đã sao chép ${type}!`);
+            } catch (err) { 
+                showToast(`Sao chép ${type} thất bại!`, true);
+            }
             document.body.removeChild(textArea);
         }
 
@@ -301,6 +312,3 @@
     </script>
 </body>
 </html>
-
-
-
