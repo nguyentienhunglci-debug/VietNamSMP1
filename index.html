@@ -403,6 +403,7 @@
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#" id="nav-home" class="nav-link active" onclick="showPage('home')">Trang Chủ</a>
                 <a href="#" id="nav-store" class="nav-link" onclick="showPage('store')">Cửa Hàng</a>
+                <a href="#" id="nav-password" class="nav-link" onclick="showPage('password')">Đổi Mật Khẩu</a>
                 <a href="#" id="nav-rules" class="nav-link" onclick="showPage('rules')">Quy Tắc</a>
                 <a href="#" id="nav-discord" class="nav-link" onclick="showPage('discord')">Discord</a>
             </div>
@@ -415,6 +416,7 @@
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-gray-900/90 backdrop-blur-md">
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('home'); closeMenu();">Trang Chủ</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('store'); closeMenu();">Cửa Hàng</a>
+            <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('password'); closeMenu();">Đổi Mật Khẩu</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('rules'); closeMenu();">Quy Tắc</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('discord'); closeMenu();">Discord</a>
         </div>
@@ -486,6 +488,91 @@
                         <li>• </li>
                     </ul>
                     <button class="btn-minecraft w-full py-3 font-bold">Mua Ngay</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-password" class="hidden page-transition">
+            <section class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-heading mb-4 glow-text">Đổi Mật Khẩu</h1>
+                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Hướng dẫn thay đổi mật khẩu tài khoản của bạn trong game</p>
+            </section>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="feature-card p-8 md:p-12 mb-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-20 h-20 bg-amber-500 bg-opacity-20 rounded-full mb-4">
+                            <svg class="w-10 h-10 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m0 0a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9a2 2 0 012-2m0 0V7a2 2 0 012-2m3 2h3m-3 0h-3m-3 0h3m-3 0H7"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-bold text-amber-400 mb-4">Lệnh Đổi Mật Khẩu</h2>
+                    </div>
+                    
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-6 mb-6 border border-amber-500/30">
+                        <div class="flex items-center justify-between">
+                            <code class="text-lg md:text-xl font-mono text-amber-300">/changepassword [mật khẩu cũ] [mật khẩu mới]</code>
+                            <button onclick="copyToClipboard('/changepassword ', 'Lệnh')" class="btn-minecraft text-white font-bold py-2 px-4 rounded-md ml-4 flex-shrink-0">Sao chép</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="announcement-card p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-blue-400 font-bold">1</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-blue-400">Bước 1: Vào Game</h3>
+                        </div>
+                        <p class="text-gray-300">Đăng nhập vào server VNSMP với tài khoản hiện tại của bạn.</p>
+                    </div>
+                    
+                    <div class="announcement-card p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-purple-500 bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-purple-400 font-bold">2</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-purple-400">Bước 2: Nhập Lệnh</h3>
+                        </div>
+                        <p class="text-gray-300">Gõ lệnh <code class="text-amber-300">/changepassword</code> theo đúng cú pháp ở trên.</p>
+                    </div>
+                    
+                    <div class="announcement-card p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                                <span class="text-green-400 font-bold">3</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-green-400">Ví Dụ Thực Tế</h3>
+                        </div>
+                        <p class="text-gray-300 mb-3">Nếu mật khẩu cũ là <code class="text-amber-300">123456</code> và muốn đổi thành <code class="text-amber-300">abcdef</code>:</p>
+                        <div class="bg-gray-800 bg-opacity-50 rounded p-3">
+                            <code class="text-amber-300">/changepassword 123456 abcdef</code>
+                        </div>
+                    </div>
+                    
+                    <div class="announcement-card p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-8 h-8 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                                <svg class="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-red-400">Lưu Ý Quan Trọng</h3>
+                        </div>
+                        <ul class="text-gray-300 space-y-2">
+                            <li>• Mật khẩu phân biệt hoa thường</li>
+                            <li>• Không sử dụng dấu cách trong mật khẩu</li>
+                            <li>• Nhớ ghi lại mật khẩu mới</li>
+                            <li>• Đăng xuất và đăng nhập lại để kiểm tra</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="feature-card p-6 mt-8 text-center">
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">Cần Hỗ Trợ?</h3>
+                    <p class="text-gray-300 mb-6">Nếu gặp khó khăn trong việc đổi mật khẩu, hãy liên hệ với đội ngũ hỗ trợ qua Discord!</p>
+                    <a href="https://discord.gg/ZpeqXps74N" target="_blank" class="btn-minecraft inline-block text-white font-bold py-3 px-8 rounded-lg">Liên Hệ Hỗ Trợ</a>
                 </div>
             </div>
         </div>
@@ -805,5 +892,3 @@
 <!-- End of LiveChat code -->
 </body>
 </html>
-
-
