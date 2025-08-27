@@ -402,7 +402,7 @@
             </div>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#" id="nav-home" class="nav-link active" onclick="showPage('home')">Trang Chủ</a>
-                <a href="#" id="nav-store" class="nav-link" onclick="showPage('store')">Cửa Hàng</a>
+                <a href="#" id="nav-store" class="nav-link" onclick="showPage('store')">Top Donate</a>
                 <a href="#" id="nav-password" class="nav-link" onclick="showPage('password')">Đổi Mật Khẩu</a>
                 <a href="#" id="nav-rules" class="nav-link" onclick="showPage('rules')">Quy Tắc</a>
                 <a href="#" id="nav-discord" class="nav-link" onclick="showPage('discord')">Discord</a>
@@ -415,7 +415,7 @@
         </nav>
         <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 bg-gray-900/90 backdrop-blur-md">
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('home'); closeMenu();">Trang Chủ</a>
-            <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('store'); closeMenu();">Cửa Hàng</a>
+            <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('store'); closeMenu();">Top Donate</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('password'); closeMenu();">Đổi Mật Khẩu</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('rules'); closeMenu();">Quy Tắc</a>
             <a href="#" class="block py-2 text-lg interactive-hover" onclick="showPage('discord'); closeMenu();">Discord</a>
@@ -472,22 +472,172 @@
 
         <div id="page-store" class="hidden page-transition">
             <section class="text-center mb-12">
-                <h1 class="text-5xl md:text-6xl font-heading mb-4 glow-text">Cửa Hàng Ranks</h1>
-                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Sở hữu những đặc quyền độc nhất để nâng cao trải nghiệm của bạn!</p>
+                <h1 class="text-5xl md:text-6xl font-heading mb-4 glow-text">🏆 Top Donate</h1>
+                <p class="text-lg text-gray-300 max-w-3xl mx-auto">Những người chơi đã đóng góp nhiều nhất cho server!</p>
             </section>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div class="store-card p-6">
-                    <h3 class="text-2xl font-bold text-purple-400 mb-2">Chưa có</h3>
-                    <p class="text-3xl font-bold text-amber-400 mb-4">200.000 VND</p>
-                    <ul class="text-gray-300 space-y-2 mb-6">
-                        <li>• </li>
-                        <li>• </li>
-                        <li>• </li>
-                        <li>• </li>
-                        <li>• </li>
-                        <li>• </li>
-                    </ul>
-                    <button class="btn-minecraft w-full py-3 font-bold">Mua Ngay</button>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Top 3 podium -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <!-- #2 -->
+                    <div class="store-card p-6 order-2 md:order-1">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-gray-400 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-4xl">🥈</span>
+                            </div>
+                            <div class="text-2xl font-bold text-gray-300 mb-2">#2</div>
+                            <div class="text-xl font-bold text-amber-400 mb-2">PlayerName2</div>
+                            <div class="text-3xl font-bold text-green-400">850,000 VND</div>
+                        </div>
+                    </div>
+                    
+                    <!-- #1 -->
+                    <div class="store-card p-6 order-1 md:order-2 transform scale-105 border-2 border-amber-500">
+                        <div class="text-center">
+                            <div class="w-24 h-24 bg-amber-500 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-5xl">👑</span>
+                            </div>
+                            <div class="text-3xl font-bold text-amber-400 mb-2">#1</div>
+                            <div class="text-2xl font-bold text-amber-300 mb-2">PlayerName1</div>
+                            <div class="text-4xl font-bold text-green-400">1,200,000 VND</div>
+                        </div>
+                    </div>
+                    
+                    <!-- #3 -->
+                    <div class="store-card p-6 order-3">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-orange-600 bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <span class="text-4xl">🥉</span>
+                            </div>
+                            <div class="text-2xl font-bold text-orange-400 mb-2">#3</div>
+                            <div class="text-xl font-bold text-amber-400 mb-2">PlayerName3</div>
+                            <div class="text-3xl font-bold text-green-400">650,000 VND</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top 4-10 List -->
+                <div class="feature-card p-8">
+                    <h2 class="text-3xl font-heading text-center mb-8 glow-text">Top 4 - 10</h2>
+                    <div class="space-y-4">
+                        <!-- #4 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-blue-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-blue-400">#4</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName4</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">520,000 VND</div>
+                        </div>
+                        
+                        <!-- #5 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-purple-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-purple-400">#5</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName5</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">450,000 VND</div>
+                        </div>
+                        
+                        <!-- #6 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-pink-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-pink-400">#6</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName6</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">380,000 VND</div>
+                        </div>
+                        
+                        <!-- #7 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-indigo-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-indigo-400">#7</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName7</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">320,000 VND</div>
+                        </div>
+                        
+                        <!-- #8 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-teal-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-teal-400">#8</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName8</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">280,000 VND</div>
+                        </div>
+                        
+                        <!-- #9 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-red-400">#9</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName9</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">220,000 VND</div>
+                        </div>
+                        
+                        <!-- #10 -->
+                        <div class="announcement-card p-4 flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-12 h-12 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center">
+                                    <span class="text-xl font-bold text-yellow-400">#10</span>
+                                </div>
+                                <div>
+                                    <div class="text-lg font-bold text-white">PlayerName10</div>
+                                    <div class="text-sm text-gray-400">Donate tháng 8</div>
+                                </div>
+                            </div>
+                            <div class="text-xl font-bold text-green-400">180,000 VND</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Info Card -->
+                <div class="feature-card p-6 mt-8 text-center">
+                    <h3 class="text-2xl font-bold text-amber-400 mb-4">🎉 Cảm ơn các bạn!</h3>
+                    <p class="text-gray-300 mb-6">Cảm ơn tất cả những người đã donate để hỗ trợ server. Nhờ có các bạn mà VNSMP ngày càng phát triển!</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="bg-green-500 bg-opacity-20 p-3 rounded-lg">
+                            <div class="text-green-400 font-bold">Tổng Donate Tháng</div>
+                            <div class="text-xl font-bold">5,050,000 VND</div>
+                        </div>
+                        <div class="bg-blue-500 bg-opacity-20 p-3 rounded-lg">
+                            <div class="text-blue-400 font-bold">Số Người Donate</div>
+                            <div class="text-xl font-bold">47 người</div>
+                        </div>
+                        <div class="bg-purple-500 bg-opacity-20 p-3 rounded-lg">
+                            <div class="text-purple-400 font-bold">Cập Nhật</div>
+                            <div class="text-xl font-bold">27/08/2025</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
