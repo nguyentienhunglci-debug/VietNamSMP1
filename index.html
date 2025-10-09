@@ -63,6 +63,28 @@
         .note-title { font-weight: 600; margin-bottom: 8px; }
         .note-preview { color: #8E8E93; font-size: 14px; }
         .type-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 20px; }
+
+        /* --- CSS MỚI --- */
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .quick-add-btn {
+            padding: 12px 0;
+            border: 1px solid #E5E5E5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #F9F9F9;
+            color: #007AFF;
+        }
+        .quick-add-btn:active {
+            background: #E5E5EA;
+        }
+        /* --- KẾT THÚC CSS MỚI --- */
     </style>
 </head>
 <body>
@@ -153,8 +175,16 @@
         <h2 class="modal-title" id="modalTitle">Thêm Giao Dịch</h2>
         <div class="form-group">
             <label class="form-label">Số tiền (₫)</label>
-            <input type="number" class="form-input" id="amt" placeholder="50000">
-        </div>
+            <input type="number" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
+            
+            <div class="quick-add-grid">
+                <button type="button" class="quick-add-btn" onclick="addAmount(10000)">10K</button>
+                <button type="button" class="quick-add-btn" onclick="addAmount(50000)">50K</button>
+                <button type="button" class="quick-add-btn" onclick="addAmount(100000)">100K</button>
+                <button type="button" class="quick-add-btn" onclick="addAmount(500000)">500K</button>
+                <button type="button" class="quick-add-btn btn-sec" onclick="clearAmount()">Xóa</button>
+            </div>
+            </div>
         <div class="form-group">
             <label class="form-label">Danh mục</label>
             <select class="form-select" id="cat">
@@ -217,20 +247,17 @@ function fmt(n) {
     return new Intl.NumberFormat('vi-VN').format(n) + '₫';
 }
 
-// HÀM MỚI: Hiển thị ngày hiện tại
 function displayDate() {
     const today = new Date();
     const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
     const dateString = today.toLocaleDateString('vi-VN', options);
-    // Viết hoa chữ cái đầu của ngày trong tuần
     const capitalizedDateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
     document.getElementById('currentDate').textContent = `Hôm nay, ${capitalizedDateString}`;
 }
 
-
 function init() {
     load();
-    displayDate(); // Gọi hàm hiển thị ngày
+    displayDate();
     render();
 }
 
@@ -255,12 +282,12 @@ function renderDash() {
     document.getElementById('inc').textContent = fmt(inc);
     document.getElementById('sav').textContent = fmt(sav);
     
-    const recent = db.txns.slice().reverse().slice(0, 3); // Sửa lại để lấy 3 giao dịch mới nhất
+    const recent = db.txns.slice().reverse().slice(0, 3);
     document.getElementById('recent').innerHTML = recent.length > 0 ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch nào<br>Hãy thêm giao dịch đầu tiên! 🎉</div>';
 }
 
 function renderHist() {
-    const allTxns = db.txns.slice().reverse(); // Hiển thị giao dịch mới nhất lên đầu
+    const allTxns = db.txns.slice().reverse();
     document.getElementById('histList').innerHTML = allTxns.length > 0 ? allTxns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Chưa có giao dịch</div>';
 }
 
@@ -288,7 +315,7 @@ function makeTxn(t, acts) {
 }
 
 function renderNotes() {
-    const allNotes = db.notes.slice().reverse(); // Hiển thị ghi chú mới nhất lên đầu
+    const allNotes = db.notes.slice().reverse();
     document.getElementById('notesList').innerHTML = allNotes.length > 0 ? allNotes.map(n => `<div class="note-item" onclick="editNote(${n.id})"><div class="note-title">${n.title}</div><div class="note-preview">${n.content.substring(0,100)}...</div></div>`).join('') : '<div class="empty">Chưa có ghi chú</div>';
 }
 
@@ -349,14 +376,14 @@ function saveTxn() {
         amount: amt,
         cat: document.getElementById('cat').value,
         note: document.getElementById('note').value,
-        date: id ? db.txns.find(t=>t.id === parseInt(id)).date : new Date().toISOString() // Giữ lại ngày cũ khi sửa
+        date: id ? db.txns.find(t=>t.id === parseInt(id)).date : new Date().toISOString()
     };
     
     if (id) {
         const idx = db.txns.findIndex(t => t.id === parseInt(id));
         if (idx > -1) db.txns[idx] = txn;
     } else {
-        db.txns.push(txn); // Thêm vào cuối để dễ sắp xếp
+        db.txns.push(txn);
     }
     
     save();
@@ -440,6 +467,19 @@ function editNote(id) {
 function closeModal(id) {
     document.getElementById(id).classList.remove('show');
 }
+
+// --- HÀM JAVASCRIPT MỚI ---
+function addAmount(value) {
+    const amtInput = document.getElementById('amt');
+    let currentAmount = parseInt(amtInput.value) || 0;
+    currentAmount += value;
+    amtInput.value = currentAmount;
+}
+
+function clearAmount() {
+    document.getElementById('amt').value = '';
+}
+// --- KẾT THÚC HÀM JAVASCRIPT MỚI ---
 
 function doSearch() {
     const q = document.getElementById('search').value.toLowerCase();
