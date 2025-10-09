@@ -1,48 +1,749 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-    <title>Ứng dụng chat đơn giản</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#667eea">
+    <title>Money Manager</title>
     <style>
-        body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-        #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #input:focus { outline: none; }
-        #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+        }
 
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages > li { padding: 0.5rem 1rem; }
-        #messages > li:nth-child(odd) { background: #efefef; }
+        /* ===== APP CONTAINER ===== */
+        .app {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            height: 44px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
+            position: relative;
+            z-index: 100;
+        }
+
+        .time {
+            position: absolute;
+            left: 20px;
+        }
+
+        .indicators {
+            position: absolute;
+            right: 20px;
+            display: flex;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            padding: 24px 20px;
+            background: linear-gradient(180deg, rgba(102, 126, 234, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+        }
+
+        .greeting {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .date-display {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-container {
+            padding: 0 20px 20px;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .balance-amount {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .mini-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mini-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mini-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .mini-amount {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .expense-color {
+            color: #ff6b6b;
+        }
+
+        .saving-color {
+            color: #51cf66;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 100px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 20px 20px 12px;
+            color: #fff;
+        }
+
+        /* ===== TRANSACTIONS LIST ===== */
+        .transactions {
+            padding: 0 20px;
+        }
+
+        .transaction {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transaction-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .transaction-icon.expense {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        }
+
+        .transaction-icon.saving {
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+        }
+
+        .transaction-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .transaction-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .transaction-time {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .transaction-delete {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 107, 107, 0.2);
+            border: none;
+            color: #ff6b6b;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .transaction:hover .transaction-delete {
+            opacity: 1;
+        }
+
+        .transaction-delete:active {
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ===== BOTTOM SHEET (ADD TRANSACTION) ===== */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+        }
+
+        .bottom-sheet-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1e1e2e;
+            border-radius: 24px 24px 0 0;
+            padding: 24px;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: 0 auto 24px;
+        }
+
+        .sheet-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .type-btn {
+            padding: 16px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .type-btn.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+            color: #fff;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        textarea.input-field {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .amount-input {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== FAB BUTTON ===== */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            border: none;
+            color: #fff;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 998;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .transaction {
+            animation: slideUp 0.3s ease;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        .content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .balance-amount {
+                font-size: 36px;
+            }
+            
+            .mini-amount {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Gửi</button>
-    </form>
+    <!-- APP CONTAINER -->
+    <div class="app">
+        <!-- STATUS BAR -->
+        <div class="status-bar">
+            <div class="time" id="statusTime">9:41</div>
+            <div class="indicators">
+                <span>📶</span>
+                <span>🔋</span>
+            </div>
+        </div>
 
-    <script src="/socket.io/socket.io.js"></script>
+        <!-- HEADER -->
+        <div class="header">
+            <div class="greeting">Xin chào! 👋</div>
+            <div class="date-display" id="dateDisplay">Chủ Nhật, 10 Tháng 10</div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-container">
+            <div class="balance-card">
+                <div class="balance-label">Số Dư Hiện Tại</div>
+                <div class="balance-amount" id="balance">0₫</div>
+            </div>
+            
+            <div class="mini-stats">
+                <div class="mini-card">
+                    <div class="mini-label">Chi Tiêu</div>
+                    <div class="mini-amount expense-color" id="totalExpense">0₫</div>
+                </div>
+                <div class="mini-card">
+                    <div class="mini-label">Tiết Kiệm</div>
+                    <div class="mini-amount saving-color" id="totalSaving">0₫</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="section-title">Giao Dịch Gần Đây</div>
+            <div class="transactions" id="transactionsList">
+                <div class="empty-state">
+                    <div class="empty-icon">💸</div>
+                    <p>Chưa có giao dịch nào<br>Nhấn + để thêm mới</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAB BUTTON -->
+        <button class="fab" id="fabBtn">+</button>
+
+        <!-- BOTTOM SHEET -->
+        <div class="bottom-sheet-overlay" id="overlay"></div>
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="sheet-handle"></div>
+            <div class="sheet-title">Thêm Giao Dịch</div>
+            
+            <form id="transactionForm">
+                <div class="type-selector">
+                    <button type="button" class="type-btn active" data-type="expense">
+                        <span>💸</span> Chi Tiêu
+                    </button>
+                    <button type="button" class="type-btn" data-type="saving">
+                        <span>💰</span> Tiết Kiệm
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Số Tiền</label>
+                    <input type="number" class="input-field amount-input" id="amount" 
+                           placeholder="0" required min="0" step="1000">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Ghi Chú</label>
+                    <textarea class="input-field" id="note" 
+                              placeholder="Ví dụ: Mua nước, ăn trưa, nạp thẻ điện thoại..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">Thêm Giao Dịch</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-        var socket = io();
+        // ===== KHỞI TẠO DỮ LIỆU =====
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let selectedType = 'expense';
 
-        var form = document.getElementById('form');
-        var input = document.getElementById('input');
-        var messages = document.getElementById('messages');
+        // ===== CẬP NHẬT THỜI GIAN =====
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('statusTime').textContent = `${hours}:${minutes}`;
 
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (input.value) {
-                socket.emit('chat message', input.value);
-                input.value = '';
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            const dateStr = now.toLocaleDateString('vi-VN', options);
+            document.getElementById('dateDisplay').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // ===== ĐỊNH DẠNG TIỀN =====
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(amount);
+        }
+
+        // ===== ĐỊNH DẠNG THỜI GIAN =====
+        function formatTime(date) {
+            const d = new Date(date);
+            const now = new Date();
+            const diff = now - d;
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (minutes < 1) return 'Vừa xong';
+            if (minutes < 60) return `${minutes} phút trước`;
+            if (hours < 24) return `${hours} giờ trước`;
+            if (days < 7) return `${days} ngày trước`;
+            
+            return d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short' });
+        }
+
+        // ===== CẬP NHẬT THỐNG KÊ =====
+        function updateStats() {
+            let totalExpense = 0;
+            let totalSaving = 0;
+
+            transactions.forEach(t => {
+                if (t.type === 'expense') totalExpense += t.amount;
+                else totalSaving += t.amount;
+            });
+
+            const balance = totalSaving - totalExpense;
+
+            document.getElementById('totalExpense').textContent = formatMoney(totalExpense);
+            document.getElementById('totalSaving').textContent = formatMoney(totalSaving);
+            document.getElementById('balance').textContent = formatMoney(balance);
+        }
+
+        // ===== HIỂN THỊ GIAO DỊCH =====
+        function displayTransactions() {
+            const list = document.getElementById('transactionsList');
+
+            if (transactions.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">💸</div>
+                        <p>Chưa có giao dịch nào<br>Nhấn + để thêm mới</p>
+                    </div>
+                `;
+                return;
             }
+
+            const sorted = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            list.innerHTML = sorted.map(t => `
+                <div class="transaction">
+                    <div class="transaction-icon ${t.type}">
+                        ${t.type === 'expense' ? '💸' : '💰'}
+                    </div>
+                    <div class="transaction-info">
+                        <div class="transaction-title">${t.note || 'Không có ghi chú'}</div>
+                        <div class="transaction-time">${formatTime(t.date)}</div>
+                    </div>
+                    <div class="transaction-amount ${t.type === 'expense' ? 'expense-color' : 'saving-color'}">
+                        ${t.type === 'expense' ? '-' : '+'}${formatMoney(t.amount)}
+                    </div>
+                    <button class="transaction-delete" onclick="deleteTransaction(${t.id})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // ===== LƯU DỮ LIỆU =====
+        function saveData() {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // ===== MỞ/ĐÓNG BOTTOM SHEET =====
+        const fabBtn = document.getElementById('fabBtn');
+        const overlay = document.getElementById('overlay');
+        const bottomSheet = document.getElementById('bottomSheet');
+
+        function openSheet() {
+            overlay.classList.add('active');
+            bottomSheet.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSheet() {
+            overlay.classList.remove('active');
+            bottomSheet.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        fabBtn.addEventListener('click', openSheet);
+        overlay.addEventListener('click', closeSheet);
+
+        // ===== CHỌN LOẠI GIAO DỊCH =====
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedType = this.dataset.type;
+            });
         });
 
-        socket.on('chat message', function(msg) {
-            var item = document.createElement('li');
-            item.textContent = msg;
-            messages.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
+        // ===== THÊM GIAO DỊCH =====
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const amount = parseFloat(document.getElementById('amount').value);
+            const note = document.getElementById('note').value.trim();
+
+            const transaction = {
+                id: Date.now(),
+                type: selectedType,
+                amount: amount,
+                note: note,
+                date: new Date().toISOString()
+            };
+
+            transactions.push(transaction);
+            saveData();
+            updateStats();
+            displayTransactions();
+
+            // Reset form
+            document.getElementById('amount').value = '';
+            document.getElementById('note').value = '';
+            document.querySelectorAll('.type-btn')[0].click();
+
+            closeSheet();
         });
+
+        // ===== XÓA GIAO DỊCH =====
+        function deleteTransaction(id) {
+            if (confirm('Xóa giao dịch này?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveData();
+                updateStats();
+                displayTransactions();
+            }
+        }
+
+        // ===== KHỞI ĐỘNG =====
+        updateStats();
+        displayTransactions();
     </script>
 </body>
 </html>
