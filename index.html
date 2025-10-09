@@ -95,21 +95,20 @@
         .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-primary); }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-primary); transition: box-shadow 0.3s ease; }
         .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent-blue); outline: none; }
         .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
         .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        /* Cập nhật kiểu cho nút thêm nhanh */
         .quick-add-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 cột */
+            grid-template-columns: repeat(2, 1fr); 
             gap: 10px;
             margin-top: 12px;
         }
         .quick-add-btn {
             padding: 12px 0;
-            border: 1px solid var(--border-color); /* Thêm viền */
-            border-radius: 12px; /* Bo tròn viền */
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
@@ -121,11 +120,19 @@
             background: #48484A;
         }
         .quick-add-btn.clear {
-            grid-column: 1 / -1; /* Nút xóa chiếm toàn bộ chiều rộng */
+            grid-column: 1 / -1; 
             background: #3A3A3C;
             color: var(--accent-red);
         }
         
+        /* --- HIỆU ỨNG NHẤP NHÁY --- */
+        @keyframes flash-effect {
+            50% { box-shadow: 0 0 8px var(--accent-blue); }
+        }
+        .flash-animation {
+            animation: flash-effect 0.4s ease-out;
+        }
+
         /* --- CSS CHO DANH SÁCH & TRÌNH PHÁT PHIM --- */
         .phim-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s; }
         .phim-item:last-child { border-bottom: none; }
@@ -272,6 +279,8 @@
     <div class="video-container"><iframe id="youtubePlayer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
 </div></div>
 
+<audio id="clickSound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEwAAASwAAB3vAAAQyAAAAAAAAAAAAAAAAAAAAAAAADDEBACwAAAAAAAAAAAAAACwQGAKYAAAAgAAAIAYDRkYEAAY02LAACQUhDMgACgAAAAAICgQCAAAAAAAgAAA4AAAAKAAAAxgAAAGsAAAAgAAAAAAAoDRkYEAAY02LAACQUhDMgACgAAAAAICgQCAAAAAAAgAAA4AAAAKAAAAxgAAAGsAAAAgAAAAAACUExBTUUAAAAPAAABPAAAAcr9PT/+cUxBTUUv/3Z3Z3Z3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d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v9//99/////wAD/9//+MYxnAAIAAQAAAAEAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAD/nExhdmY1AAAA/+MYyBAAAAACAAADSAAAA6wA/+MYyhAAAAMAAAAIAAAAyAAACCAAAA4QAAAPSAAADAAAAAQEBAQAAAAAAAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYyxAAAAANEMAADwAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" preload="auto"></audio>
+
 <script>
 const OLD_KEY_V2 = 'mywallet_dark_v2';
 const OLD_KEY_V3 = 'mywallet_dark_v3';
@@ -290,7 +299,7 @@ function migrateData() {
 
     const oldDataV3 = localStorage.getItem(OLD_KEY_V3);
     if (oldDataV3) {
-        console.log("Migrating data from v3 to v4...");
+        console.log("Đang chuyển dữ liệu từ v3 sang v4...");
         localStorage.setItem(CURRENT_KEY, oldDataV3);
         localStorage.removeItem(OLD_KEY_V3);
         return;
@@ -298,7 +307,7 @@ function migrateData() {
     
     const oldDataV2 = localStorage.getItem(OLD_KEY_V2);
     if (oldDataV2) {
-        console.log("Migrating data from v2 to v4...");
+        console.log("Đang chuyển dữ liệu từ v2 sang v4...");
         localStorage.setItem(CURRENT_KEY, oldDataV2);
         localStorage.removeItem(OLD_KEY_V2);
         return;
@@ -380,7 +389,6 @@ function renderPhimList() {
     `).join('');
 }
 
-
 // Hàm tạo HTML
 function makeTxn(t, acts) {
     const icons = { food: '🍔', transport: '🚗', shopping: '🛍️', bills: '💡', salary: '💰', other: '📌' };
@@ -417,6 +425,21 @@ function openMoviePlayer(youtubeId, title) {
     openModal('moviePlayerModal');
 }
 
+// Thêm hiệu ứng và âm thanh
+function playEffect() {
+    const input = document.getElementById('amt');
+    const sound = document.getElementById('clickSound');
+    
+    if (sound) {
+        sound.currentTime = 0;
+        sound.play().catch(e => console.error("Audio play failed:", e));
+    }
+    
+    input.classList.remove('flash-animation');
+    void input.offsetWidth; // Trick to restart animation
+    input.classList.add('flash-animation');
+}
+
 // Hàm cho Giao dịch
 function openTxn(txnType) {
     document.getElementById('editId').value = '';
@@ -438,8 +461,15 @@ function saveTxn() {
 }
 function editTxn(id) { const t = db.txns.find(x => x.id === id); if (!t) return; openTxn(t.type); document.getElementById('editId').value = t.id; document.getElementById('amt').value = t.amount; document.getElementById('cat').value = t.cat; document.getElementById('note').value = t.note; }
 function delTxn(id) { if (confirm('Xóa giao dịch này?')) { db.txns = db.txns.filter(t => t.id !== id); save(); render(); }}
-function addAmount(value) { const i = document.getElementById('amt'); i.value = (parseInt(i.value)||0) + value; }
-function clearAmount() { document.getElementById('amt').value = ''; }
+function addAmount(value) { 
+    const i = document.getElementById('amt'); 
+    i.value = (parseInt(i.value)||0) + value; 
+    playEffect();
+}
+function clearAmount() { 
+    document.getElementById('amt').value = ''; 
+    playEffect();
+}
 
 // Hàm cho Ghi chú
 function openNote() { document.getElementById('editNoteId').value = ''; document.getElementById('noteTitle').value = ''; document.getElementById('noteContent').value = ''; openModal('noteModal'); }
