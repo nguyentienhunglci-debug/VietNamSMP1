@@ -273,7 +273,10 @@
 </div></div>
 
 <script>
-const KEY = 'mywallet_dark_v4'; // Cập nhật key để tránh xung đột dữ liệu cũ
+const OLD_KEY_V2 = 'mywallet_dark_v2';
+const OLD_KEY_V3 = 'mywallet_dark_v3';
+const CURRENT_KEY = 'mywallet_dark_v4'; // Khóa lưu trữ cho phiên bản hiện tại
+
 let db = { txns: [], notes: [] };
 
 // --- DANH SÁCH PHIM MỚI CỦA PHƯƠNG HỮU DƯỠNG (CHỈ CÓ 1 PHIM BẠN YÊU CẦU) ---
@@ -281,10 +284,38 @@ const phuongHuuDuongMovies = [
     { id: 1, title: "PHD - Thử Thách Người Cuối Cùng Không Ngủ Tập 3", desc: "Thử thách người cuối cùng không ngủ", youtubeId: "8HJFIgI2oPE" }
 ];
 
-function load() {
-    try { const s = localStorage.getItem(KEY); if (s) db = JSON.parse(s); } catch(e) {}
+function migrateData() {
+    const currentData = localStorage.getItem(CURRENT_KEY);
+    if (currentData) return; // Nếu đã có dữ liệu mới thì không làm gì cả
+
+    const oldDataV3 = localStorage.getItem(OLD_KEY_V3);
+    if (oldDataV3) {
+        console.log("Migrating data from v3 to v4...");
+        localStorage.setItem(CURRENT_KEY, oldDataV3);
+        localStorage.removeItem(OLD_KEY_V3);
+        return;
+    }
+    
+    const oldDataV2 = localStorage.getItem(OLD_KEY_V2);
+    if (oldDataV2) {
+        console.log("Migrating data from v2 to v4...");
+        localStorage.setItem(CURRENT_KEY, oldDataV2);
+        localStorage.removeItem(OLD_KEY_V2);
+        return;
+    }
 }
-function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
+
+function load() {
+    try { 
+        const s = localStorage.getItem(CURRENT_KEY); 
+        if (s) db = JSON.parse(s); 
+    } catch(e) {}
+}
+
+function save() { 
+    localStorage.setItem(CURRENT_KEY, JSON.stringify(db)); 
+}
+
 function fmt(n) { return new Intl.NumberFormat('vi-VN').format(n) + '₫'; }
 
 function updateClock() {
@@ -296,9 +327,10 @@ function updateClock() {
 }
 
 function init() {
+    migrateData(); // Chạy hàm chuyển đổi dữ liệu trước khi tải
     load();
     updateClock();
-    setInterval(updateClock, 1000); // Cập nhật đồng hồ mỗi giây
+    setInterval(updateClock, 1000); 
     render();
 }
 
