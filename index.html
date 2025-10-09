@@ -2,802 +2,425 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <!-- PWA Meta Tags cho iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Money Notes">
-    <meta name="theme-color" content="#1a1d2e">
-    
-    <!-- Icon cho app -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%235b67ca'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>💰</text></svg>">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💰</text></svg>">
-    
-    <title>Money Notes - Quản Lý & Ghi Chú</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tài Chính</title>
     <style>
-        /* ========== RESET ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #1a1d2e 0%, #2d3250 100%);
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* ========== CONTAINER ========== */
-        .app {
-            max-width: 480px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #1a1d2e;
-            position: relative;
-        }
-
-        /* ========== HEADER ========== */
-        .header {
-            padding: 50px 20px 30px;
-            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(91, 103, 202, 0.3);
-        }
-
-        .greeting {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .date-display {
-            font-size: 16px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        /* ========== NAVIGATION TABS ========== */
-        .nav-tabs {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-tab {
-            padding: 16px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-tab.active {
-            color: #fff;
-        }
-
-        .nav-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #5b67ca, #7c4dff);
-            border-radius: 3px 3px 0 0;
-        }
-
-        /* ========== CONTENT SECTIONS ========== */
-        .content {
-            display: none;
-            padding: 20px;
-        }
-
-        .content.active {
-            display: block;
-        }
-
-        /* ========== QUẢN LÝ TIỀN - STATS ========== */
-        .balance-card {
-            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(91, 103, 202, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .balance-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 200px;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-        }
-
-        .balance-label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 8px;
-        }
-
-        .balance-amount {
-            font-size: 44px;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .expense-color { color: #ff6b6b; }
-        .saving-color { color: #51cf66; }
-
-        /* ========== FORM NHẬP LIỆU ========== */
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .type-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .type-btn {
-            padding: 14px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .type-btn.active {
-            border-color: #5b67ca;
-            background: rgba(91, 103, 202, 0.3);
-            color: #fff;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            font-size: 16px;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #5b67ca;
-            background: rgba(91, 103, 202, 0.1);
-        }
-
-        textarea.form-input {
-            resize: vertical;
-            min-height: 120px;
-            line-height: 1.5;
-        }
-
-        .btn-add {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 16px rgba(91, 103, 202, 0.4);
-        }
-
-        .btn-add:active {
-            transform: scale(0.98);
-        }
-
-        /* ========== DANH SÁCH GIAO DỊCH / GHI CHÚ ========== */
-        .notes-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .note-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
-
-        .note-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .note-type-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .note-type-badge.expense {
-            background: rgba(255, 107, 107, 0.2);
-            color: #ff6b6b;
-        }
-
-        .note-type-badge.saving {
-            background: rgba(81, 207, 102, 0.2);
-            color: #51cf66;
-        }
-
-        .note-amount {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .note-content {
-            font-size: 15px;
-            line-height: 1.5;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 12px;
-            white-space: pre-wrap;
-        }
-
-        .note-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .note-date {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .btn-delete {
-            background: rgba(255, 107, 107, 0.2);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            color: #ff6b6b;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .empty-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        /* ========== GAME TÀI XỈU ========== */
-        .game-container {
-            text-align: center;
-        }
-
-        .dice-container {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin: 30px 0;
-        }
-
-        .dice {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-            font-weight: 700;
-            color: #1a1d2e;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            animation: rotate 0.5s ease;
-        }
-
-        @keyframes rotate {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(360deg); }
-        }
-
-        .total-display {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 20px 0;
-            color: #ffd93d;
-        }
-
-        .bet-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .bet-btn {
-            padding: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            font-size: 24px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .bet-btn.active {
-            border-color: #ffd93d;
-            background: rgba(255, 217, 61, 0.2);
-            box-shadow: 0 0 20px rgba(255, 217, 61, 0.4);
-        }
-
-        .bet-btn.tai { color: #ff6b6b; }
-        .bet-btn.xiu { color: #51cf66; }
-
-        .timer {
-            font-size: 48px;
-            font-weight: 700;
-            color: #ffd93d;
-            margin: 20px 0;
-        }
-
-        .play-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #ffd93d 0%, #ffab00 100%);
-            border: none;
-            border-radius: 16px;
-            color: #1a1d2e;
-            font-size: 20px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 8px 24px rgba(255, 217, 61, 0.4);
-            transition: all 0.2s ease;
-        }
-
-        .play-btn:active {
-            transform: scale(0.98);
-        }
-
-        .play-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .result-display {
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .result-display.win {
-            background: rgba(81, 207, 102, 0.2);
-            color: #51cf66;
-        }
-
-        .result-display.lose {
-            background: rgba(255, 107, 107, 0.2);
-            color: #ff6b6b;
-        }
-
-        /* ========== GHI CHÚ ĐƠN GIẢN ========== */
-        .simple-note-card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 12px;
-        }
-
-        .simple-note-content {
-            font-size: 16px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 12px;
-            white-space: pre-wrap;
-        }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 480px) {
-            .header {
-                padding: 44px 20px 24px;
-            }
-            .greeting {
-                font-size: 32px;
-            }
-            .balance-amount {
-                font-size: 38px;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #F2F2F7; padding-bottom: 80px; }
+        .screen { display: none; }
+        .screen.active { display: block; }
+        .header { background: #FFF; padding: 20px; border-bottom: 1px solid #E5E5E5; }
+        .header h1 { font-size: 28px; font-weight: 700; }
+        .btn { padding: 14px 20px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; background: #007AFF; color: white; width: 100%; margin-top: 12px; }
+        .btn:active { opacity: 0.7; }
+        .btn-sec { background: #E5E5EA; color: #000; }
+        .btn-danger { background: #FF3B30; }
+        .btn-success { background: #34C759; }
+        .btn-warning { background: #FF9500; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
+        .stat-card { background: #FFF; padding: 20px; border-radius: 12px; text-align: center; }
+        .stat-label { color: #8E8E93; font-size: 13px; margin-bottom: 8px; }
+        .stat-value { font-size: 24px; font-weight: 600; }
+        .stat-value.red { color: #FF3B30; }
+        .stat-value.green { color: #34C759; }
+        .card { background: #FFF; border-radius: 12px; padding: 16px; margin: 16px 20px; }
+        .txn-item { display: flex; align-items: center; padding: 12px; background: #F9F9F9; border-radius: 8px; margin-bottom: 8px; }
+        .txn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; }
+        .txn-icon.exp { background: #FFE5E5; }
+        .txn-icon.inc { background: #E5F8E5; }
+        .txn-icon.sav { background: #FFF5E5; }
+        .txn-info { flex: 1; }
+        .txn-cat { font-weight: 600; font-size: 15px; }
+        .txn-date { color: #8E8E93; font-size: 13px; }
+        .txn-amt { font-weight: 600; font-size: 16px; }
+        .txn-acts { display: flex; gap: 8px; margin-left: 8px; }
+        .icon-btn { width: 36px; height: 36px; border: none; background: #FFF; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .icon-btn:active { opacity: 0.5; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #FFF; border-top: 1px solid #E5E5E5; display: flex; padding: 8px 0; }
+        .nav-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; color: #8E8E93; }
+        .nav-item.active { color: #007AFF; }
+        .nav-item:active { opacity: 0.5; }
+        .nav-icon { font-size: 24px; }
+        .nav-label { font-size: 11px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: #FFF; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; color: #8E8E93; font-size: 13px; margin-bottom: 6px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; border: 1px solid #E5E5E5; border-radius: 8px; font-size: 16px; background: #F9F9F9; }
+        .form-textarea { min-height: 100px; font-family: inherit; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
+        .empty { text-align: center; padding: 40px 20px; color: #8E8E93; }
+        .note-item { background: #F9F9F9; padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; }
+        .note-item:active { opacity: 0.7; }
+        .note-title { font-weight: 600; margin-bottom: 8px; }
+        .note-preview { color: #8E8E93; font-size: 14px; }
+        .type-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-    <div class="app">
-        <!-- HEADER -->
-        <div class="header">
-            <div class="greeting">Xin chào! 👋</div>
-            <div class="date-display" id="dateDisplay">Thứ Sáu, 10 tháng 10</div>
-        </div>
 
-        <!-- NAVIGATION -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" onclick="switchTab('money')">💰 Quản Lý Tiền</button>
-            <button class="nav-tab" onclick="switchTab('notes')">📝 Ghi Chú</button>
-            <button class="nav-tab" onclick="switchTab('game')">🎲 Trò Chơi</button>
-        </div>
-
-        <!-- CONTENT: QUẢN LÝ TIỀN -->
-        <div id="moneyContent" class="content active">
-            <!-- Stats -->
-            <div class="balance-card">
-                <div class="balance-label">Số Dư Hiện Tại</div>
-                <div class="balance-amount" id="balanceAmount">0đ</div>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Chi Tiêu</div>
-                    <div class="stat-value expense-color" id="totalExpense">0đ</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Tiết Kiệm</div>
-                    <div class="stat-value saving-color" id="totalSaving">0đ</div>
-                </div>
-            </div>
-
-            <!-- Form -->
-            <div class="section-title">📝 Thêm Giao Dịch</div>
-            <form id="moneyForm">
-                <div class="type-selector">
-                    <button type="button" class="type-btn active" data-type="expense">💸 Chi Tiêu</button>
-                    <button type="button" class="type-btn" data-type="saving">💰 Tiết Kiệm</button>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Số Tiền (VNĐ)</label>
-                    <input type="text" class="form-input" id="moneyAmount" placeholder="0" inputmode="numeric">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Ghi Chú</label>
-                    <textarea class="form-input" id="moneyNote" placeholder="Ví dụ: Mua nước, ăn sáng..."></textarea>
-                </div>
-                <button type="submit" class="btn-add">✓ Thêm Giao Dịch</button>
-            </form>
-
-            <!-- Lịch sử -->
-            <div style="margin-top: 24px;">
-                <div class="section-title">📋 Lịch Sử Giao Dịch</div>
-                <div class="notes-list" id="moneyList"></div>
-            </div>
-        </div>
-
-        <!-- CONTENT: GHI CHÚ -->
-        <div id="notesContent" class="content">
-            <div class="section-title">✍️ Ghi Chú Cá Nhân</div>
-            <form id="notesForm">
-                <div class="form-group">
-                    <textarea class="form-input" id="simpleNote" placeholder="Viết ghi chú của bạn...&#x0a;Ví dụ: Hôm nay tôi đau chân, nhớ mua thuốc..." rows="6"></textarea>
-                </div>
-                <button type="submit" class="btn-add">💾 Lưu Ghi Chú</button>
-            </form>
-
-            <div style="margin-top: 24px;">
-                <div class="section-title">📚 Ghi Chú Đã Lưu</div>
-                <div id="simpleNotesList"></div>
-            </div>
-        </div>
-
-        <!-- CONTENT: GAME TÀI XỈU -->
-        <div id="gameContent" class="content">
-            <div class="game-container">
-                <div class="section-title" style="justify-content: center;">🎲 Trò Chơi Tài Xỉu</div>
-                
-                <div class="dice-container">
-                    <div class="dice" id="dice1">🎲</div>
-                    <div class="dice" id="dice2">🎲</div>
-                    <div class="dice" id="dice3">🎲</div>
-                </div>
-
-                <div class="total-display" id="diceTotal">? ? ?</div>
-
-                <div class="bet-buttons">
-                    <button class="bet-btn tai" onclick="selectBet('tai')">
-                        <div>🔴 TÀI</div>
-                        <div style="font-size: 14px; margin-top: 4px;">11-17</div>
-                    </button>
-                    <button class="bet-btn xiu" onclick="selectBet('xiu')">
-                        <div>🟢 XỈU</div>
-                        <div style="font-size: 14px; margin-top: 4px;">4-10</div>
-                    </button>
-                </div>
-
-                <div class="timer" id="timer">60</div>
-
-                <button class="play-btn" id="playBtn" onclick="startGame()">🎮 BẮT ĐẦU CƯỢC</button>
-
-                <div id="result" class="result-display" style="display: none;"></div>
-            </div>
+<div id="dash" class="screen active">
+    <div class="header">
+        <h1>Tài Chính</h1>
+        <div class="type-buttons">
+            <button class="btn btn-danger" onclick="openTxn('expense')">💸 Chi Tiêu</button>
+            <button class="btn btn-success" onclick="openTxn('income')">💰 Thu Nhập</button>
+            <button class="btn btn-warning" onclick="openTxn('savings')">🏦 Tiết Kiệm</button>
         </div>
     </div>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-label">Tổng Số Dư</div>
+            <div class="stat-value" id="bal">0₫</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Đã Chi</div>
+            <div class="stat-value red" id="exp">0₫</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Thu Nhập</div>
+            <div class="stat-value green" id="inc">0₫</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Tiết Kiệm</div>
+            <div class="stat-value" id="sav">0₫</div>
+        </div>
+    </div>
+    <div class="card">
+        <h3 style="margin-bottom: 16px;">Giao Dịch Gần Đây</h3>
+        <div id="recent"></div>
+    </div>
+</div>
 
-    <script>
-        // ===== BIẾN TOÀN CỤC =====
-        let moneyTransactions = [];
-        let simpleNotes = [];
-        let selectedMoneyType = 'expense';
-        let selectedBet = null;
-        let gameTimer = null;
-        let timeLeft = 60;
+<div id="hist" class="screen">
+    <div class="header"><h1>Lịch Sử</h1></div>
+    <div class="card">
+        <input type="text" class="form-input" placeholder="🔍 Tìm kiếm..." id="search" oninput="doSearch()">
+    </div>
+    <div class="card"><div id="histList"></div></div>
+</div>
 
-        const MONEY_KEY = 'moneyData_v1';
-        const NOTES_KEY = 'simpleNotes_v1';
+<div id="notes" class="screen">
+    <div class="header">
+        <h1>Ghi Chú</h1>
+        <button class="btn" onclick="openNote()">+ Tạo Ghi Chú</button>
+    </div>
+    <div class="card"><div id="notesList"></div></div>
+</div>
 
-        // ===== LOAD DỮ LIỆU =====
-        function loadData() {
-            try {
-                const money = localStorage.getItem(MONEY_KEY);
-                const notes = localStorage.getItem(NOTES_KEY);
-                if (money) moneyTransactions = JSON.parse(money);
-                if (notes) simpleNotes = JSON.parse(notes);
-            } catch (e) {
-                console.error('Lỗi load dữ liệu:', e);
-            }
-        }
+<div id="reports" class="screen">
+    <div class="header"><h1>Báo Cáo</h1></div>
+    <div class="card">
+        <h3>Tổng Quan</h3>
+        <div id="rpt" style="margin-top: 16px;"></div>
+    </div>
+</div>
 
-        function saveMoneyData() {
-            localStorage.setItem(MONEY_KEY, JSON.stringify(moneyTransactions));
-        }
+<div class="bottom-nav">
+    <div class="nav-item active" onclick="goTo('dash')">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Tổng Quan</div>
+    </div>
+    <div class="nav-item" onclick="goTo('hist')">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Lịch Sử</div>
+    </div>
+    <div class="nav-item" onclick="goTo('notes')">
+        <div class="nav-icon">📝</div>
+        <div class="nav-label">Ghi Chú</div>
+    </div>
+    <div class="nav-item" onclick="goTo('reports')">
+        <div class="nav-icon">📈</div>
+        <div class="nav-label">Báo Cáo</div>
+    </div>
+</div>
 
-        function saveNotesData() {
-            localStorage.setItem(NOTES_KEY, JSON.stringify(simpleNotes));
-        }
+<div id="txnModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title" id="modalTitle">Thêm Giao Dịch</h2>
+        <div class="form-group">
+            <label class="form-label">Số tiền (₫)</label>
+            <input type="number" class="form-input" id="amt" placeholder="50000">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Danh mục</label>
+            <select class="form-select" id="cat">
+                <option value="food">🍔 Ăn uống</option>
+                <option value="transport">🚗 Đi lại</option>
+                <option value="shopping">🛍️ Mua sắm</option>
+                <option value="bills">💡 Hóa đơn</option>
+                <option value="salary">💰 Lương</option>
+                <option value="other">📌 Khác</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ghi chú</label>
+            <textarea class="form-textarea" id="note" placeholder="Nhập ghi chú..."></textarea>
+        </div>
+        <input type="hidden" id="type">
+        <input type="hidden" id="editId">
+        <div class="modal-actions">
+            <button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1">Hủy</button>
+            <button class="btn" onclick="saveTxn()" style="flex:1">Lưu</button>
+        </div>
+    </div>
+</div>
 
-        // ===== ĐỊNH DẠNG TIỀN =====
-        function formatMoney(amount) {
-            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
-        }
+<div id="noteModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Ghi Chú</h2>
+        <div class="form-group">
+            <label class="form-label">Tiêu đề</label>
+            <input type="text" class="form-input" id="noteTitle">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Nội dung</label>
+            <textarea class="form-textarea" id="noteContent" style="min-height:200px"></textarea>
+        </div>
+        <input type="hidden" id="editNoteId">
+        <div class="modal-actions">
+            <button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1">Hủy</button>
+            <button class="btn" onclick="saveNote()" style="flex:1">Lưu</button>
+        </div>
+    </div>
+</div>
 
-        function parseMoney(value) {
-            return parseInt(value.replace(/\D/g, '')) || 0;
-        }
+<script>
+const KEY = 'mywallet_v1';
+let db = { txns: [], notes: [] };
 
-        // ===== XỬ LÝ INPUT SỐ TIỀN =====
-        document.getElementById('moneyAmount').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value) {
-                e.target.value = parseInt(value).toLocaleString('vi-VN');
-            } else {
-                e.target.value = '';
-            }
-        });
+function load() {
+    try {
+        const s = localStorage.getItem(KEY);
+        if (s) db = JSON.parse(s);
+    } catch(e) {}
+}
 
-        // ===== ĐỊNH DẠNG THỜI GIAN =====
-        function formatDateTime(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = now - date;
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
+function save() {
+    localStorage.setItem(KEY, JSON.stringify(db));
+}
 
-            if (minutes < 1) return 'Vừa xong';
-            if (minutes < 60) return `${minutes} phút trước`;
-            if (hours < 24) return `${hours} giờ trước`;
-            if (days === 1) return 'Hôm qua';
-            if (days < 7) return `${days} ngày trước`;
-            
-            return date.toLocaleDateString('vi-VN', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
+function fmt(n) {
+    return new Intl.NumberFormat('vi-VN').format(n) + '₫';
+}
 
-        // ===== CẬP NHẬT NGÀY =====
-        function updateDate() {
-            const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
-            const dateStr = now.toLocaleDateString('vi-VN', options);
-            document.getElementById('dateDisplay').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-        }
+function init() {
+    load();
+    render();
+}
 
-        // ===== CHUYỂN TAB =====
-        function switchTab(tab) {
-            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            
-            if (tab === 'money') {
-                document.getElementById('moneyContent').classList.add('active');
-            } else if (tab === 'notes') {
-                document.getElementById('notesContent').classList.add('active');
-            } else if (tab === 'game') {
-                document.getElementById('gameContent').classList.add('active');
-            }
-        }
+function render() {
+    renderDash();
+    renderHist();
+    renderNotes();
+    renderRpt();
+}
 
-        // ===== QUẢN LÝ TIỀN =====
-        function updateMoneyStats() {
-            let expense = 0, saving = 0;
-            moneyTransactions.forEach(t => {
-                if (t.type === 'expense') expense += t.amount;
-                else saving += t.amount;
-            });
-            const balance = saving - expense;
-            
-            document.getElementById('totalExpense').textContent = formatMoney(expense);
-            document.getElementById('totalSaving').textContent = formatMoney(saving);
-            document.getElementById('balanceAmount').textContent = formatMoney(balance);
-        }
+function renderDash() {
+    let bal = 0, exp = 0, inc = 0, sav = 0;
+    db.txns.forEach(t => {
+        if (t.type === 'expense') exp += t.amount;
+        else if (t.type === 'income') inc += t.amount;
+        else if (t.type === 'savings') sav += t.amount;
+    });
+    bal = inc - exp;
+    
+    document.getElementById('bal').textContent = fmt(bal);
+    document.getElementById('exp').textContent = fmt(exp);
+    document.getElementById('inc').textContent = fmt(inc);
+    document.getElementById('sav').textContent = fmt(sav);
+    
+    const recent = db.txns.slice(0, 3);
+    document.getElementById('recent').innerHTML = recent.length > 0 ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch nào<br>Hãy thêm giao dịch đầu tiên! 🎉</div>';
+}
 
-        function displayMoneyList() {
-            const list = document.getElementById('moneyList');
-            if (moneyTransactions.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="empty-icon">💸</div><p>Chưa có giao dịch nào</p></div>';
-                return;
-            }
-            
-            const sorted = [...moneyTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-            list.innerHTML = sorted.map(t => `
-                <div class="note-card">
-                    <div class="note-header">
-                        <span class="note-type-badge ${t.type}">
-                            ${t.type === 'expense' ? '💸 Chi Tiêu' : '💰 Tiết Kiệm'}
-                        </span>
-                        <div class="note-amount ${t.type === 'expense' ? 'expense-color' : 'saving-color'}">
-                            ${t.type === 'expense' ? '-' : '+'}${formatMoney(t.amount)}
-                        </div>
-                    </div>
-                    ${t.note ? `<div class="note-content">${t.note}</div>` : ''}
-                    <div class="note-footer">
-                        <div class="note-date">${formatDateTime(t.date)}</div>
-                        <button class="btn-delete" onclick="deleteMoneyTransaction(${t.id})">Xóa</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+function renderHist() {
+    document.getElementById('histList').innerHTML = db.txns.length > 0 ? db.txns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Chưa có giao dịch</div>';
+}
 
-        document.querySelectorAll('.type-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                selectedMoneyType = this.dataset.type;
-            });
-        });
+function makeTxn(t, acts) {
+    const icons = { food: '🍔', transport: '🚗', shopping: '🛍️', bills: '💡', salary: '💰', other: '📌' };
+    const names = { food: 'Ăn uống', transport: 'Đi lại', shopping: 'Mua sắm', bills: 'Hóa đơn', salary: 'Lương', other: 'Khác' };
+    const ic = icons[t.cat] || '📌';
+    const nm = names[t.cat] || 'Khác';
+    const dt = new Date(t.date).toLocaleDateString('vi-VN');
+    const cls = t.type === 'expense' ? 'exp' : (t.type === 'income' ? 'inc' : 'sav');
+    const btns = acts ? `<div class="txn-acts"><button class="icon-btn" onclick="editTxn(${t.id})">✏️</button><button class="icon-btn" onclick="delTxn(${t.id})">🗑️</button></div>` : '';
+    
+    return `<div class="txn-item">
+        <div class="txn-icon ${cls}">${ic}</div>
+        <div class="txn-info">
+            <div class="txn-cat">${nm}</div>
+            <div class="txn-date">${dt}</div>
+        </div>
+        <div class="txn-amt">${fmt(t.amount)}</div>
+        ${btns}
+    </div>`;
+}
 
-        document.getElementById('moneyForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const amount = parseMoney(document.getElementById('moneyAmount').value);
-            const note = document.getElementById('moneyNote').value.trim();
-            
-            if (amount <= 0) {
-                alert('Vui lòng nhập số tiền hợp lệ');
-                return;
-            }
-            
-            moneyTransactions.push({
-                id: Date.now(),
-                type: selectedMoneyType,
-                amount: amount,
-                note: note,
-                date: new Date().toISOString()
-            });
-            
-            saveMoneyData();
-            updateMoneyStats();
-            displayMoneyList();
-            
-            document.getElementById('moneyAmount').value = '';
-            document.getElementById('moneyNote').value = '';
-        });
+function renderNotes() {
+    document.getElementById('notesList').innerHTML = db.notes.length > 0 ? db.notes.map(n => `<div class="note-item" onclick="editNote(${n.id})"><div class="note-title">${n.title}</div><div class="note-preview">${n.content.substring(0,100)}</div></div>`).join('') : '<div class="empty">Chưa có ghi chú</div>';
+}
 
-        function deleteMoneyTransaction(id) {
-            if (confirm('Xóa giao dịch này?')) {
-                moneyTransactions = moneyTransactions.filter(t => t.id !== id);
-                saveMoneyData();
-                updateMoneyStats();
-                displayMoneyList();
-            }
-        }
+function renderRpt() {
+    let exp = 0, inc = 0;
+    db.txns.forEach(t => {
+        if (t.type === 'expense') exp += t.amount;
+        else if (t.type === 'income') inc += t.amount;
+    });
+    document.getElementById('rpt').innerHTML = `
+        <div style="padding:12px;background:#F9F9F9;border-radius:8px;margin-bottom:12px">
+            <div style="color:#8E8E93;font-size:13px">Tổng Chi</div>
+            <div style="font-size:20px;font-weight:600;color:#FF3B30">${fmt(exp)}</div>
+        </div>
+        <div style="padding:12px;background:#F9F9F9;border-radius:8px">
+            <div style="color:#8E8E93;font-size:13px">Tổng Thu</div>
+            <div style="font-size:20px;font-weight:600;color:#34C759">${fmt(inc)}</div>
+        </div>
+    `;
+}
 
-        // ===== GHI CHÚ ĐƠN GIẢN =====
-        function displaySimpleNotes() {
-            const list = document.getElementById('simpleNotesList');
-            if (simpleNotes.length === 0) {
-                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Chưa có ghi chú nào</p></div>';
-                return;
-            }
-            
-            const sorted = [...simpleNotes].sort((a, b) => new Date(b.date) - new Date(a.date));
-            list.innerHTML = sorted.map(note => `
+function goTo(scr) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(scr).classList.add('active');
+    event.currentTarget.classList.add('active');
+    render();
+}
+
+function openTxn(txnType) {
+    document.getElementById('editId').value = '';
+    document.getElementById('type').value = txnType;
+    document.getElementById('amt').value = '';
+    document.getElementById('cat').value = 'food';
+    document.getElementById('note').value = '';
+    
+    const titles = {
+        'expense': '💸 Thêm Chi Tiêu',
+        'income': '💰 Thêm Thu Nhập',
+        'savings': '🏦 Thêm Tiết Kiệm'
+    };
+    document.getElementById('modalTitle').textContent = titles[txnType];
+    
+    document.getElementById('txnModal').classList.add('show');
+}
+
+function saveTxn() {
+    const id = document.getElementById('editId').value;
+    const amt = parseInt(document.getElementById('amt').value) || 0;
+    
+    if (amt <= 0) {
+        alert('Vui lòng nhập số tiền hợp lệ!');
+        return;
+    }
+    
+    const txn = {
+        id: id ? parseInt(id) : Date.now(),
+        type: document.getElementById('type').value,
+        amount: amt,
+        cat: document.getElementById('cat').value,
+        note: document.getElementById('note').value,
+        date: new Date().toISOString()
+    };
+    
+    if (id) {
+        const idx = db.txns.findIndex(t => t.id === parseInt(id));
+        if (idx > -1) db.txns[idx] = txn;
+    } else {
+        db.txns.unshift(txn);
+    }
+    
+    save();
+    closeModal('txnModal');
+    render();
+}
+
+function editTxn(id) {
+    const t = db.txns.find(x => x.id === id);
+    if (!t) return;
+    
+    document.getElementById('editId').value = t.id;
+    document.getElementById('type').value = t.type;
+    document.getElementById('amt').value = t.amount;
+    document.getElementById('cat').value = t.cat;
+    document.getElementById('note').value = t.note;
+    
+    const titles = {
+        'expense': '💸 Sửa Chi Tiêu',
+        'income': '💰 Sửa Thu Nhập',
+        'savings': '🏦 Sửa Tiết Kiệm'
+    };
+    document.getElementById('modalTitle').textContent = titles[t.type];
+    
+    document.getElementById('txnModal').classList.add('show');
+}
+
+function delTxn(id) {
+    if (confirm('Xóa giao dịch này?')) {
+        db.txns = db.txns.filter(t => t.id !== id);
+        save();
+        render();
+    }
+}
+
+function openNote() {
+    document.getElementById('editNoteId').value = '';
+    document.getElementById('noteTitle').value = '';
+    document.getElementById('noteContent').value = '';
+    document.getElementById('noteModal').classList.add('show');
+}
+
+function saveNote() {
+    const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteContent').value.trim();
+    
+    if (!title) {
+        alert('Vui lòng nhập tiêu đề!');
+        return;
+    }
+    
+    const id = document.getElementById('editNoteId').value;
+    const n = {
+        id: id ? parseInt(id) : Date.now(),
+        title: title,
+        content: content,
+        date: new Date().toISOString()
+    };
+    
+    if (id) {
+        const idx = db.notes.findIndex(x => x.id === parseInt(id));
+        if (idx > -1) db.notes[idx] = n;
+    } else {
+        db.notes.unshift(n);
+    }
+    
+    save();
+    closeModal('noteModal');
+    render();
+}
+
+function editNote(id) {
+    const n = db.notes.find(x => x.id === id);
+    if (!n) return;
+    document.getElementById('editNoteId').value = n.id;
+    document.getElementById('noteTitle').value = n.title;
+    document.getElementById('noteContent').value = n.content;
+    document.getElementById('noteModal').classList.add('show');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('show');
+}
+
+function doSearch() {
+    const q = document.getElementById('search').value.toLowerCase();
+    const res = db.txns.filter(t => t.note.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q));
+    document.getElementById('histList').innerHTML = res.length > 0 ? res.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không tìm thấy</div>';
+}
+
+init();
+</script>
+</body>
+</html>
