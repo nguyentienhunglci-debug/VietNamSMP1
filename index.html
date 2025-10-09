@@ -3,424 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Tài Chính</title>
+    <title>Web Alarm</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #F2F2F7; padding-bottom: 80px; }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        .header { background: #FFF; padding: 20px; border-bottom: 1px solid #E5E5E5; }
-        .header h1 { font-size: 28px; font-weight: 700; }
-        .btn { padding: 14px 20px; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; background: #007AFF; color: white; width: 100%; margin-top: 12px; }
-        .btn:active { opacity: 0.7; }
-        .btn-sec { background: #E5E5EA; color: #000; }
-        .btn-danger { background: #FF3B30; }
-        .btn-success { background: #34C759; }
-        .btn-warning { background: #FF9500; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
-        .stat-card { background: #FFF; padding: 20px; border-radius: 12px; text-align: center; }
-        .stat-label { color: #8E8E93; font-size: 13px; margin-bottom: 8px; }
-        .stat-value { font-size: 24px; font-weight: 600; }
-        .stat-value.red { color: #FF3B30; }
-        .stat-value.green { color: #34C759; }
-        .card { background: #FFF; border-radius: 12px; padding: 16px; margin: 16px 20px; }
-        .txn-item { display: flex; align-items: center; padding: 12px; background: #F9F9F9; border-radius: 8px; margin-bottom: 8px; }
-        .txn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; }
-        .txn-icon.exp { background: #FFE5E5; }
-        .txn-icon.inc { background: #E5F8E5; }
-        .txn-icon.sav { background: #FFF5E5; }
-        .txn-info { flex: 1; }
-        .txn-cat { font-weight: 600; font-size: 15px; }
-        .txn-date { color: #8E8E93; font-size: 13px; }
-        .txn-amt { font-weight: 600; font-size: 16px; }
-        .txn-acts { display: flex; gap: 8px; margin-left: 8px; }
-        .icon-btn { width: 36px; height: 36px; border: none; background: #FFF; border-radius: 8px; cursor: pointer; font-size: 16px; }
-        .icon-btn:active { opacity: 0.5; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #FFF; border-top: 1px solid #E5E5E5; display: flex; padding: 8px 0; }
-        .nav-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; color: #8E8E93; }
-        .nav-item.active { color: #007AFF; }
-        .nav-item:active { opacity: 0.5; }
-        .nav-icon { font-size: 24px; }
-        .nav-label { font-size: 11px; }
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
-        .modal.show { display: flex; }
-        .modal-content { background: #FFF; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; max-height: 80vh; overflow-y: auto; }
-        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; color: #8E8E93; font-size: 13px; margin-bottom: 6px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; border: 1px solid #E5E5E5; border-radius: 8px; font-size: 16px; background: #F9F9F9; }
-        .form-textarea { min-height: 100px; font-family: inherit; }
-        .modal-actions { display: flex; gap: 12px; margin-top: 20px; }
-        .empty { text-align: center; padding: 40px 20px; color: #8E8E93; }
-        .note-item { background: #F9F9F9; padding: 16px; border-radius: 12px; margin-bottom: 12px; cursor: pointer; }
-        .note-item:active { opacity: 0.7; }
-        .note-title { font-weight: 600; margin-bottom: 8px; }
-        .note-preview { color: #8E8E93; font-size: 14px; }
-        .type-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            background-color: #f0f2f5;
+            color: #1c1c1e;
+        }
+        h1 {
+            color: #000;
+        }
+        #container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 350px;
+            margin: 40px auto;
+        }
+        input[type="number"] { 
+            font-size: 1.2em; 
+            padding: 10px; 
+            margin: 10px 0 20px 0; 
+            width: 80%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        button { 
+            font-size: 1.2em; 
+            padding: 12px 25px; 
+            cursor: pointer; 
+            border: none;
+            background-color: #007AFF;
+            color: white;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-
-<div id="dash" class="screen active">
-    <div class="header">
-        <h1>Tài Chính</h1>
-        <div class="type-buttons">
-            <button class="btn btn-danger" onclick="openTxn('expense')">💸 Chi Tiêu</button>
-            <button class="btn btn-success" onclick="openTxn('income')">💰 Thu Nhập</button>
-            <button class="btn btn-warning" onclick="openTxn('savings')">🏦 Tiết Kiệm</button>
-        </div>
+    <div id="container">
+        <h1>Báo thức trên Web ⏰</h1>
+        <p>Báo thức sẽ kêu sau (giây):</p>
+        <input type="number" id="secondsInput" value="15" min="1">
+        <br>
+        <button id="setAlarmBtn">Đặt báo thức</button>
     </div>
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="stat-label">Tổng Số Dư</div>
-            <div class="stat-value" id="bal">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Đã Chi</div>
-            <div class="stat-value red" id="exp">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Thu Nhập</div>
-            <div class="stat-value green" id="inc">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Tiết Kiệm</div>
-            <div class="stat-value" id="sav">0₫</div>
-        </div>
-    </div>
-    <div class="card">
-        <h3 style="margin-bottom: 16px;">Giao Dịch Gần Đây</h3>
-        <div id="recent"></div>
-    </div>
-</div>
 
-<div id="hist" class="screen">
-    <div class="header"><h1>Lịch Sử</h1></div>
-    <div class="card">
-        <input type="text" class="form-input" placeholder="🔍 Tìm kiếm..." id="search" oninput="doSearch()">
-    </div>
-    <div class="card"><div id="histList"></div></div>
-</div>
-
-<div id="notes" class="screen">
-    <div class="header">
-        <h1>Ghi Chú</h1>
-        <button class="btn" onclick="openNote()">+ Tạo Ghi Chú</button>
-    </div>
-    <div class="card"><div id="notesList"></div></div>
-</div>
-
-<div id="reports" class="screen">
-    <div class="header"><h1>Báo Cáo</h1></div>
-    <div class="card">
-        <h3>Tổng Quan</h3>
-        <div id="rpt" style="margin-top: 16px;"></div>
-    </div>
-</div>
-
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('dash')">
-        <div class="nav-icon">🏠</div>
-        <div class="nav-label">Tổng Quan</div>
-    </div>
-    <div class="nav-item" onclick="goTo('hist')">
-        <div class="nav-icon">📊</div>
-        <div class="nav-label">Lịch Sử</div>
-    </div>
-    <div class="nav-item" onclick="goTo('notes')">
-        <div class="nav-icon">📝</div>
-        <div class="nav-label">Ghi Chú</div>
-    </div>
-    <div class="nav-item" onclick="goTo('reports')">
-        <div class="nav-icon">📈</div>
-        <div class="nav-label">Báo Cáo</div>
-    </div>
-</div>
-
-<div id="txnModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title" id="modalTitle">Thêm Giao Dịch</h2>
-        <div class="form-group">
-            <label class="form-label">Số tiền (₫)</label>
-            <input type="number" class="form-input" id="amt" placeholder="50000">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Danh mục</label>
-            <select class="form-select" id="cat">
-                <option value="food">🍔 Ăn uống</option>
-                <option value="transport">🚗 Đi lại</option>
-                <option value="shopping">🛍️ Mua sắm</option>
-                <option value="bills">💡 Hóa đơn</option>
-                <option value="salary">💰 Lương</option>
-                <option value="other">📌 Khác</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Ghi chú</label>
-            <textarea class="form-textarea" id="note" placeholder="Nhập ghi chú..."></textarea>
-        </div>
-        <input type="hidden" id="type">
-        <input type="hidden" id="editId">
-        <div class="modal-actions">
-            <button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1">Hủy</button>
-            <button class="btn" onclick="saveTxn()" style="flex:1">Lưu</button>
-        </div>
-    </div>
-</div>
-
-<div id="noteModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Ghi Chú</h2>
-        <div class="form-group">
-            <label class="form-label">Tiêu đề</label>
-            <input type="text" class="form-input" id="noteTitle">
-        </div>
-        <div class="form-group">
-            <label class="form-label">Nội dung</label>
-            <textarea class="form-textarea" id="noteContent" style="min-height:200px"></textarea>
-        </div>
-        <input type="hidden" id="editNoteId">
-        <div class="modal-actions">
-            <button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1">Hủy</button>
-            <button class="btn" onclick="saveNote()" style="flex:1">Lưu</button>
-        </div>
-    </div>
-</div>
-
-<script>
-const KEY = 'mywallet_v1';
-let db = { txns: [], notes: [] };
-
-function load() {
-    try {
-        const s = localStorage.getItem(KEY);
-        if (s) db = JSON.parse(s);
-    } catch(e) {}
-}
-
-function save() {
-    localStorage.setItem(KEY, JSON.stringify(db));
-}
-
-function fmt(n) {
-    return new Intl.NumberFormat('vi-VN').format(n) + '₫';
-}
-
-function init() {
-    load();
-    render();
-}
-
-function render() {
-    renderDash();
-    renderHist();
-    renderNotes();
-    renderRpt();
-}
-
-function renderDash() {
-    let bal = 0, exp = 0, inc = 0, sav = 0;
-    db.txns.forEach(t => {
-        if (t.type === 'expense') exp += t.amount;
-        else if (t.type === 'income') inc += t.amount;
-        else if (t.type === 'savings') sav += t.amount;
-    });
-    bal = inc - exp;
-    
-    document.getElementById('bal').textContent = fmt(bal);
-    document.getElementById('exp').textContent = fmt(exp);
-    document.getElementById('inc').textContent = fmt(inc);
-    document.getElementById('sav').textContent = fmt(sav);
-    
-    const recent = db.txns.slice(0, 3);
-    document.getElementById('recent').innerHTML = recent.length > 0 ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch nào<br>Hãy thêm giao dịch đầu tiên! 🎉</div>';
-}
-
-function renderHist() {
-    document.getElementById('histList').innerHTML = db.txns.length > 0 ? db.txns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Chưa có giao dịch</div>';
-}
-
-function makeTxn(t, acts) {
-    const icons = { food: '🍔', transport: '🚗', shopping: '🛍️', bills: '💡', salary: '💰', other: '📌' };
-    const names = { food: 'Ăn uống', transport: 'Đi lại', shopping: 'Mua sắm', bills: 'Hóa đơn', salary: 'Lương', other: 'Khác' };
-    const ic = icons[t.cat] || '📌';
-    const nm = names[t.cat] || 'Khác';
-    const dt = new Date(t.date).toLocaleDateString('vi-VN');
-    const cls = t.type === 'expense' ? 'exp' : (t.type === 'income' ? 'inc' : 'sav');
-    const btns = acts ? `<div class="txn-acts"><button class="icon-btn" onclick="editTxn(${t.id})">✏️</button><button class="icon-btn" onclick="delTxn(${t.id})">🗑️</button></div>` : '';
-    
-    return `<div class="txn-item">
-        <div class="txn-icon ${cls}">${ic}</div>
-        <div class="txn-info">
-            <div class="txn-cat">${nm}</div>
-            <div class="txn-date">${dt}</div>
-        </div>
-        <div class="txn-amt">${fmt(t.amount)}</div>
-        ${btns}
-    </div>`;
-}
-
-function renderNotes() {
-    document.getElementById('notesList').innerHTML = db.notes.length > 0 ? db.notes.map(n => `<div class="note-item" onclick="editNote(${n.id})"><div class="note-title">${n.title}</div><div class="note-preview">${n.content.substring(0,100)}</div></div>`).join('') : '<div class="empty">Chưa có ghi chú</div>';
-}
-
-function renderRpt() {
-    let exp = 0, inc = 0;
-    db.txns.forEach(t => {
-        if (t.type === 'expense') exp += t.amount;
-        else if (t.type === 'income') inc += t.amount;
-    });
-    document.getElementById('rpt').innerHTML = `
-        <div style="padding:12px;background:#F9F9F9;border-radius:8px;margin-bottom:12px">
-            <div style="color:#8E8E93;font-size:13px">Tổng Chi</div>
-            <div style="font-size:20px;font-weight:600;color:#FF3B30">${fmt(exp)}</div>
-        </div>
-        <div style="padding:12px;background:#F9F9F9;border-radius:8px">
-            <div style="color:#8E8E93;font-size:13px">Tổng Thu</div>
-            <div style="font-size:20px;font-weight:600;color:#34C759">${fmt(inc)}</div>
-        </div>
-    `;
-}
-
-function goTo(scr) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(scr).classList.add('active');
-    event.currentTarget.classList.add('active');
-    render();
-}
-
-function openTxn(txnType) {
-    document.getElementById('editId').value = '';
-    document.getElementById('type').value = txnType;
-    document.getElementById('amt').value = '';
-    document.getElementById('cat').value = 'food';
-    document.getElementById('note').value = '';
-    
-    const titles = {
-        'expense': '💸 Thêm Chi Tiêu',
-        'income': '💰 Thêm Thu Nhập',
-        'savings': '🏦 Thêm Tiết Kiệm'
-    };
-    document.getElementById('modalTitle').textContent = titles[txnType];
-    
-    document.getElementById('txnModal').classList.add('show');
-}
-
-function saveTxn() {
-    const id = document.getElementById('editId').value;
-    const amt = parseInt(document.getElementById('amt').value) || 0;
-    
-    if (amt <= 0) {
-        alert('Vui lòng nhập số tiền hợp lệ!');
-        return;
-    }
-    
-    const txn = {
-        id: id ? parseInt(id) : Date.now(),
-        type: document.getElementById('type').value,
-        amount: amt,
-        cat: document.getElementById('cat').value,
-        note: document.getElementById('note').value,
-        date: new Date().toISOString()
-    };
-    
-    if (id) {
-        const idx = db.txns.findIndex(t => t.id === parseInt(id));
-        if (idx > -1) db.txns[idx] = txn;
-    } else {
-        db.txns.unshift(txn);
-    }
-    
-    save();
-    closeModal('txnModal');
-    render();
-}
-
-function editTxn(id) {
-    const t = db.txns.find(x => x.id === id);
-    if (!t) return;
-    
-    document.getElementById('editId').value = t.id;
-    document.getElementById('type').value = t.type;
-    document.getElementById('amt').value = t.amount;
-    document.getElementById('cat').value = t.cat;
-    document.getElementById('note').value = t.note;
-    
-    const titles = {
-        'expense': '💸 Sửa Chi Tiêu',
-        'income': '💰 Sửa Thu Nhập',
-        'savings': '🏦 Sửa Tiết Kiệm'
-    };
-    document.getElementById('modalTitle').textContent = titles[t.type];
-    
-    document.getElementById('txnModal').classList.add('show');
-}
-
-function delTxn(id) {
-    if (confirm('Xóa giao dịch này?')) {
-        db.txns = db.txns.filter(t => t.id !== id);
-        save();
-        render();
-    }
-}
-
-function openNote() {
-    document.getElementById('editNoteId').value = '';
-    document.getElementById('noteTitle').value = '';
-    document.getElementById('noteContent').value = '';
-    document.getElementById('noteModal').classList.add('show');
-}
-
-function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    const content = document.getElementById('noteContent').value.trim();
-    
-    if (!title) {
-        alert('Vui lòng nhập tiêu đề!');
-        return;
-    }
-    
-    const id = document.getElementById('editNoteId').value;
-    const n = {
-        id: id ? parseInt(id) : Date.now(),
-        title: title,
-        content: content,
-        date: new Date().toISOString()
-    };
-    
-    if (id) {
-        const idx = db.notes.findIndex(x => x.id === parseInt(id));
-        if (idx > -1) db.notes[idx] = n;
-    } else {
-        db.notes.unshift(n);
-    }
-    
-    save();
-    closeModal('noteModal');
-    render();
-}
-
-function editNote(id) {
-    const n = db.notes.find(x => x.id === id);
-    if (!n) return;
-    document.getElementById('editNoteId').value = n.id;
-    document.getElementById('noteTitle').value = n.title;
-    document.getElementById('noteContent').value = n.content;
-    document.getElementById('noteModal').classList.add('show');
-}
-
-function closeModal(id) {
-    document.getElementById(id).classList.remove('show');
-}
-
-function doSearch() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const res = db.txns.filter(t => t.note.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q));
-    document.getElementById('histList').innerHTML = res.length > 0 ? res.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không tìm thấy</div>';
-}
-
-init();
-</script>
+    <script src="app.js"></script>
 </body>
 </html>
