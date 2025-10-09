@@ -99,10 +99,32 @@
         .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent-blue); outline: none; }
         .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
         .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        .quick-add-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; } /* Đổi thành 2 cột */
-        .quick-add-btn { padding: 12px 0; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--input-bg); color: var(--accent-blue); }
-        .quick-add-btn:active { background: #48484A; }
-        .quick-add-btn.clear { grid-column: 1 / -1; background: #3A3A3C; color: var(--accent-red);} /* Nút xóa chiếm cả hàng */
+        /* Cập nhật kiểu cho nút thêm nhanh */
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 cột */
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .quick-add-btn {
+            padding: 12px 0;
+            border: 1px solid var(--border-color); /* Thêm viền */
+            border-radius: 12px; /* Bo tròn viền */
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--input-bg);
+            color: var(--accent-blue);
+            transition: background-color 0.1s ease;
+        }
+        .quick-add-btn:active {
+            background: #48484A;
+        }
+        .quick-add-btn.clear {
+            grid-column: 1 / -1; /* Nút xóa chiếm toàn bộ chiều rộng */
+            background: #3A3A3C;
+            color: var(--accent-red);
+        }
         
         /* --- CSS CHO DANH SÁCH & TRÌNH PHÁT PHIM --- */
         .phim-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s; }
@@ -195,6 +217,10 @@
         <h3>Quản lý dữ liệu</h3>
         <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; margin-bottom: 16px;">Hành động này sẽ xóa toàn bộ chi tiêu và ghi chú. Không thể hoàn tác.</p>
         <button class="btn btn-danger" onclick="resetData()">Xóa Toàn Bộ Dữ Liệu</button>
+        
+        <h3 style="margin-top: 30px;">Cập nhật phiên bản</h3>
+        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; margin-bottom: 16px;">Nhấn vào đây để tải lại trang và cập nhật phiên bản mới nhất.</p>
+        <button class="btn btn-sec" onclick="reloadApp()">Cập nhật Phiên bản Mới</button>
     </div>
 </div>
 
@@ -247,21 +273,12 @@
 </div></div>
 
 <script>
-const KEY = 'mywallet_dark_v3'; // Thay đổi key để tránh xung đột với dữ liệu cũ
+const KEY = 'mywallet_dark_v4'; // Cập nhật key để tránh xung đột dữ liệu cũ
 let db = { txns: [], notes: [] };
 
-// --- DANH SÁCH 10 PHIM CỦA PHÙNG KIẾN VŨ (PHƯƠNG HỮU DƯỠNG) ---
+// --- DANH SÁCH PHIM MỚI CỦA PHƯƠNG HỮU DƯỠNG (CHỈ CÓ 1 PHIM BẠN YÊU CẦU) ---
 const phuongHuuDuongMovies = [
-    { id: 1, title: "Nghịch Tập: Chi Ái Thượng Tình Địch", desc: "Web drama, 2015", youtubeId: "h0IAnRL-2Qk" },
-    { id: 2, title: "Thư Sinh Lạc Phường", desc: "Web movie, 2016", youtubeId: "M_u2-Eb5a_w" },
-    { id: 3, title: "Bất Khả Kháng Lực 1 & 2", desc: "Web movie, 2016 (vai phụ)", youtubeId: "U3-Jt52i-PE" },
-    { id: 4, title: "Thích Khách Liệt Truyện 1", desc: "Phim cổ trang, 2016", youtubeId: "VIDEO_ID_HERE" }, // Chưa có trailer
-    { id: 5, title: "Họa Giang Hồ Chi Bất Lương Nhân", desc: "Web drama, 2016", youtubeId: "r-d5wVvJ_4Y" },
-    { id: 6, title: "Thứ Nữ Phiêu Diêu", desc: "Phim cổ trang, 2019", youtubeId: "S_i1Fq2kHkI" },
-    { id: 7, title: "Tôi Ở Đại Lý Tự Làm Sủng Vật", desc: "Phim cổ trang, 2018", youtubeId: "uOa84aI7H-k" },
-    { id: 8, title: "Hận Quân Bất Tựa Giang Lâu Nguyệt", desc: "Dân quốc, 2021", youtubeId: "fW9x0u3gI4o" },
-    { id: 9, "title": "Thanh Yến Truyện (The Story of the Bat)", "desc": "Web movie, 2021", "youtubeId": "3_Fz9JiAb2o" },
-    { id: 10, title: "Tuyết Ưng Lĩnh Chủ", desc: "Phim cổ trang, 2023 (vai phụ)", youtubeId: "m2C3xQ_yS3c" }
+    { id: 1, title: "PHD - Thử Thách Người Cuối Cùng Không Ngủ Tập 3", desc: "Thử thách người cuối cùng không ngủ", youtubeId: "8HJFIgI2oPE" }
 ];
 
 function load() {
@@ -363,10 +380,6 @@ function closeModal(id) {
 
 // Hàm cho Phim
 function openMoviePlayer(youtubeId, title) {
-    if (youtubeId === 'VIDEO_ID_HERE') {
-        alert('Trailer cho phim này hiện chưa có sẵn.');
-        return;
-    }
     document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
     document.getElementById('moviePlayerTitle').textContent = title;
     openModal('moviePlayerModal');
@@ -417,6 +430,12 @@ function doSearch() {
 function resetData() {
     if (confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ DỮ LIỆU?\nHành động này không thể hoàn tác!')) {
         db = { txns: [], notes: [] }; save(); render(); alert('✅ Đã xóa toàn bộ dữ liệu.');
+    }
+}
+
+function reloadApp() {
+    if (confirm('Bạn có chắc chắn muốn cập nhật phiên bản mới? Trang sẽ tải lại.')) {
+        location.reload(true); // Tải lại trang từ server, bỏ qua bộ nhớ cache
     }
 }
 
