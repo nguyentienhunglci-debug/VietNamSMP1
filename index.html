@@ -87,7 +87,7 @@
         // Chờ toàn bộ trang được tải xong
         window.addEventListener('load', async () => {
             if (!('serviceWorker' in navigator)) {
-                alert('Trình duyệt này không hỗ trợ thông báo nền!');
+                alert('Trình duyệt này không hỗ trợ thông báo nền! (Lỗi: Thiếu HTTPS)');
                 return;
             }
 
@@ -124,7 +124,7 @@
                             command: 'startTimer',
                             seconds: seconds
                         });
-                        alert(`Đã đặt báo thức! Thông báo sẽ kêu sau ${seconds} giây, kể cả khi bạn khóa màn hình.`);
+                        alert('Đã đặt báo thức! Thông báo sẽ kêu sau ' + seconds + ' giây, kể cả khi bạn khóa màn hình.');
                     } else {
                         alert('Trang chưa sẵn sàng, vui lòng tải lại và thử lại.');
                     }
