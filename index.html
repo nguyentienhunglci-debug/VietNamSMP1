@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Alarm</title>
+    <title>Web Alarm (All-in-One)</title>
     <style>
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
@@ -11,6 +11,11 @@
             padding: 20px; 
             background-color: #f0f2f5;
             color: #1c1c1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
         h1 {
             color: #000;
@@ -19,9 +24,10 @@
             background-color: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px
+            12px rgba(0,0,0,0.1);
             max-width: 350px;
-            margin: 40px auto;
+            width: 90%;
         }
         input[type="number"] { 
             font-size: 1.2em; 
@@ -30,6 +36,7 @@
             width: 80%;
             border: 1px solid #ccc;
             border-radius: 8px;
+            text-align: center;
         }
         button { 
             font-size: 1.2em; 
@@ -39,6 +46,7 @@
             background-color: #007AFF;
             color: white;
             border-radius: 8px;
+            width: calc(80% + 22px);
             transition: background-color 0.2s;
         }
         button:hover {
@@ -48,13 +56,81 @@
 </head>
 <body>
     <div id="container">
-        <h1>Báo thức trên Web ⏰</h1>
+        <h1>Báo thức Web ⏰</h1>
         <p>Báo thức sẽ kêu sau (giây):</p>
         <input type="number" id="secondsInput" value="15" min="1">
         <br>
         <button id="setAlarmBtn">Đặt báo thức</button>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // --- TOÀN BỘ LOGIC JAVASCRIPT ĐƯỢC ĐẶT Ở ĐÂY ---
+
+        // Nội dung của file service-worker.js được chứa trong một biến kiểu chuỗi
+        const serviceWorkerCode = `
+            console.log('Service Worker đang chạy...');
+
+            self.addEventListener('message', event => {
+                if (event.data.command === 'startTimer') {
+                    const seconds = event.data.seconds;
+                    
+                    setTimeout(() => {
+                        self.registration.showNotification('⏰ Reng Reng! Báo thức!', {
+                            body: 'Đã hết ' + seconds + ' giây bạn đã đặt.',
+                            vibrate: [200, 100, 200, 100, 200]
+                        });
+                    }, seconds * 1000);
+                }
+            });
+        `;
+
+        // Chờ toàn bộ trang được tải xong
+        window.addEventListener('load', async () => {
+            if (!('serviceWorker' in navigator)) {
+                alert('Trình duyệt này không hỗ trợ thông báo nền!');
+                return;
+            }
+
+            // Kỹ thuật đặc biệt: Tạo một file ảo từ chuỗi code ở trên
+            const blob = new Blob([serviceWorkerCode], { type: 'application/javascript' });
+            const swURL = URL.createObjectURL(blob);
+
+            // Đăng ký Service Worker bằng URL ảo vừa tạo
+            try {
+                const registration = await navigator.serviceWorker.register(swURL);
+                console.log('Service Worker ảo đã đăng ký thành công.');
+            } catch (error) {
+                console.error('Đăng ký Service Worker ảo thất bại:', error);
+            }
+
+            const setAlarmBtn = document.getElementById('setAlarmBtn');
+            const secondsInput = document.getElementById('secondsInput');
+
+            setAlarmBtn.addEventListener('click', () => {
+                Notification.requestPermission().then(permission => {
+                    if (permission !== 'granted') {
+                        alert('Bạn cần cho phép thông báo để ứng dụng hoạt động!');
+                        return;
+                    }
+
+                    const seconds = parseInt(secondsInput.value, 10);
+                    if (isNaN(seconds) || seconds <= 0) {
+                        alert('Vui lòng nhập số giây hợp lệ.');
+                        return;
+                    }
+
+                    if (navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({
+                            command: 'startTimer',
+                            seconds: seconds
+                        });
+                        alert(`Đã đặt báo thức! Thông báo sẽ kêu sau ${seconds} giây, kể cả khi bạn khóa màn hình.`);
+                    } else {
+                        alert('Trang chưa sẵn sàng, vui lòng tải lại và thử lại.');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
