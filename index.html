@@ -2,8 +2,14 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Quản Lý Tài Chính</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #F2F2F7; padding-bottom: 80px; }
@@ -56,7 +62,7 @@
         .note-item:active { opacity: 0.7; }
         .note-title { font-weight: 600; margin-bottom: 8px; }
         .note-preview { color: #8E8E93; font-size: 14px; }
-        .type-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .type-buttons { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -64,6 +70,7 @@
 <div id="dash" class="screen active">
     <div class="header">
         <h1>Tài Chính</h1>
+        <p id="currentDate" style="color: #8E8E93; font-size: 14px; margin-top: 4px;"></p>
         <div class="type-buttons">
             <button class="btn btn-danger" onclick="openTxn('expense')">💸 Chi Tiêu</button>
             <button class="btn btn-success" onclick="openTxn('income')">💰 Thu Nhập</button>
@@ -210,8 +217,20 @@ function fmt(n) {
     return new Intl.NumberFormat('vi-VN').format(n) + '₫';
 }
 
+// HÀM MỚI: Hiển thị ngày hiện tại
+function displayDate() {
+    const today = new Date();
+    const options = { weekday: 'long', day: 'numeric', month: 'numeric', year: 'numeric' };
+    const dateString = today.toLocaleDateString('vi-VN', options);
+    // Viết hoa chữ cái đầu của ngày trong tuần
+    const capitalizedDateString = dateString.charAt(0).toUpperCase() + dateString.slice(1);
+    document.getElementById('currentDate').textContent = `Hôm nay, ${capitalizedDateString}`;
+}
+
+
 function init() {
     load();
+    displayDate(); // Gọi hàm hiển thị ngày
     render();
 }
 
@@ -236,12 +255,13 @@ function renderDash() {
     document.getElementById('inc').textContent = fmt(inc);
     document.getElementById('sav').textContent = fmt(sav);
     
-    const recent = db.txns.slice(0, 3);
+    const recent = db.txns.slice().reverse().slice(0, 3); // Sửa lại để lấy 3 giao dịch mới nhất
     document.getElementById('recent').innerHTML = recent.length > 0 ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch nào<br>Hãy thêm giao dịch đầu tiên! 🎉</div>';
 }
 
 function renderHist() {
-    document.getElementById('histList').innerHTML = db.txns.length > 0 ? db.txns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Chưa có giao dịch</div>';
+    const allTxns = db.txns.slice().reverse(); // Hiển thị giao dịch mới nhất lên đầu
+    document.getElementById('histList').innerHTML = allTxns.length > 0 ? allTxns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Chưa có giao dịch</div>';
 }
 
 function makeTxn(t, acts) {
@@ -251,6 +271,9 @@ function makeTxn(t, acts) {
     const nm = names[t.cat] || 'Khác';
     const dt = new Date(t.date).toLocaleDateString('vi-VN');
     const cls = t.type === 'expense' ? 'exp' : (t.type === 'income' ? 'inc' : 'sav');
+    const amtSign = t.type === 'expense' ? '-' : '+';
+    const amtColor = t.type === 'expense' ? 'red' : 'green';
+    
     const btns = acts ? `<div class="txn-acts"><button class="icon-btn" onclick="editTxn(${t.id})">✏️</button><button class="icon-btn" onclick="delTxn(${t.id})">🗑️</button></div>` : '';
     
     return `<div class="txn-item">
@@ -259,13 +282,14 @@ function makeTxn(t, acts) {
             <div class="txn-cat">${nm}</div>
             <div class="txn-date">${dt}</div>
         </div>
-        <div class="txn-amt">${fmt(t.amount)}</div>
+        <div class="txn-amt" style="color:${amtColor}">${amtSign}${fmt(t.amount)}</div>
         ${btns}
     </div>`;
 }
 
 function renderNotes() {
-    document.getElementById('notesList').innerHTML = db.notes.length > 0 ? db.notes.map(n => `<div class="note-item" onclick="editNote(${n.id})"><div class="note-title">${n.title}</div><div class="note-preview">${n.content.substring(0,100)}</div></div>`).join('') : '<div class="empty">Chưa có ghi chú</div>';
+    const allNotes = db.notes.slice().reverse(); // Hiển thị ghi chú mới nhất lên đầu
+    document.getElementById('notesList').innerHTML = allNotes.length > 0 ? allNotes.map(n => `<div class="note-item" onclick="editNote(${n.id})"><div class="note-title">${n.title}</div><div class="note-preview">${n.content.substring(0,100)}...</div></div>`).join('') : '<div class="empty">Chưa có ghi chú</div>';
 }
 
 function renderRpt() {
@@ -325,14 +349,14 @@ function saveTxn() {
         amount: amt,
         cat: document.getElementById('cat').value,
         note: document.getElementById('note').value,
-        date: new Date().toISOString()
+        date: id ? db.txns.find(t=>t.id === parseInt(id)).date : new Date().toISOString() // Giữ lại ngày cũ khi sửa
     };
     
     if (id) {
         const idx = db.txns.findIndex(t => t.id === parseInt(id));
         if (idx > -1) db.txns[idx] = txn;
     } else {
-        db.txns.unshift(txn);
+        db.txns.push(txn); // Thêm vào cuối để dễ sắp xếp
     }
     
     save();
@@ -389,14 +413,14 @@ function saveNote() {
         id: id ? parseInt(id) : Date.now(),
         title: title,
         content: content,
-        date: new Date().toISOString()
+        date: id ? db.notes.find(x => x.id === parseInt(id)).date : new Date().toISOString()
     };
     
     if (id) {
         const idx = db.notes.findIndex(x => x.id === parseInt(id));
         if (idx > -1) db.notes[idx] = n;
     } else {
-        db.notes.unshift(n);
+        db.notes.push(n);
     }
     
     save();
@@ -419,16 +443,23 @@ function closeModal(id) {
 
 function doSearch() {
     const q = document.getElementById('search').value.toLowerCase();
-    const res = db.txns.filter(t => t.note.toLowerCase().includes(q) || t.cat.toLowerCase().includes(q));
+    const allTxns = db.txns.slice().reverse();
+    const res = allTxns.filter(t => {
+        const noteMatch = t.note.toLowerCase().includes(q);
+        const names = { food: 'Ăn uống', transport: 'Đi lại', shopping: 'Mua sắm', bills: 'Hóa đơn', salary: 'Lương', other: 'Khác' };
+        const catName = (names[t.cat] || 'Khác').toLowerCase();
+        const catMatch = catName.includes(q);
+        const amountMatch = t.amount.toString().includes(q);
+        return noteMatch || catMatch || amountMatch;
+    });
     document.getElementById('histList').innerHTML = res.length > 0 ? res.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không tìm thấy</div>';
 }
 
-// HÀM MỚI ĐỂ RESET DỮ LIỆU
 function resetData() {
     if (confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ DỮ LIỆU KHÔNG?\nHành động này không thể hoàn tác!')) {
-        db = { txns: [], notes: [] }; // Đặt lại cơ sở dữ liệu
-        save();     // Lưu trạng thái trống
-        render();   // Vẽ lại giao diện
+        db = { txns: [], notes: [] }; 
+        save();
+        render(); 
         alert('✅ Đã xóa toàn bộ dữ liệu.');
     }
 }
