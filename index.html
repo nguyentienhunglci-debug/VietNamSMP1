@@ -3,12 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- PWA Meta Tags cho iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#667eea">
-    <title>Money Manager</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Money Notes">
+    <meta name="theme-color" content="#1a1d2e">
+    
+    <!-- Icon cho app -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%235b67ca'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>💰</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💰</text></svg>">
+    
+    <title>Money Notes - Quản Lý & Ghi Chú</title>
+    
     <style>
-        /* ===== RESET & BASE ===== */
+        /* ========== RESET ========== */
         * {
             margin: 0;
             padding: 0;
@@ -17,85 +26,98 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1d2e 0%, #2d3250 100%);
             color: #fff;
+            min-height: 100vh;
             overflow-x: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100vh;
         }
 
-        /* ===== APP CONTAINER ===== */
+        /* ========== CONTAINER ========== */
         .app {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #1a1d2e;
             position: relative;
-            overflow: hidden;
         }
 
-        /* ===== STATUS BAR ===== */
-        .status-bar {
-            height: 44px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            font-weight: 600;
-            color: #fff;
-            position: relative;
-            z-index: 100;
-        }
-
-        .time {
-            position: absolute;
-            left: 20px;
-        }
-
-        .indicators {
-            position: absolute;
-            right: 20px;
-            display: flex;
-            gap: 6px;
-            font-size: 13px;
-        }
-
-        /* ===== HEADER ===== */
+        /* ========== HEADER ========== */
         .header {
-            padding: 24px 20px;
-            background: linear-gradient(180deg, rgba(102, 126, 234, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+            padding: 50px 20px 30px;
+            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(91, 103, 202, 0.3);
         }
 
         .greeting {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
         .date-display {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            opacity: 0.9;
             font-weight: 500;
         }
 
-        /* ===== STATS CARDS ===== */
-        .stats-container {
-            padding: 0 20px 20px;
+        /* ========== NAVIGATION TABS ========== */
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .nav-tab {
+            padding: 16px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-tab.active {
+            color: #fff;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5b67ca, #7c4dff);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* ========== CONTENT SECTIONS ========== */
+        .content {
+            display: none;
+            padding: 20px;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        /* ========== QUẢN LÝ TIỀN - STATS ========== */
         .balance-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 24px;
-            padding: 28px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(91, 103, 202, 0.4);
             position: relative;
             overflow: hidden;
         }
@@ -115,22 +137,22 @@
             font-size: 14px;
             opacity: 0.9;
             margin-bottom: 8px;
-            font-weight: 500;
         }
 
         .balance-amount {
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 700;
             letter-spacing: -1px;
         }
 
-        .mini-stats {
+        .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-bottom: 24px;
         }
 
-        .mini-card {
+        .stat-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             border-radius: 16px;
@@ -138,131 +160,187 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .mini-label {
+        .stat-label {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.7);
             margin-bottom: 8px;
-            font-weight: 500;
         }
 
-        .mini-amount {
+        .stat-value {
             font-size: 24px;
             font-weight: 700;
         }
 
-        .expense-color {
-            color: #ff6b6b;
-        }
+        .expense-color { color: #ff6b6b; }
+        .saving-color { color: #51cf66; }
 
-        .saving-color {
-            color: #51cf66;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-bottom: 100px;
-        }
-
+        /* ========== FORM NHẬP LIỆU ========== */
         .section-title {
             font-size: 20px;
             font-weight: 700;
-            padding: 20px 20px 12px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .type-btn {
+            padding: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .type-btn.active {
+            border-color: #5b67ca;
+            background: rgba(91, 103, 202, 0.3);
             color: #fff;
         }
 
-        /* ===== TRANSACTIONS LIST ===== */
-        .transactions {
-            padding: 0 20px;
+        .form-group {
+            margin-bottom: 16px;
         }
 
-        .transaction {
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #5b67ca;
+            background: rgba(91, 103, 202, 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.5;
+        }
+
+        .btn-add {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #5b67ca 0%, #7c4dff 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(91, 103, 202, 0.4);
+        }
+
+        .btn-add:active {
+            transform: scale(0.98);
+        }
+
+        /* ========== DANH SÁCH GIAO DỊCH / GHI CHÚ ========== */
+        .notes-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-card {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
-            overflow: hidden;
         }
 
-        .transaction-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+        .note-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
+            margin-bottom: 12px;
         }
 
-        .transaction-icon.expense {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-        }
-
-        .transaction-icon.saving {
-            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
-        }
-
-        .transaction-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .transaction-title {
-            font-size: 16px;
+        .note-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 4px;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        .transaction-time {
+        .note-type-badge.expense {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+        }
+
+        .note-type-badge.saving {
+            background: rgba(81, 207, 102, 0.2);
+            color: #51cf66;
+        }
+
+        .note-amount {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .note-content {
+            font-size: 15px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            white-space: pre-wrap;
+        }
+
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .note-date {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.5);
         }
 
-        .transaction-amount {
-            font-size: 18px;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .transaction-delete {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
+        .btn-delete {
             background: rgba(255, 107, 107, 0.2);
             border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
             color: #ff6b6b;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            font-size: 16px;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .transaction:hover .transaction-delete {
-            opacity: 1;
-        }
-
-        .transaction-delete:active {
-            transform: translateY(-50%) scale(0.9);
         }
 
         .empty-state {
@@ -277,336 +355,317 @@
             opacity: 0.5;
         }
 
-        /* ===== BOTTOM SHEET (ADD TRANSACTION) ===== */
-        .bottom-sheet-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            z-index: 999;
-        }
-
-        .bottom-sheet-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .bottom-sheet {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #1e1e2e;
-            border-radius: 24px 24px 0 0;
-            padding: 24px;
-            transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 1000;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .bottom-sheet.active {
-            transform: translateY(0);
-        }
-
-        .sheet-handle {
-            width: 40px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-            margin: 0 auto 24px;
-        }
-
-        .sheet-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 24px;
+        /* ========== GAME TÀI XỈU ========== */
+        .game-container {
             text-align: center;
         }
 
-        .type-selector {
+        .dice-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .dice {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a1d2e;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            animation: rotate 0.5s ease;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(360deg); }
+        }
+
+        .total-display {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #ffd93d;
+        }
+
+        .bet-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .type-btn {
-            padding: 16px;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .type-btn.active {
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.2);
-            color: #fff;
-        }
-
-        .input-group {
             margin-bottom: 20px;
         }
 
-        .input-label {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: block;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .input-field {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 16px;
-            color: #fff;
-            font-size: 16px;
-            font-family: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-
-        .input-field::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        textarea.input-field {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .amount-input {
-            font-size: 24px;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+        .bet-btn {
+            padding: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
-            padding: 18px;
+            background: rgba(255, 255, 255, 0.05);
             color: #fff;
-            font-size: 17px;
+            font-size: 24px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
         }
 
-        .btn-submit:active {
+        .bet-btn.active {
+            border-color: #ffd93d;
+            background: rgba(255, 217, 61, 0.2);
+            box-shadow: 0 0 20px rgba(255, 217, 61, 0.4);
+        }
+
+        .bet-btn.tai { color: #ff6b6b; }
+        .bet-btn.xiu { color: #51cf66; }
+
+        .timer {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffd93d;
+            margin: 20px 0;
+        }
+
+        .play-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #ffd93d 0%, #ffab00 100%);
+            border: none;
+            border-radius: 16px;
+            color: #1a1d2e;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(255, 217, 61, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .play-btn:active {
             transform: scale(0.98);
         }
 
-        /* ===== FAB BUTTON ===== */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 20px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            border: none;
-            color: #fff;
-            font-size: 28px;
-            cursor: pointer;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 998;
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .fab:active {
-            transform: scale(0.9);
+        .result-display {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
         }
 
-        /* ===== ANIMATIONS ===== */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .result-display.win {
+            background: rgba(81, 207, 102, 0.2);
+            color: #51cf66;
         }
 
-        .transaction {
-            animation: slideUp 0.3s ease;
+        .result-display.lose {
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
         }
 
-        /* ===== SCROLLBAR ===== */
-        .content::-webkit-scrollbar {
-            width: 6px;
+        /* ========== GHI CHÚ ĐƠN GIẢN ========== */
+        .simple-note-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 12px;
         }
 
-        .content::-webkit-scrollbar-track {
-            background: transparent;
+        .simple-note-content {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 12px;
+            white-space: pre-wrap;
         }
 
-        .content::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-        }
-
-        /* ===== RESPONSIVE ===== */
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 480px) {
-            .balance-amount {
-                font-size: 36px;
+            .header {
+                padding: 44px 20px 24px;
             }
-            
-            .mini-amount {
-                font-size: 20px;
+            .greeting {
+                font-size: 32px;
+            }
+            .balance-amount {
+                font-size: 38px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- APP CONTAINER -->
     <div class="app">
-        <!-- STATUS BAR -->
-        <div class="status-bar">
-            <div class="time" id="statusTime">9:41</div>
-            <div class="indicators">
-                <span>📶</span>
-                <span>🔋</span>
-            </div>
-        </div>
-
         <!-- HEADER -->
         <div class="header">
             <div class="greeting">Xin chào! 👋</div>
-            <div class="date-display" id="dateDisplay">Chủ Nhật, 10 Tháng 10</div>
+            <div class="date-display" id="dateDisplay">Thứ Sáu, 10 tháng 10</div>
         </div>
 
-        <!-- STATS -->
-        <div class="stats-container">
+        <!-- NAVIGATION -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('money')">💰 Quản Lý Tiền</button>
+            <button class="nav-tab" onclick="switchTab('notes')">📝 Ghi Chú</button>
+            <button class="nav-tab" onclick="switchTab('game')">🎲 Trò Chơi</button>
+        </div>
+
+        <!-- CONTENT: QUẢN LÝ TIỀN -->
+        <div id="moneyContent" class="content active">
+            <!-- Stats -->
             <div class="balance-card">
                 <div class="balance-label">Số Dư Hiện Tại</div>
-                <div class="balance-amount" id="balance">0₫</div>
+                <div class="balance-amount" id="balanceAmount">0đ</div>
             </div>
             
-            <div class="mini-stats">
-                <div class="mini-card">
-                    <div class="mini-label">Chi Tiêu</div>
-                    <div class="mini-amount expense-color" id="totalExpense">0₫</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Chi Tiêu</div>
+                    <div class="stat-value expense-color" id="totalExpense">0đ</div>
                 </div>
-                <div class="mini-card">
-                    <div class="mini-label">Tiết Kiệm</div>
-                    <div class="mini-amount saving-color" id="totalSaving">0₫</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content">
-            <div class="section-title">Giao Dịch Gần Đây</div>
-            <div class="transactions" id="transactionsList">
-                <div class="empty-state">
-                    <div class="empty-icon">💸</div>
-                    <p>Chưa có giao dịch nào<br>Nhấn + để thêm mới</p>
+                <div class="stat-card">
+                    <div class="stat-label">Tiết Kiệm</div>
+                    <div class="stat-value saving-color" id="totalSaving">0đ</div>
                 </div>
             </div>
-        </div>
 
-        <!-- FAB BUTTON -->
-        <button class="fab" id="fabBtn">+</button>
-
-        <!-- BOTTOM SHEET -->
-        <div class="bottom-sheet-overlay" id="overlay"></div>
-        <div class="bottom-sheet" id="bottomSheet">
-            <div class="sheet-handle"></div>
-            <div class="sheet-title">Thêm Giao Dịch</div>
-            
-            <form id="transactionForm">
+            <!-- Form -->
+            <div class="section-title">📝 Thêm Giao Dịch</div>
+            <form id="moneyForm">
                 <div class="type-selector">
-                    <button type="button" class="type-btn active" data-type="expense">
-                        <span>💸</span> Chi Tiêu
-                    </button>
-                    <button type="button" class="type-btn" data-type="saving">
-                        <span>💰</span> Tiết Kiệm
-                    </button>
+                    <button type="button" class="type-btn active" data-type="expense">💸 Chi Tiêu</button>
+                    <button type="button" class="type-btn" data-type="saving">💰 Tiết Kiệm</button>
                 </div>
-
-                <div class="input-group">
-                    <label class="input-label">Số Tiền</label>
-                    <input type="number" class="input-field amount-input" id="amount" 
-                           placeholder="0" required min="0" step="1000">
+                <div class="form-group">
+                    <label class="form-label">Số Tiền (VNĐ)</label>
+                    <input type="text" class="form-input" id="moneyAmount" placeholder="0" inputmode="numeric">
                 </div>
-
-                <div class="input-group">
-                    <label class="input-label">Ghi Chú</label>
-                    <textarea class="input-field" id="note" 
-                              placeholder="Ví dụ: Mua nước, ăn trưa, nạp thẻ điện thoại..."></textarea>
+                <div class="form-group">
+                    <label class="form-label">Ghi Chú</label>
+                    <textarea class="form-input" id="moneyNote" placeholder="Ví dụ: Mua nước, ăn sáng..."></textarea>
                 </div>
-
-                <button type="submit" class="btn-submit">Thêm Giao Dịch</button>
+                <button type="submit" class="btn-add">✓ Thêm Giao Dịch</button>
             </form>
+
+            <!-- Lịch sử -->
+            <div style="margin-top: 24px;">
+                <div class="section-title">📋 Lịch Sử Giao Dịch</div>
+                <div class="notes-list" id="moneyList"></div>
+            </div>
+        </div>
+
+        <!-- CONTENT: GHI CHÚ -->
+        <div id="notesContent" class="content">
+            <div class="section-title">✍️ Ghi Chú Cá Nhân</div>
+            <form id="notesForm">
+                <div class="form-group">
+                    <textarea class="form-input" id="simpleNote" placeholder="Viết ghi chú của bạn...&#x0a;Ví dụ: Hôm nay tôi đau chân, nhớ mua thuốc..." rows="6"></textarea>
+                </div>
+                <button type="submit" class="btn-add">💾 Lưu Ghi Chú</button>
+            </form>
+
+            <div style="margin-top: 24px;">
+                <div class="section-title">📚 Ghi Chú Đã Lưu</div>
+                <div id="simpleNotesList"></div>
+            </div>
+        </div>
+
+        <!-- CONTENT: GAME TÀI XỈU -->
+        <div id="gameContent" class="content">
+            <div class="game-container">
+                <div class="section-title" style="justify-content: center;">🎲 Trò Chơi Tài Xỉu</div>
+                
+                <div class="dice-container">
+                    <div class="dice" id="dice1">🎲</div>
+                    <div class="dice" id="dice2">🎲</div>
+                    <div class="dice" id="dice3">🎲</div>
+                </div>
+
+                <div class="total-display" id="diceTotal">? ? ?</div>
+
+                <div class="bet-buttons">
+                    <button class="bet-btn tai" onclick="selectBet('tai')">
+                        <div>🔴 TÀI</div>
+                        <div style="font-size: 14px; margin-top: 4px;">11-17</div>
+                    </button>
+                    <button class="bet-btn xiu" onclick="selectBet('xiu')">
+                        <div>🟢 XỈU</div>
+                        <div style="font-size: 14px; margin-top: 4px;">4-10</div>
+                    </button>
+                </div>
+
+                <div class="timer" id="timer">60</div>
+
+                <button class="play-btn" id="playBtn" onclick="startGame()">🎮 BẮT ĐẦU CƯỢC</button>
+
+                <div id="result" class="result-display" style="display: none;"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ===== KHỞI TẠO DỮ LIỆU =====
-        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        let selectedType = 'expense';
+        // ===== BIẾN TOÀN CỤC =====
+        let moneyTransactions = [];
+        let simpleNotes = [];
+        let selectedMoneyType = 'expense';
+        let selectedBet = null;
+        let gameTimer = null;
+        let timeLeft = 60;
 
-        // ===== CẬP NHẬT THỜI GIAN =====
-        function updateTime() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            document.getElementById('statusTime').textContent = `${hours}:${minutes}`;
+        const MONEY_KEY = 'moneyData_v1';
+        const NOTES_KEY = 'simpleNotes_v1';
 
-            const options = { weekday: 'long', day: 'numeric', month: 'long' };
-            const dateStr = now.toLocaleDateString('vi-VN', options);
-            document.getElementById('dateDisplay').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        // ===== LOAD DỮ LIỆU =====
+        function loadData() {
+            try {
+                const money = localStorage.getItem(MONEY_KEY);
+                const notes = localStorage.getItem(NOTES_KEY);
+                if (money) moneyTransactions = JSON.parse(money);
+                if (notes) simpleNotes = JSON.parse(notes);
+            } catch (e) {
+                console.error('Lỗi load dữ liệu:', e);
+            }
         }
 
-        setInterval(updateTime, 1000);
-        updateTime();
+        function saveMoneyData() {
+            localStorage.setItem(MONEY_KEY, JSON.stringify(moneyTransactions));
+        }
+
+        function saveNotesData() {
+            localStorage.setItem(NOTES_KEY, JSON.stringify(simpleNotes));
+        }
 
         // ===== ĐỊNH DẠNG TIỀN =====
         function formatMoney(amount) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            }).format(amount);
+            return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'đ';
         }
 
+        function parseMoney(value) {
+            return parseInt(value.replace(/\D/g, '')) || 0;
+        }
+
+        // ===== XỬ LÝ INPUT SỐ TIỀN =====
+        document.getElementById('moneyAmount').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value) {
+                e.target.value = parseInt(value).toLocaleString('vi-VN');
+            } else {
+                e.target.value = '';
+            }
+        });
+
         // ===== ĐỊNH DẠNG THỜI GIAN =====
-        function formatTime(date) {
-            const d = new Date(date);
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
             const now = new Date();
-            const diff = now - d;
+            const diff = now - date;
             const minutes = Math.floor(diff / 60000);
             const hours = Math.floor(diff / 3600000);
             const days = Math.floor(diff / 86400000);
@@ -614,136 +673,131 @@
             if (minutes < 1) return 'Vừa xong';
             if (minutes < 60) return `${minutes} phút trước`;
             if (hours < 24) return `${hours} giờ trước`;
+            if (days === 1) return 'Hôm qua';
             if (days < 7) return `${days} ngày trước`;
             
-            return d.toLocaleDateString('vi-VN', { day: 'numeric', month: 'short' });
-        }
-
-        // ===== CẬP NHẬT THỐNG KÊ =====
-        function updateStats() {
-            let totalExpense = 0;
-            let totalSaving = 0;
-
-            transactions.forEach(t => {
-                if (t.type === 'expense') totalExpense += t.amount;
-                else totalSaving += t.amount;
+            return date.toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
             });
-
-            const balance = totalSaving - totalExpense;
-
-            document.getElementById('totalExpense').textContent = formatMoney(totalExpense);
-            document.getElementById('totalSaving').textContent = formatMoney(totalSaving);
-            document.getElementById('balance').textContent = formatMoney(balance);
         }
 
-        // ===== HIỂN THỊ GIAO DỊCH =====
-        function displayTransactions() {
-            const list = document.getElementById('transactionsList');
+        // ===== CẬP NHẬT NGÀY =====
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            const dateStr = now.toLocaleDateString('vi-VN', options);
+            document.getElementById('dateDisplay').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        }
 
-            if (transactions.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">💸</div>
-                        <p>Chưa có giao dịch nào<br>Nhấn + để thêm mới</p>
-                    </div>
-                `;
+        // ===== CHUYỂN TAB =====
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            
+            if (tab === 'money') {
+                document.getElementById('moneyContent').classList.add('active');
+            } else if (tab === 'notes') {
+                document.getElementById('notesContent').classList.add('active');
+            } else if (tab === 'game') {
+                document.getElementById('gameContent').classList.add('active');
+            }
+        }
+
+        // ===== QUẢN LÝ TIỀN =====
+        function updateMoneyStats() {
+            let expense = 0, saving = 0;
+            moneyTransactions.forEach(t => {
+                if (t.type === 'expense') expense += t.amount;
+                else saving += t.amount;
+            });
+            const balance = saving - expense;
+            
+            document.getElementById('totalExpense').textContent = formatMoney(expense);
+            document.getElementById('totalSaving').textContent = formatMoney(saving);
+            document.getElementById('balanceAmount').textContent = formatMoney(balance);
+        }
+
+        function displayMoneyList() {
+            const list = document.getElementById('moneyList');
+            if (moneyTransactions.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">💸</div><p>Chưa có giao dịch nào</p></div>';
                 return;
             }
-
-            const sorted = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
-
+            
+            const sorted = [...moneyTransactions].sort((a, b) => new Date(b.date) - new Date(a.date));
             list.innerHTML = sorted.map(t => `
-                <div class="transaction">
-                    <div class="transaction-icon ${t.type}">
-                        ${t.type === 'expense' ? '💸' : '💰'}
+                <div class="note-card">
+                    <div class="note-header">
+                        <span class="note-type-badge ${t.type}">
+                            ${t.type === 'expense' ? '💸 Chi Tiêu' : '💰 Tiết Kiệm'}
+                        </span>
+                        <div class="note-amount ${t.type === 'expense' ? 'expense-color' : 'saving-color'}">
+                            ${t.type === 'expense' ? '-' : '+'}${formatMoney(t.amount)}
+                        </div>
                     </div>
-                    <div class="transaction-info">
-                        <div class="transaction-title">${t.note || 'Không có ghi chú'}</div>
-                        <div class="transaction-time">${formatTime(t.date)}</div>
+                    ${t.note ? `<div class="note-content">${t.note}</div>` : ''}
+                    <div class="note-footer">
+                        <div class="note-date">${formatDateTime(t.date)}</div>
+                        <button class="btn-delete" onclick="deleteMoneyTransaction(${t.id})">Xóa</button>
                     </div>
-                    <div class="transaction-amount ${t.type === 'expense' ? 'expense-color' : 'saving-color'}">
-                        ${t.type === 'expense' ? '-' : '+'}${formatMoney(t.amount)}
-                    </div>
-                    <button class="transaction-delete" onclick="deleteTransaction(${t.id})">×</button>
                 </div>
             `).join('');
         }
 
-        // ===== LƯU DỮ LIỆU =====
-        function saveData() {
-            localStorage.setItem('transactions', JSON.stringify(transactions));
-        }
-
-        // ===== MỞ/ĐÓNG BOTTOM SHEET =====
-        const fabBtn = document.getElementById('fabBtn');
-        const overlay = document.getElementById('overlay');
-        const bottomSheet = document.getElementById('bottomSheet');
-
-        function openSheet() {
-            overlay.classList.add('active');
-            bottomSheet.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeSheet() {
-            overlay.classList.remove('active');
-            bottomSheet.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        fabBtn.addEventListener('click', openSheet);
-        overlay.addEventListener('click', closeSheet);
-
-        // ===== CHỌN LOẠI GIAO DỊCH =====
         document.querySelectorAll('.type-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                selectedType = this.dataset.type;
+                selectedMoneyType = this.dataset.type;
             });
         });
 
-        // ===== THÊM GIAO DỊCH =====
-        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+        document.getElementById('moneyForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            const amount = parseFloat(document.getElementById('amount').value);
-            const note = document.getElementById('note').value.trim();
-
-            const transaction = {
+            const amount = parseMoney(document.getElementById('moneyAmount').value);
+            const note = document.getElementById('moneyNote').value.trim();
+            
+            if (amount <= 0) {
+                alert('Vui lòng nhập số tiền hợp lệ');
+                return;
+            }
+            
+            moneyTransactions.push({
                 id: Date.now(),
-                type: selectedType,
+                type: selectedMoneyType,
                 amount: amount,
                 note: note,
                 date: new Date().toISOString()
-            };
-
-            transactions.push(transaction);
-            saveData();
-            updateStats();
-            displayTransactions();
-
-            // Reset form
-            document.getElementById('amount').value = '';
-            document.getElementById('note').value = '';
-            document.querySelectorAll('.type-btn')[0].click();
-
-            closeSheet();
+            });
+            
+            saveMoneyData();
+            updateMoneyStats();
+            displayMoneyList();
+            
+            document.getElementById('moneyAmount').value = '';
+            document.getElementById('moneyNote').value = '';
         });
 
-        // ===== XÓA GIAO DỊCH =====
-        function deleteTransaction(id) {
+        function deleteMoneyTransaction(id) {
             if (confirm('Xóa giao dịch này?')) {
-                transactions = transactions.filter(t => t.id !== id);
-                saveData();
-                updateStats();
-                displayTransactions();
+                moneyTransactions = moneyTransactions.filter(t => t.id !== id);
+                saveMoneyData();
+                updateMoneyStats();
+                displayMoneyList();
             }
         }
 
-        // ===== KHỞI ĐỘNG =====
-        updateStats();
-        displayTransactions();
-    </script>
-</body>
-</html>
+        // ===== GHI CHÚ ĐƠN GIẢN =====
+        function displaySimpleNotes() {
+            const list = document.getElementById('simpleNotesList');
+            if (simpleNotes.length === 0) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">📝</div><p>Chưa có ghi chú nào</p></div>';
+                return;
+            }
+            
+            const sorted = [...simpleNotes].sort((a, b) => new Date(b.date) - new Date(a.date));
+            list.innerHTML = sorted.map(note => `
