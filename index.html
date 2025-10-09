@@ -2,407 +2,96 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Trợ Lý Cá Nhân</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đồng Hồ và Nút Bấm</title>
     <style>
-        /* --- BẢNG MÀU DARK MODE & THIẾT KẾ MỚI --- */
-        :root {
-            --bg-color: #000000;
-            --card-color: #1C1C1E;
-            --header-color: #1C1C1E;
-            --nav-color: rgba(28, 28, 30, 0.7);
-            --text-primary: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --accent-blue: #0A84FF;
-            --accent-red: #FF453A;
-            --accent-green: #30D158;
-            --accent-orange: #FF9F0A;
-            --border-color: #38383A;
-            --input-bg: #2C2C2E;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { color-scheme: dark; }
+        /* CSS để làm đẹp trang */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-primary);
-            padding-bottom: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5; /* Màu nền xám nhạt */
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
-        .screen { display: none; }
-        .screen.active { display: block; }
-        .header {
-            background: var(--header-color);
-            padding: 20px;
-            padding-top: 60px; /* Thêm padding cho status bar trên mobile */
-            border-bottom: 1px solid var(--border-color);
+        .container {
+            padding: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-        .header h1 { font-size: 34px; font-weight: 700; }
-        .btn {
-            padding: 15px 20px; border: none; border-radius: 12px;
-            font-size: 17px; font-weight: 600; cursor: pointer;
-            background: var(--accent-blue); color: white;
-            width: 100%; margin-top: 16px;
-            transition: transform 0.1s ease, opacity 0.2s ease;
+        #thoi-gian {
+            /* Làm cho giờ to và đậm */
+            font-size: 5rem; /* Kích thước chữ rất lớn */
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
         }
-        .btn:active { transform: scale(0.97); opacity: 0.8; }
-        .btn-sec { background: #3A3A3C; color: var(--text-primary); }
-        .btn-danger { background: var(--accent-red); }
-        .btn-success { background: var(--accent-green); }
-        .btn-warning { background: var(--accent-orange); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; }
-        .stat-card { background: var(--card-color); padding: 20px; border-radius: 16px; text-align: center; }
-        .stat-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .stat-value { font-size: 26px; font-weight: 600; }
-        .stat-value.red { color: var(--accent-red); }
-        .stat-value.green { color: var(--accent-green); }
-        .card { background: var(--card-color); border-radius: 16px; padding: 16px; margin: 16px 20px; }
-        .card h3 { font-size: 20px; margin-bottom: 16px; }
-        .txn-item { display: flex; align-items: center; padding: 12px; background: transparent; border-bottom: 1px solid var(--border-color); }
-        .txn-item:last-child { border-bottom: none; }
-        .txn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 16px; }
-        .txn-icon.exp { background: rgba(255, 69, 58, 0.3); }
-        .txn-icon.inc { background: rgba(48, 209, 88, 0.3); }
-        .txn-icon.sav { background: rgba(255, 159, 10, 0.3); }
-        .txn-info { flex: 1; }
-        .txn-cat { font-weight: 600; font-size: 16px; }
-        .txn-date { color: var(--text-secondary); font-size: 14px; }
-        .txn-amt { font-weight: 600; font-size: 16px; }
-        .txn-acts { display: flex; gap: 8px; margin-left: 8px; }
-        .icon-btn { width: 38px; height: 38px; border: none; background: #3A3A3C; border-radius: 50%; cursor: pointer; font-size: 16px; }
-        .icon-btn:active { opacity: 0.5; }
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--nav-color);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
-            display: flex; padding: 8px 0; padding-bottom: 24px; /* Thêm padding cho khu vực an toàn */
+        #ngay-thang {
+            /* Làm cho ngày tháng rõ ràng */
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 30px;
         }
-        .nav-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; color: var(--text-secondary); transition: color 0.2s ease; }
-        .nav-item.active { color: var(--accent-blue); }
-        .nav-item:active { opacity: 0.5; }
-        .nav-icon { font-size: 24px; }
-        .nav-label { font-size: 11px; }
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal.show { display: flex; }
-        .modal-content { background: #2C2C2E; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
-        .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-primary); }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent-blue); outline: none; }
-        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-        .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        .quick-add-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 12px; }
-        .quick-add-btn { padding: 12px 0; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--input-bg); color: var(--accent-blue); }
-        .quick-add-btn:active { background: #48484A; }
-        
-        /* --- CSS CHO DANH SÁCH & TRÌNH PHÁT PHIM --- */
-        .phim-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s; }
-        .phim-item:last-child { border-bottom: none; }
-        .phim-item:active { background-color: #3A3A3C; }
-        .phim-item-num { font-size: 18px; font-weight: bold; color: var(--text-secondary); width: 40px; }
-        .phim-item-info { flex-grow: 1; }
-        .phim-item-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-        .phim-item-desc { font-size: 14px; color: var(--text-secondary); }
-        .phim-play-icon { font-size: 24px; color: var(--text-secondary); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #moviePlayerModal .modal-content { padding: 12px; }
-        #moviePlayerModal .modal-title { padding: 0 12px; margin-top: 12px; margin-bottom: 12px; font-size: 18px; }
+        .nut-an-tien-nhanh {
+            /* Làm cho nút nổi bật */
+            background-color: #28a745; /* Màu xanh lá cây nổi bật */
+            color: white; /* Chữ trắng */
+            border: none;
+            padding: 15px 30px; /* Nút to hơn */
+            font-size: 1.2rem; /* Chữ trong nút to hơn */
+            font-weight: bold;
+            border-radius: 50px; /* Bo tròn cạnh */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4);
+        }
+        .nut-an-tien-nhanh:hover {
+            /* Hiệu ứng khi di chuột vào */
+            background-color: #218838; /* Màu xanh đậm hơn */
+            transform: scale(1.05); /* Phóng to nhẹ */
+        }
     </style>
 </head>
 <body>
 
-<div id="dash" class="screen active">
-    <div class="header"><h1>Tổng Quan</h1></div>
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="stat-label">Tổng Số Dư</div>
-            <div class="stat-value" id="bal">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Đã Chi</div>
-            <div class="stat-value red" id="exp">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Thu Nhập</div>
-            <div class="stat-value green" id="inc">0₫</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">Tiết Kiệm</div>
-            <div class="stat-value" id="sav">0₫</div>
-        </div>
+    <div class="container">
+        <div id="thoi-gian">00:00:00</div>
+        <div id="ngay-thang">Ngày 00, tháng 00, năm 0000</div>
+        <button class="nut-an-tien-nhanh" onclick="alert('Cảm ơn bạn đã ủng hộ!')">
+            ⚡️ Ủng Hộ Nhanh
+        </button>
     </div>
-    <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Thêm Nhanh</h3>
-        <button class="btn-sec" onclick="goTo('hist', document.querySelector('.nav-item:nth-child(2)'))" style="padding: 8px 12px; border-radius: 8px; font-size: 14px; margin-top: 0;">Xem tất cả</button>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px;">
-            <button class="btn btn-danger" onclick="openTxn('expense')">💸 Chi Tiêu</button>
-            <button class="btn btn-success" onclick="openTxn('income')">💰 Thu Nhập</button>
-            <button class="btn btn-warning" onclick="openTxn('savings')">🏦 Tiết Kiệm</button>
-      </div>
-    </div>
-    <div class="card">
-        <h3>Giao Dịch Gần Đây</h3>
-        <div id="recent"></div>
-    </div>
-</div>
 
-<div id="hist" class="screen">
-    <div class="header"><h1>Lịch Sử Giao Dịch</h1></div>
-    <div class="card"><input type="text" class="form-input" placeholder="🔍 Tìm kiếm giao dịch..." id="search" oninput="doSearch()"></div>
-    <div class="card"><div id="histList"></div></div>
-</div>
+    <script>
+        // JavaScript để đồng hồ tự chạy
+        function capNhatThoiGian() {
+            const baygio = new Date();
 
-<div id="notes" class="screen">
-    <div class="header">
-        <h1>Ghi Chú</h1>
-        <button class="btn" onclick="openNote()">+ Tạo Ghi Chú Mới</button>
-    </div>
-    <div class="card"><div id="notesList"></div></div>
-</div>
+            // Lấy giờ, phút, giây và thêm số 0 nếu cần
+            const gio = String(baygio.getHours()).padStart(2, '0');
+            const phut = String(baygio.getMinutes()).padStart(2, '0');
+            const giay = String(baygio.getSeconds()).padStart(2, '0');
 
-<div id="movies" class="screen">
-    <div class="header">
-        <h1>Phim Của Phương Hữu Dưỡng</h1>
-        <p id="currentDate" style="color: var(--text-secondary); font-size: 14px; margin-top: 4px;"></p>
-    </div>
-    <div class="card" id="phimListContainer">
-        </div>
-</div>
+            // Lấy ngày, tháng, năm
+            const thu = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][baygio.getDay()];
+            const ngay = baygio.getDate();
+            const thang = baygio.getMonth() + 1; // Tháng bắt đầu từ 0
+            const nam = baygio.getFullYear();
 
-<div id="settings" class="screen">
-    <div class="header"><h1>Cài Đặt</h1></div>
-    <div class="card">
-        <h3>Quản lý dữ liệu</h3>
-        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; margin-bottom: 16px;">Hành động này sẽ xóa toàn bộ chi tiêu và ghi chú. Không thể hoàn tác.</p>
-        <button class="btn btn-danger" onclick="resetData()">Xóa Toàn Bộ Dữ Liệu</button>
-    </div>
-</div>
+            // Cập nhật lên HTML
+            document.getElementById('thoi-gian').textContent = `${gio}:${phut}:${giay}`;
+            document.getElementById('ngay-thang').textContent = `${thu}, ngày ${ngay} tháng ${thang} năm ${nam}`;
+        }
 
-<div class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('dash', this)"><div class="nav-icon">🏠</div><div class="nav-label">Tổng Quan</div></div>
-    <div class="nav-item" onclick="goTo('hist', this)"><div class="nav-icon">📊</div><div class="nav-label">Lịch Sử</div></div>
-    <div class="nav-item" onclick="goTo('notes', this)"><div class="nav-icon">📝</div><div class="nav-label">Ghi Chú</div></div>
-    <div class="nav-item" onclick="goTo('movies', this)"><div class="nav-icon">🎬</div><div class="nav-label">Phim</div></div>
-    <div class="nav-item" onclick="goTo('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-label">Cài Đặt</div></div>
-</div>
+        // Cập nhật thời gian mỗi giây
+        setInterval(capNhatThoiGian, 1000);
 
-<div id="txnModal" class="modal"><div class="modal-content">
-    <h2 class="modal-title" id="modalTitle"></h2>
-    <div class="form-group">
-        <label class="form-label">Số tiền (₫)</label>
-        <input type="number" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
-        <div class="quick-add-grid">
-            <button type="button" class="quick-add-btn" onclick="addAmount(10000)">10K</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(50000)">50K</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(100000)">100K</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(500000)">500K</button>
-            <button type="button" class="quick-add-btn" onclick="clearAmount()">Xóa</button>
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="form-label">Danh mục</label>
-        <select class="form-select" id="cat">
-            <option value="food">🍔 Ăn uống</option><option value="transport">🚗 Đi lại</option><option value="shopping">🛍️ Mua sắm</option><option value="bills">💡 Hóa đơn</option><option value="salary">💰 Lương</option><option value="other">📌 Khác</option>
-        </select>
-    </div>
-    <div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note"></textarea></div>
-    <input type="hidden" id="type"><input type="hidden" id="editId">
-    <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1">Lưu</button></div>
-</div></div>
-<div id="noteModal" class="modal"><div class="modal-content">
-    <h2 class="modal-title">Ghi Chú</h2>
-    <div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div>
-    <div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" style="min-height:200px"></textarea></div>
-    <input type="hidden" id="editNoteId">
-    <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1">Lưu</button></div>
-</div></div>
-<div id="moviePlayerModal" class="modal"><div class="modal-content">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 class="modal-title" id="moviePlayerTitle"></h2>
-        <button onclick="closeModal('moviePlayerModal')" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
-    </div>
-    <div class="video-container"><iframe id="youtubePlayer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
-</div></div>
+        // Chạy lần đầu ngay khi tải trang
+        capNhatThoiGian();
+    </script>
 
-<script>
-const KEY = 'mywallet_dark_v2';
-let db = { txns: [], notes: [] };
-
-// --- DANH SÁCH 10 PHIM CỦA PHƯƠNG HỮU DƯỠNG ---
-const phuongHuuDuongMovies = [
-    { id: 1, title: "Nghịch Tập: Chi Ái Thượng Tình Địch", desc: "Web drama, 2015", youtubeId: "h0IAnRL-2Qk" },
-    { id: 2, title: "Tôi Ở Đại Lý Tự Làm Sủng Vật", desc: "Phim cổ trang, 2018", youtubeId: "uOa84aI7H-k" },
-    { id: 3, title: "Bất Khả Kháng Lực", desc: "Web movie, 2016 (vai phụ)", youtubeId: "U3-Jt52i-PE" },
-    { id: 4, title: "Thư Sinh Lạc Phường", desc: "Web movie, 2016", youtubeId: "M_u2-Eb5a_w" },
-    { id: 5, title: "Thanh Xuân Vị Ký", desc: "Phim ngắn, 2017", youtubeId: "yO8Oq-iQk1Y" },
-    { id: 6, title: "Mạt Lộ Phùng Cam", desc: "Phim ngắn, 2020", youtubeId: "VIDEO_ID_HERE" }, // Cần tìm ID
-    { id: 7, title: "My Neighbour Can't Sleep", desc: "Web drama, 2019 (vai phụ)", youtubeId: "e2Od1cf1U7I" },
-    { id: 8, title: "The Story of the Bat", desc: "Web movie, 2021", youtubeId: "3_Fz9JiAb2o" },
-    { id: 9, title: "The Most Beautiful You in the World", desc: "Web drama, 2021", youtubeId: "aU-tAfFz_pY" },
-    { id: 10, title: "Counter Attack 2", desc: "Dự án (chưa phát hành)", youtubeId: "VIDEO_ID_HERE" } // Placeholder
-];
-
-function load() {
-    try { const s = localStorage.getItem(KEY); if (s) db = JSON.parse(s); } catch(e) {}
-}
-function save() { localStorage.setItem(KEY, JSON.stringify(db)); }
-function fmt(n) { return new Intl.NumberFormat('vi-VN').format(n) + '₫'; }
-
-function init() {
-    load();
-    const today = new Date();
-    const dateString = today.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
-    document.getElementById('currentDate').textContent = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-    render();
-}
-
-function render() {
-    renderDash();
-    renderHist();
-    renderNotes();
-    renderPhimList();
-}
-
-// Các hàm render chính
-function renderDash() {
-    let bal = 0, exp = 0, inc = 0, sav = 0;
-    db.txns.forEach(t => {
-        if (t.type === 'expense') exp += t.amount;
-        else if (t.type === 'income') inc += t.amount;
-        else if (t.type === 'savings') sav += t.amount;
-    });
-    bal = inc - exp;
-    
-    document.getElementById('bal').textContent = fmt(bal);
-    document.getElementById('exp').textContent = fmt(exp);
-    document.getElementById('inc').textContent = fmt(inc);
-    document.getElementById('sav').textContent = fmt(sav);
-    
-    const recent = db.txns.slice().reverse().slice(0, 3);
-    document.getElementById('recent').innerHTML = recent.length ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch.</div>';
-}
-function renderHist() {
-    const allTxns = db.txns.slice().reverse();
-    document.getElementById('histList').innerHTML = allTxns.length ? allTxns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không có giao dịch nào.</div>';
-}
-function renderNotes() {
-    const allNotes = db.notes.slice().reverse();
-    document.getElementById('notesList').innerHTML = allNotes.length > 0 ? allNotes.map(n => `<div class="phim-item" onclick="editNote(${n.id})"><div class="phim-item-info"><div class="phim-item-title">${n.title}</div><div class="phim-item-desc">${n.content.substring(0,100)}...</div></div></div>`).join('') : '<div class="empty">Chưa có ghi chú nào.</div>';
-}
-function renderPhimList() {
-    document.getElementById('phimListContainer').innerHTML = phuongHuuDuongMovies.map(movie => `
-        <div class="phim-item" onclick="openMoviePlayer('${movie.youtubeId}', '${movie.title.replace(/'/g, "\\'")}')">
-            <div class="phim-item-num">${movie.id.toString().padStart(2, '0')}</div>
-            <div class="phim-item-info">
-                <div class="phim-item-title">${movie.title}</div>
-                <div class="phim-item-desc">${movie.desc}</div>
-            </div>
-            <div class="phim-play-icon">▶</div>
-        </div>
-    `).join('');
-}
-
-
-// Hàm tạo HTML
-function makeTxn(t, acts) {
-    const icons = { food: '🍔', transport: '🚗', shopping: '🛍️', bills: '💡', salary: '💰', other: '📌' };
-    const names = { food: 'Ăn uống', transport: 'Đi lại', shopping: 'Mua sắm', bills: 'Hóa đơn', salary: 'Lương', other: 'Khác' };
-    const cls = t.type === 'expense' ? 'exp' : (t.type === 'income' ? 'inc' : 'sav');
-    const amtSign = t.type === 'expense' ? '-' : '+';
-    const amtColor = t.type === 'expense' ? 'var(--accent-red)' : 'var(--accent-green)';
-    const btns = acts ? `<div class="txn-acts"><button class="icon-btn" onclick="event.stopPropagation(); editTxn(${t.id})">✏️</button><button class="icon-btn" onclick="event.stopPropagation(); delTxn(${t.id})">🗑️</button></div>` : '';
-    return `<div class="txn-item"><div class="txn-icon ${cls}">${icons[t.cat]||'📌'}</div><div class="txn-info"><div class="txn-cat">${names[t.cat]||'Khác'}</div><div class="txn-date">${new Date(t.date).toLocaleDateString('vi-VN')}</div></div><div class="txn-amt" style="color:${amtColor}">${amtSign}${fmt(t.amount)}</div>${btns}</div>`;
-}
-
-// Hàm điều hướng
-function goTo(scr, element) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(scr).classList.add('active');
-    element.classList.add('active');
-}
-
-// Hàm tương tác Modal
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) {
-    const modal = document.getElementById(id);
-    modal.classList.remove('show');
-    if (id === 'moviePlayerModal') {
-        document.getElementById('youtubePlayer').src = ''; // Dừng video khi đóng
-    }
-}
-
-// Hàm cho Phim
-function openMoviePlayer(youtubeId, title) {
-    if (youtubeId === 'VIDEO_ID_HERE') {
-        alert('Trailer cho phim này hiện chưa có sẵn.');
-        return;
-    }
-    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
-    document.getElementById('moviePlayerTitle').textContent = title;
-    openModal('moviePlayerModal');
-}
-
-// Hàm cho Giao dịch
-function openTxn(txnType) {
-    document.getElementById('editId').value = '';
-    document.getElementById('amt').value = '';
-    document.getElementById('cat').value = 'food';
-    document.getElementById('note').value = '';
-    document.getElementById('type').value = txnType;
-    const titles = {'expense':'💸 Chi Tiêu Mới','income':'💰 Thu Nhập Mới','savings':'🏦 Tiết Kiệm Mới'};
-    document.getElementById('modalTitle').textContent = titles[txnType];
-    openModal('txnModal');
-}
-function saveTxn() {
-    const id = document.getElementById('editId').value;
-    const amt = parseInt(document.getElementById('amt').value) || 0;
-    if (amt <= 0) { alert('Vui lòng nhập số tiền hợp lệ!'); return; }
-    const txn = {id: id ? parseInt(id) : Date.now(), type: document.getElementById('type').value, amount: amt, cat: document.getElementById('cat').value, note: document.getElementById('note').value, date: id ? db.txns.find(t=>t.id === parseInt(id)).date : new Date().toISOString()};
-    if (id) { const idx = db.txns.findIndex(t => t.id === parseInt(id)); if (idx > -1) db.txns[idx] = txn; } else { db.txns.push(txn); }
-    save(); closeModal('txnModal'); render();
-}
-function editTxn(id) { const t = db.txns.find(x => x.id === id); if (!t) return; openTxn(t.type); document.getElementById('editId').value = t.id; document.getElementById('amt').value = t.amount; document.getElementById('cat').value = t.cat; document.getElementById('note').value = t.note; }
-function delTxn(id) { if (confirm('Xóa giao dịch này?')) { db.txns = db.txns.filter(t => t.id !== id); save(); render(); }}
-function addAmount(value) { const i = document.getElementById('amt'); i.value = (parseInt(i.value)||0) + value; }
-function clearAmount() { document.getElementById('amt').value = ''; }
-
-// Hàm cho Ghi chú
-function openNote() { document.getElementById('editNoteId').value = ''; document.getElementById('noteTitle').value = ''; document.getElementById('noteContent').value = ''; openModal('noteModal'); }
-function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    if (!title) { alert('Vui lòng nhập tiêu đề!'); return; }
-    const id = document.getElementById('editNoteId').value;
-    const n = {id: id ? parseInt(id) : Date.now(), title, content: document.getElementById('noteContent').value.trim(), date: id ? db.notes.find(x => x.id === parseInt(id)).date : new Date().toISOString()};
-    if (id) { const idx = db.notes.findIndex(x => x.id === parseInt(id)); if (idx > -1) db.notes[idx] = n; } else { db.notes.push(n); }
-    save(); closeModal('noteModal'); render();
-}
-function editNote(id) { const n = db.notes.find(x => x.id === id); if (!n) return; openNote(); document.getElementById('editNoteId').value = n.id; document.getElementById('noteTitle').value = n.title; document.getElementById('noteContent').value = n.content; }
-
-// Hàm tìm kiếm và cài đặt
-function doSearch() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const res = db.txns.slice().reverse().filter(t => t.note.toLowerCase().includes(q) || t.amount.toString().includes(q) || t.cat.toLowerCase().includes(q));
-    document.getElementById('histList').innerHTML = res.length > 0 ? res.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không tìm thấy kết quả.</div>';
-}
-function resetData() {
-    if (confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ DỮ LIỆU?\nHành động này không thể hoàn tác!')) {
-        db = { txns: [], notes: [] }; save(); render(); alert('✅ Đã xóa toàn bộ dữ liệu.');
-    }
-}
-
-init();
-</script>
 </body>
 </html>
