@@ -58,16 +58,14 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* ========= THAY ĐỔI: BỎ HEADER, THÊM PADDING CHO SCREEN ========= */
         .screen { 
             display: none; 
-            padding: 60px 20px 0 20px; /* Thêm padding top để thay thế header */
+            padding: 60px 20px 0 20px;
         }
         .screen.active { 
             display: block; 
         }
         
-        /* ========= NEW: TIÊU ĐỀ MỚI TRONG NỘI DUNG ========= */
         .screen-title-bar {
             display: flex;
             justify-content: space-between;
@@ -89,7 +87,6 @@
             font-size: 14px;
         }
 
-        /* BUTTONS */
         .btn {
             padding: 14px 24px; border: none; border-radius: 12px; font-size: 16px;
             font-weight: 600; cursor: pointer; background: linear-gradient(135deg, var(--accent-blue), #0066cc);
@@ -101,10 +98,9 @@
         html.light-theme .btn-sec { background: linear-gradient(135deg, #e0e0e0, #d5d5d5); color: var(--text-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-danger { background: linear-gradient(135deg, var(--accent-red), #cc0000); box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3); }
         
-        /* CARDS & LAYOUT */
         .card { 
             background: var(--card-bg); border-radius: 16px; padding: 20px;
-            margin: 16px 0; /* Bỏ margin trái phải vì screen đã có padding */
+            margin: 16px 0;
             box-shadow: var(--shadow); border: 1px solid var(--border);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
@@ -128,14 +124,12 @@
         .data-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
         .data-btn { padding: 6px 14px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: var(--bg-primary); color: var(--text-primary); }
         
-        /* NAVIGATION */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(var(--card-bg-rgb, 18, 18, 18), 0.9); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 8px 0; padding-bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 1000; transition: background 0.3s ease, border-color 0.3s ease; }
         .nav-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
         .nav-item.active { color: var(--accent-blue); transform: scale(1.1); }
         .nav-icon { font-size: 22px; margin-bottom: 2px; }
         .nav-label { font-size: 10px; font-weight: 500; }
         
-        /* MODAL & OTHER STYLES */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); opacity: 0; transition: opacity 0.3s; }
         .modal.show { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-secondary); border-radius: 16px; padding: 24px; width: 90%; max-width: 440px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.8); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease; }
@@ -220,8 +214,11 @@
         </div>
         <div class="card">
             <h3>Quản Lý Dữ Liệu</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">Xóa toàn bộ dữ liệu. Thao tác này không thể hoàn tác.</p>
+            <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">
+                Xóa toàn bộ dữ liệu hoặc tải lại trang để áp dụng cập nhật.
+            </p>
             <button class="btn btn-danger" onclick="resetData()">🗑️ Xóa Toàn Bộ Dữ Liệu</button>
+            <button class="btn btn-sec" onclick="reloadApp()">🔄 Tải Lại Trang</button>
         </div>
     </div>
 
@@ -234,12 +231,14 @@
     </div>
 </div>
 
-<div id="txnModal" class="modal">...</div>
-<div id="noteModal" class="modal">...</div>
-<div id="passwordModal" class="modal">...</div>
+<div id="txnModal" class="modal">
+    </div>
+<div id="noteModal" class="modal">
+    </div>
+<div id="passwordModal" class="modal">
+    </div>
 
 <script>
-// Logic khởi tạo giao diện
 (function initializeTheme() {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -248,10 +247,6 @@
     }
 })();
 
-// Dán toàn bộ các hàm JavaScript từ code trước vào đây.
-// Code JavaScript không có thay đổi nào về chức năng.
-
-// ... (Dán toàn bộ nội dung thẻ <script> từ phiên bản trước vào đây)
 const DB = {
     getTxns: () => JSON.parse(localStorage.getItem('txns') || '[]'),
     saveTxns: (txns) => localStorage.setItem('txns', JSON.stringify(txns)),
@@ -260,15 +255,82 @@ const DB = {
     getPasswords: () => JSON.parse(localStorage.getItem('passwords') || '[]'),
     savePasswords: (passwords) => localStorage.setItem('passwords', JSON.stringify(passwords)),
 };
-const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] }, { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] }, { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] }, { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] }, { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
-let lastRenderedDay = -1; 
+
+const scheduleData = [
+    { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
+    { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] },
+    { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] },
+    { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] },
+    { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] },
+    { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] },
+    { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
+];
+
+let lastRenderedDay = -1;
 let clockInterval = null;
-function goTo(screenId, element) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); element.classList.add('active'); window.scrollTo(0, 0); }
-function updateClockAndSchedule() { const now = new Date(); const dayIndex = now.getDay(); document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); if (dayIndex !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = dayIndex; } }
-function renderFullSchedule(now) { const dayIndex = now.getDay(); document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }); const todaySchedule = scheduleData[dayIndex]; const todayContainer = document.getElementById('today-schedule'); let todayHTML = '<h3>Lịch học hôm nay</h3>'; if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) { todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`; } else { if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join(''); if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join(''); else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`; } todayContainer.innerHTML = todayHTML; const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7; const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex]; const futureContainer = document.getElementById('future-schedule'); let futureHTML = '<h3>Lịch trình sắp tới</h3>'; futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`; futureContainer.innerHTML = futureHTML; }
-function toggleTheme() { const htmlEl = document.documentElement; htmlEl.classList.toggle('light-theme'); const isLight = htmlEl.classList.contains('light-theme'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); }
-function renderAll() { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderStats(); renderHistory(); renderNotes(); renderPasswords(); }
+
+function goTo(screenId, element) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    element.classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+function updateClockAndSchedule() {
+    const now = new Date();
+    const dayIndex = now.getDay();
+    document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false });
+    if (dayIndex !== lastRenderedDay) {
+        renderFullSchedule(now);
+        lastRenderedDay = dayIndex;
+    }
+}
+
+function renderFullSchedule(now) {
+    const dayIndex = now.getDay();
+    document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' });
+    const todaySchedule = scheduleData[dayIndex];
+    const todayContainer = document.getElementById('today-schedule');
+    let todayHTML = '<h3>Lịch học hôm nay</h3>';
+    if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) {
+        todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`;
+    } else {
+        if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join('');
+        if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join('');
+        else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`;
+    }
+    todayContainer.innerHTML = todayHTML;
+    const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7;
+    const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex];
+    const futureContainer = document.getElementById('future-schedule');
+    let futureHTML = '<h3>Lịch trình sắp tới</h3>';
+    futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`;
+    futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`;
+    futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`;
+    futureContainer.innerHTML = futureHTML;
+}
+
+function toggleTheme() {
+    const htmlEl = document.documentElement;
+    htmlEl.classList.toggle('light-theme');
+    const isLight = htmlEl.classList.contains('light-theme');
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+
+function renderAll() {
+    if (!clockInterval) {
+        updateClockAndSchedule();
+        clockInterval = setInterval(updateClockAndSchedule, 1000);
+    }
+    renderStats();
+    renderHistory();
+    renderNotes();
+    renderPasswords();
+}
+
 document.addEventListener('DOMContentLoaded', renderAll);
+
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
 function renderStats() { const txns = DB.getTxns(); const totalIncome = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const totalExpense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('bal').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(balance); document.getElementById('inc').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalIncome); document.getElementById('exp').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalExpense); }
@@ -289,6 +351,7 @@ function toggleModalPasswordVisibility() { const passInput = document.getElement
 function showToast(message) { const existingToast = document.querySelector('.copy-toast'); if (existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.textContent = message; toast.className = 'copy-toast'; document.body.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000); }
 function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
 function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
+function reloadApp() { window.location.reload(); }
 
 </script>
 </body>
