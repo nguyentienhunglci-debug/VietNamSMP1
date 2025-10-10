@@ -278,6 +278,27 @@
         }
         .quick-add-btn:active { background: var(--card-hover); transform: scale(0.96); }
         .quick-add-btn.clear { grid-column: 1 / -1; background: #2a2a2a; color: var(--accent-red); }
+
+        /* === NEW CSS FOR COPY TOAST === */
+        .copy-toast {
+            position: fixed;
+            bottom: 100px; /* Vị trí phía trên thanh điều hướng */
+            left: 50%;
+            background-color: var(--accent-green);
+            color: var(--bg-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 3000;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translate(-50%, 20px); /* Bắt đầu từ dưới */
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translate(-50%, 0); /* Trượt lên */
+        }
     </style>
 </head>
 <body>
@@ -583,7 +604,7 @@ function renderPasswords() {
             <div class="password-field">
                 <span class="password-value" id="pass-val-${p.id}">••••••••</span>
                 <button class="data-btn" onclick="togglePasswordVisibility('${p.id}')">👁️</button>
-                <button class="data-btn" onclick="copyPassword('${p.id}', this)">📄</button>
+                <button class="data-btn" onclick="copyPassword('${p.id}')">📄</button>
             </div>
             <div class="data-actions">
                 <button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button>
@@ -628,10 +649,11 @@ function deletePassword(id) {
 
 function togglePasswordVisibility(id) {
     const passField = document.getElementById(`pass-val-${id}`);
-    const passwords = DB.getPasswords();
-    const p = passwords.find(item => item.id === id);
+    const passwordObj = DB.getPasswords().find(item => item.id === id);
+    if (!passwordObj) return;
+
     if (passField.textContent === '••••••••') {
-        passField.textContent = p.password;
+        passField.textContent = passwordObj.password;
     } else {
         passField.textContent = '••••••••';
     }
@@ -647,14 +669,53 @@ function toggleModalPasswordVisibility() {
     }
 }
 
-function copyPassword(id, button) {
-    const passwords = DB.getPasswords();
-    const p = passwords.find(item => item.id === id);
-    navigator.clipboard.writeText(p.password).then(() => {
-        const originalText = button.textContent;
-        button.textContent = '✅';
-        setTimeout(() => { button.textContent = originalText; }, 1500);
-    });
+// === UPDATED COPY FUNCTION & NEW TOAST NOTIFICATION ===
+function showToast(message) {
+    const existingToast = document.querySelector('.copy-toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = 'copy-toast';
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.classList.add('show'), 10);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
+}
+
+function copyPassword(id) {
+    const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password;
+    if (!passwordToCopy) return;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        // Phương pháp hiện đại, an toàn
+        navigator.clipboard.writeText(passwordToCopy)
+            .then(() => showToast('✅ Đã sao chép!'))
+            .catch(err => {
+                console.error('Lỗi sao chép:', err);
+                showToast('❌ Sao chép thất bại!');
+            });
+    } else {
+        // Phương pháp cũ hơn, tương thích rộng rãi (dành cho môi trường không an toàn như file://)
+        try {
+            const textArea = document.createElement("textarea");
+            textArea.value = passwordToCopy;
+            textArea.style.position = "absolute";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showToast('✅ Đã sao chép!');
+        } catch (err) {
+            console.error('Lỗi sao chép (fallback):', err);
+            showToast('❌ Sao chép thất bại!');
+        }
+    }
 }
 
 // --- SETTINGS LOGIC ---
@@ -662,7 +723,7 @@ function resetData() {
     if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu giao dịch, ghi chú và mật khẩu. Bạn có chắc chắn muốn tiếp tục không?')) {
         localStorage.removeItem('txns');
         localStorage.removeItem('notes');
-        localStorage.removeItem('passwords'); // Also clear passwords
+        localStorage.removeItem('passwords');
         alert('Đã xóa toàn bộ dữ liệu.');
         renderAll();
     }
