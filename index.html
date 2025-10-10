@@ -11,145 +11,595 @@
     <link rel="apple-touch-icon" href="icon-192x192.png">
 
     <style>
-        /* --- BẢNG MÀU DARK MODE & THIẾT KẾ MỚI --- */
         :root {
-            --bg-color: #000000;
-            --card-color: #1C1C1E;
-            --header-color: #1C1C1E;
-            --nav-color: rgba(28, 28, 30, 0.7);
-            --text-primary: #FFFFFF;
-            --text-secondary: #8E8E93;
-            --accent-blue: #0A84FF;
-            --accent-red: #FF453A;
-            --accent-green: #30D158;
-            --accent-orange: #FF9F0A;
-            --border-color: #38383A;
-            --input-bg: #2C2C2E;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --card-bg: #1e1e1e;
+            --card-hover: #252525;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --accent-blue: #3ea6ff;
+            --accent-red: #ff4444;
+            --accent-green: #00d166;
+            --accent-orange: #ff9500;
+            --border: #303030;
+            --shadow: 0 4px 12px rgba(0,0,0,0.5);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.6);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         html { color-scheme: dark; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #1a1a2e 100%);
             color: var(--text-primary);
             padding-bottom: 90px;
+            min-height: 100vh;
         }
+
         .screen { display: none; }
         .screen.active { display: block; }
+
         .header {
-            background: var(--header-color);
+            background: rgba(18, 18, 18, 0.8);
             padding: 20px;
-            padding-top: 60px; /* Thêm padding cho status bar trên mobile */
-            border-bottom: 1px solid var(--border-color);
+            padding-top: 50px; /* Adjusted for status bar */
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
-        .header h1 { font-size: 34px; font-weight: 700; }
+        
+        .header h1 { 
+            font-size: 28px; 
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* BUTTONS */
         .btn {
-            padding: 15px 20px; border: none; border-radius: 12px;
-            font-size: 17px; font-weight: 600; cursor: pointer;
-            background: var(--accent-blue); color: white;
-            width: 100%; margin-top: 16px;
-            transition: transform 0.1s ease, opacity 0.2s ease;
-        }
-        .btn:active { transform: scale(0.97); opacity: 0.8; }
-        .btn-sec { background: #3A3A3C; color: var(--text-primary); }
-        .btn-danger { background: var(--accent-red); }
-        .btn-success { background: var(--accent-green); }
-        .btn-warning { background: var(--accent-orange); }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 20px; }
-        .stat-card { background: var(--card-color); padding: 20px; border-radius: 16px; text-align: center; }
-        .stat-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .stat-value { font-size: 26px; font-weight: 600; }
-        .stat-value.red { color: var(--accent-red); }
-        .stat-value.green { color: var(--accent-green); }
-        .card { background: var(--card-color); border-radius: 16px; padding: 16px; margin: 16px 20px; }
-        .card h3 { font-size: 20px; margin-bottom: 16px; }
-        .txn-item { display: flex; align-items: center; padding: 12px; background: transparent; border-bottom: 1px solid var(--border-color); }
-        .txn-item:last-child { border-bottom: none; }
-        .txn-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 16px; }
-        .txn-icon.exp { background: rgba(255, 69, 58, 0.3); }
-        .txn-icon.inc { background: rgba(48, 209, 88, 0.3); }
-        .txn-icon.sav { background: rgba(255, 159, 10, 0.3); }
-        .txn-info { flex: 1; }
-        .txn-cat { font-weight: 600; font-size: 16px; }
-        .txn-date { color: var(--text-secondary); font-size: 14px; }
-        .txn-amt { font-weight: 600; font-size: 16px; }
-        .txn-acts { display: flex; gap: 8px; margin-left: 8px; }
-        .icon-btn { width: 38px; height: 38px; border: none; background: #3A3A3C; border-radius: 50%; cursor: pointer; font-size: 16px; }
-        .icon-btn:active { opacity: 0.5; }
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: var(--nav-color);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
-            display: flex; padding: 8px 0; padding-bottom: 24px; /* Thêm padding cho khu vực an toàn */
-        }
-        .nav-item { flex: 1; text-align: center; padding: 8px; cursor: pointer; color: var(--text-secondary); transition: color 0.2s ease; }
-        .nav-item.active { color: var(--accent-blue); }
-        .nav-item:active { opacity: 0.5; }
-        .nav-icon { font-size: 24px; }
-        .nav-label { font-size: 11px; }
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal.show { display: flex; }
-        .modal-content { background: #2C2C2E; border-radius: 16px; padding: 24px; width: 90%; max-width: 400px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-color); }
-        .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; }
-        .form-input, .form-select, .form-textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 16px; background: var(--input-bg); color: var(--text-primary); transition: box-shadow 0.3s ease; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent-blue); outline: none; }
-        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-        .empty { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
-        .quick-add-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .quick-add-btn {
-            padding: 12px 0;
-            border: 1px solid var(--border-color); 
-            border-radius: 12px; 
-            font-size: 14px;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            background: var(--input-bg);
+            background: linear-gradient(135deg, var(--accent-blue), #0066cc);
+            color: white;
+            width: 100%;
+            margin-top: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(62, 166, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before { left: 100%; }
+        
+        .btn:active { 
+            transform: scale(0.96);
+            box-shadow: 0 2px 8px rgba(62, 166, 255, 0.4);
+        }
+
+        .btn-sec { 
+            background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn-danger { 
+            background: linear-gradient(135deg, var(--accent-red), #cc0000);
+            box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
+        }
+
+        .btn-success { 
+            background: linear-gradient(135deg, var(--accent-green), #00a854);
+            box-shadow: 0 4px 12px rgba(0, 209, 102, 0.3);
+        }
+
+        .btn-warning { 
+            background: linear-gradient(135deg, var(--accent-orange), #cc7700);
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+        }
+
+        /* STATS GRID */
+        .stat-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 16px; 
+            padding: 20px;
+        }
+
+        .stat-card { 
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(62, 166, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:active {
+            transform: translateY(-4px) scale(0.98);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card:active::before { opacity: 1; }
+
+        .stat-label { 
+            color: var(--text-secondary); 
+            font-size: 13px; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value { 
+            font-size: 24px; 
+            font-weight: 700;
+        }
+
+        .stat-value.red { color: var(--accent-red); }
+        .stat-value.green { color: var(--accent-green); }
+
+        /* CARDS */
+        .card { 
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 16px 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 { 
+            font-size: 18px; 
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        /* TRANSACTION ITEMS */
+        .txn-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .txn-item:last-child { border-bottom: none; }
+        .txn-item:active { background: var(--card-hover); }
+
+        .txn-icon { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 20px; 
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .txn-icon.exp { background: rgba(255, 68, 68, 0.2); color: var(--accent-red); }
+        .txn-icon.inc { background: rgba(0, 209, 102, 0.2); color: var(--accent-green); }
+        .txn-icon.sav { background: rgba(255, 149, 0, 0.2); color: var(--accent-orange); }
+
+        .txn-info { flex: 1; overflow: hidden; }
+        .txn-cat { font-weight: 600; font-size: 15px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+        .txn-date { color: var(--text-secondary); font-size: 13px; margin-top: 2px; }
+        .txn-amt { font-weight: 600; font-size: 15px; text-align: right; }
+        .txn-acts { display: flex; gap: 8px; margin-left: 8px; }
+
+        .icon-btn { 
+            width: 36px; 
+            height: 36px;
+            border: none;
+            background: #2a2a2a;
+            color: var(--text-secondary);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-btn:active { 
+            transform: scale(0.9);
+            background: #353535;
+        }
+
+        /* NOTES SECTION */
+        .note-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .note-card:hover {
+            transform: translateY(-4px);
+            background: var(--card-hover);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .note-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .note-date {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .note-preview {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
+        }
+
+        .note-btn {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #2a2a2a;
+            color: var(--text-primary);
+        }
+
+        .note-btn:hover {
+            background: #353535;
+            transform: scale(1.05);
+        }
+
+        .note-btn.delete {
+            background: rgba(255, 68, 68, 0.2);
+            color: var(--accent-red);
+        }
+
+        .note-btn.delete:hover {
+            background: rgba(255, 68, 68, 0.3);
+        }
+
+        /* YOUTUBE-STYLE VIDEO CARDS */
+        .video-grid {
+            display: grid;
+            gap: 16px;
+            padding: 0 20px;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .video-thumbnail::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .play-button {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #000;
+            transition: all 0.3s ease;
+            z-index: 1;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .video-card:hover .play-button {
+            background: var(--accent-blue);
+            color: white;
+            transform: scale(1.15);
+        }
+
+        .video-info {
+            padding: 12px;
+        }
+
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-channel {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .channel-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .channel-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .video-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* NAVIGATION */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .nav-item.active { color: var(--accent-blue); transform: scale(1.1); }
+        .nav-item:active { opacity: 0.6; }
+        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+        .nav-label { font-size: 10px; font-weight: 500; }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.show { 
+            display: flex; 
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 440px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            transition: all 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--accent-blue);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(62, 166, 255, 0.2);
+        }
+
+        .form-textarea { min-height: 120px; resize: vertical; }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        /* QUICK ADD BUTTONS */
+        .quick-add-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .quick-add-btn {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--card-bg);
             color: var(--accent-blue);
-            transition: background-color 0.1s ease;
+            transition: all 0.2s;
         }
+
         .quick-add-btn:active {
-            background: #48484A;
+            background: var(--card-hover);
+            transform: scale(0.96);
         }
+
         .quick-add-btn.clear {
-            grid-column: 1 / -1; 
-            background: #3A3A3C;
+            grid-column: 1 / -1;
+            background: #2a2a2a;
             color: var(--accent-red);
         }
         
-        /* --- HIỆU ỨNG NHẤP NHÁY --- */
-        @keyframes flash-effect {
-            50% { box-shadow: 0 0 8px var(--accent-blue); }
-        }
-        .flash-animation {
-            animation: flash-effect 0.4s ease-out;
+        /* Video Player Modal */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
         }
 
-        /* --- CSS CHO DANH SÁCH & TRÌNH PHÁT PHIM --- */
-        .phim-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s; }
-        .phim-item:last-child { border-bottom: none; }
-        .phim-item:active { background-color: #3A3A3C; }
-        .phim-item-num { font-size: 18px; font-weight: bold; color: var(--text-secondary); width: 40px; }
-        .phim-item-info { flex-grow: 1; }
-        .phim-item-title { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
-        .phim-item-desc { font-size: 14px; color: var(--text-secondary); }
-        .phim-play-icon { font-size: 24px; color: var(--text-secondary); }
-        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; border-radius: 12px; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        #moviePlayerModal .modal-content { padding: 12px; }
-        #moviePlayerModal .modal-title { padding: 0 12px; margin-top: 12px; margin-bottom: 12px; font-size: 18px; }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #moviePlayerModal .modal-content {
+            padding: 16px;
+            width: 95%;
+            max-width: 900px;
+            background: var(--bg-primary);
+        }
+
         #date-time-container {
             color: var(--text-secondary);
-            font-size: 15px;
-            margin-top: 4px;
+            font-size: 13px;
+            margin-top: 8px;
             font-weight: 500;
         }
     </style>
@@ -177,15 +627,15 @@
         </div>
     </div>
     <div class="card">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Thêm Nhanh</h3>
-        <button class="btn-sec" onclick="goTo('hist', document.querySelector('.nav-item:nth-child(2)'))" style="padding: 8px 12px; border-radius: 8px; font-size: 14px; margin-top: 0;">Xem tất cả</button>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 16px;">
-            <button class="btn btn-danger" onclick="openTxn('expense')">💸 Chi Tiêu</button>
-            <button class="btn btn-success" onclick="openTxn('income')">💰 Thu Nhập</button>
-            <button class="btn btn-warning" onclick="openTxn('savings')">🏦 Tiết Kiệm</button>
-      </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0;">Thêm Nhanh</h3>
+            <button class="btn-sec" onclick="goTo('hist', document.querySelector('.nav-item:nth-child(2)'))" style="padding: 6px 12px; border-radius: 8px; font-size: 13px; margin: 0; width: auto;">Xem tất cả</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+            <button class="btn btn-danger" style="margin: 0;" onclick="openTxn('expense')">💸 Chi Tiêu</button>
+            <button class="btn btn-success" style="margin: 0;" onclick="openTxn('income')">💰 Thu Nhập</button>
+            <button class="btn btn-warning" style="margin: 0;" onclick="openTxn('savings')">🏦 Tiết Kiệm</button>
+        </div>
     </div>
     <div class="card">
         <h3>Giao Dịch Gần Đây</h3>
@@ -194,314 +644,521 @@
 </div>
 
 <div id="hist" class="screen">
-    <div class="header"><h1>Lịch Sử Giao Dịch</h1></div>
-    <div class="card"><input type="text" class="form-input" placeholder="🔍 Tìm kiếm giao dịch..." id="search" oninput="doSearch()"></div>
-    <div class="card"><div id="histList"></div></div>
+    <div class="header"><h1>Lịch Sử</h1></div>
+    <div class="card">
+        <input type="text" class="form-input" placeholder="🔍 Tìm kiếm giao dịch..." id="search" oninput="renderHistory()">
+    </div>
+    <div id="histList" style="padding: 0 20px;"></div>
 </div>
 
 <div id="notes" class="screen">
-    <div class="header">
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
         <h1>Ghi Chú</h1>
-        <button class="btn" onclick="openNote()">+ Tạo Ghi Chú Mới</button>
+        <button class="btn" onclick="openNote()" style="width: auto; margin: 0; padding: 10px 16px;">📝 Mới</button>
     </div>
-    <div class="card"><div id="notesList"></div></div>
+    <div id="notesList" style="padding: 16px 20px;"></div>
 </div>
 
 <div id="movies" class="screen">
     <div class="header">
-        <h1>Phim Của Phương Hữu Dưỡng</h1>
+        <h1>Video</h1>
         <div id="date-time-container">
-            <span id="currentDate"></span> | <span id="currentTime"></span>
+            <span id="currentDate"></span> • <span id="currentTime"></span>
         </div>
     </div>
-    <div class="card" id="phimListContainer">
-        </div>
+    <div class="video-grid" id="phimListContainer"></div>
 </div>
 
 <div id="settings" class="screen">
     <div class="header"><h1>Cài Đặt</h1></div>
     <div class="card">
-        <h3>Quản lý dữ liệu</h3>
-        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; margin-bottom: 16px;">Hành động này sẽ xóa toàn bộ chi tiêu và ghi chú. Không thể hoàn tác.</p>
-        <button class="btn btn-danger" onclick="resetData()">Xóa Toàn Bộ Dữ Liệu</button>
+        <h3>Quản Lý Dữ Liệu</h3>
+        <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">Xóa toàn bộ giao dịch và ghi chú. Thao tác này không thể hoàn tác.</p>
+        <button class="btn btn-danger" onclick="resetData()">🗑️ Xóa Toàn Bộ Dữ Liệu</button>
         
-        <h3 style="margin-top: 30px;">Cập nhật phiên bản</h3>
-        <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px; margin-bottom: 16px;">Nhấn vào đây để tải lại trang và cập nhật phiên bản mới nhất.</p>
-        <button class="btn btn-sec" onclick="reloadApp()">Cập nhật Phiên bản Mới</button>
+        <h3 style="margin-top: 30px;">Cập Nhật Ứng Dụng</h3>
+        <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">Tải lại trang để áp dụng các thay đổi hoặc cập nhật mới nhất.</p>
+        <button class="btn btn-sec" onclick="reloadApp()">🔄 Tải Lại Trang</button>
     </div>
 </div>
 
 <div class="bottom-nav">
-    <div class="nav-item active" onclick="goTo('dash', this)"><div class="nav-icon">🏠</div><div class="nav-label">Tổng Quan</div></div>
-    <div class="nav-item" onclick="goTo('hist', this)"><div class="nav-icon">📊</div><div class="nav-label">Lịch Sử</div></div>
-    <div class="nav-item" onclick="goTo('notes', this)"><div class="nav-icon">📝</div><div class="nav-label">Ghi Chú</div></div>
-    <div class="nav-item" onclick="goTo('movies', this)"><div class="nav-icon">🎬</div><div class="nav-label">Phim</div></div>
-    <div class="nav-item" onclick="goTo('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-label">Cài Đặt</div></div>
+    <div class="nav-item active" onclick="goTo('dash', this)">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-label">Tổng Quan</div>
+    </div>
+    <div class="nav-item" onclick="goTo('hist', this)">
+        <div class="nav-icon">📊</div>
+        <div class="nav-label">Lịch Sử</div>
+    </div>
+    <div class="nav-item" onclick="goTo('notes', this)">
+        <div class="nav-icon">📝</div>
+        <div class="nav-label">Ghi Chú</div>
+    </div>
+    <div class="nav-item" onclick="goTo('movies', this)">
+        <div class="nav-icon">🎬</div>
+        <div class="nav-label">Video</div>
+    </div>
+    <div class="nav-item" onclick="goTo('settings', this)">
+        <div class="nav-icon">⚙️</div>
+        <div class="nav-label">Cài Đặt</div>
+    </div>
 </div>
 
-<div id="txnModal" class="modal"><div class="modal-content">
-    <h2 class="modal-title" id="modalTitle"></h2>
-    <div class="form-group">
-        <label class="form-label">Số tiền (₫)</label>
-        <input type="number" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
-        <div class="quick-add-grid">
-            <button type="button" class="quick-add-btn" onclick="addAmount(10000)">+ 10.000₫</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(20000)">+ 20.000₫</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(50000)">+ 50.000₫</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(100000)">+ 100.000₫</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(200000)">+ 200.000₫</button>
-            <button type="button" class="quick-add-btn" onclick="addAmount(500000)">+ 500.000₫</button>
-            <button type="button" class="quick-add-btn clear" onclick="clearAmount()">Xóa</button>
+<div id="txnModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="form-group">
+            <label class="form-label">Số tiền (₫)</label>
+            <input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
+            <div class="quick-add-grid">
+                <button class="quick-add-btn" onclick="addAmount(10000)">+10K</button>
+                <button class="quick-add-btn" onclick="addAmount(20000)">+20K</button>
+                <button class="quick-add-btn" onclick="addAmount(50000)">+50K</button>
+                <button class="quick-add-btn" onclick="addAmount(100000)">+100K</button>
+                <button class="quick-add-btn" onclick="addAmount(200000)">+200K</button>
+                <button class="quick-add-btn" onclick="addAmount(500000)">+500K</button>
+                <button class="quick-add-btn clear" onclick="clearAmount()">Xóa</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Danh mục</label>
+            <select class="form-select" id="cat">
+                <option value="Ăn uống">🍔 Ăn uống</option>
+                <option value="Đi lại">🚗 Đi lại</option>
+                <option value="Mua sắm">🛍️ Mua sắm</option>
+                <option value="Hóa đơn">💡 Hóa đơn</option>
+                <option value="Lương">💰 Lương</option>
+                <option value="Đầu tư">📈 Đầu tư</option>
+                <option value="Giải trí">🎬 Giải trí</option>
+                <option value="Khác">📌 Khác</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Ghi chú (không bắt buộc)</label>
+            <textarea class="form-textarea" id="note" placeholder="VD: Cà phê với bạn bè..."></textarea>
+        </div>
+        <input type="hidden" id="type">
+        <input type="hidden" id="editId">
+        <div class="modal-actions">
+            <button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button>
+            <button class="btn" id="saveTxnBtn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button>
         </div>
     </div>
-    <div class="form-group">
-        <label class="form-label">Danh mục</label>
-        <select class="form-select" id="cat">
-            <option value="food">🍔 Ăn uống</option><option value="transport">🚗 Đi lại</option><option value="shopping">🛍️ Mua sắm</option><option value="bills">💡 Hóa đơn</option><option value="salary">💰 Lương</option><option value="other">📌 Khác</option>
-        </select>
-    </div>
-    <div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note"></textarea></div>
-    <input type="hidden" id="type"><input type="hidden" id="editId">
-    <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1">Lưu</button></div>
-</div></div>
-<div id="noteModal" class="modal"><div class="modal-content">
-    <h2 class="modal-title">Ghi Chú</h2>
-    <div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div>
-    <div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" style="min-height:200px"></textarea></div>
-    <input type="hidden" id="editNoteId">
-    <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1">Lưu</button></div>
-</div></div>
-<div id="moviePlayerModal" class="modal"><div class="modal-content">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h2 class="modal-title" id="moviePlayerTitle"></h2>
-        <button onclick="closeModal('moviePlayerModal')" style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">&times;</button>
-    </div>
-    <div class="video-container"><iframe id="youtubePlayer" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>
-</div></div>
+</div>
 
-<audio id="clickSound" src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU2LjQwLjEwMQAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEwAAASwAAB3vAAAQyAAAAAAAAAAAAAAAAAAAAAAAADDEBACwAAAAAAAAAAAAAACwQGAKYAAAAgAAAIAYDRkYEAAY02LAACQUhDMgACgAAAAAICgQCAAAAAAAgAAA4AAAAKAAAAxgAAAGsAAAAgAAAAAAAoDRkYEAAY02LAACQUhDMgACgAAAAAICgQCAAAAAAAgAAA4AAAAKAAAAxgAAAGsAAAAgAAAAAACUExBTUUAAAAPAAABPAAAAcr9PT/+cUxBTUUv/3Z3Z3Z3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3daxODgwMDc4NTI5NDU2NDUyZAAAAAAA/+MYxBAEAAAACAAAAPGAAAIiEAHcAAAJhA/+/+MYxAsAAACAAAAA/oAAAIiEAH4AAAJhA/+/+MYxBgAAACAAAAA/wAAAIiEAHsAAAJhA/+/+MYxDAAAACAAAAA/gAAAIiEAHcAAAJhA/+/+MYxEQAAACAAAAA/QAAAIiEAHQAAAJhA/+/+MYxGAAAACAAAAA/IAAAD6CAAgAAACgAP/7s4f//9//8AAAA/+MYxHQAAAGsAAAAIAAAADgAAABIAAAAOAAAABAAAAAkAAAAMAAAABwAAADAAAAAGAAAA/+MYxIQAAYAABkAAAAJAAAAJwAAADIAAAAoAAAAKgAAAB4AAAFoAAAApAAAALgAAADkAAAGW/+MYxJQAAYAABIAAAAJAAAAHgAAACQAAAAgAAAAIQAAADMAAACVAAAAogAAALAAAAAsAAAFw/+MYxLQAAYAABkAAAAKAAAAJgAAAC8AAAAoAAAAJAAAABwAAABsAAAAowAAALMAAADGAAAD+/+MYxMAAKQAHgAAAAwAAAAfAAAAIQAAACEAAAAiAAAAJgAAADoAAACQAAAAogAAALsAAADPAAAChP+MYxOAAGAAHAAAAAwAAAAZAAAADgAAABUAAAAZAAAAIgAAADIAAACOAAAApQAAALcAAADTAAACO/+MYxPAAGAAHAAAAAwAAAAcAAAANAAAAEwAAABYAAAAeAAAAKwAAAIEAAACQAAAAqQAAALr/7dEAAAAA/+MYxSAAHwAHgAAAAkAAAAOAAAADgAAABUAAAAXAAAAGwAAACQAAAB2AAAAlAAAAK8AAADDAAACl/+MYxTAAHwAHAAAAAkAAAAOAAAADQAAABIAAAAUAAAAGAAAAB4AAABlAAAAjAAAAKsAAADAAAACHv+MYxVAAHwAHgAAAAkAAAAOAAAADAAAAA4AAAAUAAAADgAAABkAAABzAAAAmAAAAMMAAAEDAAAD4/+MYxWAAHwAHgAAAAkAAAAOAAAADgAAABEAAAAUAAAADQAAABYAAABrAAAAnAAAAK0AAADBAAADE/+MYxXAAHwAGAAAAAkAAAAOAAAADAAAAAsAAAAQAAAAEAAAABYAAABtAAAAnwAAAMMAAAEeAAADf/+MYxYQAAMAAGQAAAAKAAAACgAAABQAAAAXAAAAHQAAACEAAACYAAAAuwAAANYAAANiAAAAwgAAAbYAAAAA/+MYxYwAAMAAGQAAAAKAAAACgAAABMAAAAWAAAAGwAAAB8AAACWAAAAuAAAANsAAANiAAAAvwAAAbIAAAAA/+MYxZQAAMAAGQAAAAKAAAACwAAABUAAAAXAAAAGwAAACEAAACfAAAAwgAAAPgAAAPGAAAABgIAAAJIAAAA/+MYxaQAMAAHgAAAAwAAAAUAAAAMAAAAEAAAABYAAAAcAAAAJAAAAIIAAACWAAAAswAAAOgAAAP8AAAD/+MYxbQAMAAHgAAAAwAAAAQAAAAMAAAAKAAAADgAAABIAAAAcAAAARQAAAI8AAACzAAAA3gAAANcAAAEC/+MYxcQAMAAHgAAAAwAAAAQAAAAEAAAADAAAADAAAABEAAAAXAAAAMwAAAIcAAACvAAAA3gAAAM4AAACz/+MYxdQAMAAHgAAAAwAAAAIAAAAEAAAACAAAABEAAAATAAAAGAAAAC8AAAB9AAAAqgAAAMUAAADFAAAAsP+MYxeQAMAAHgAAAAwAAAAEAAAACgAAABAAAAASAAAAGQAAADwAAACEAAAAqgAAALUAAAC1AAAAqP+MYxfQAMAAHgAAAAwAAAAHAAAACgAAABEAAAAVAAAAGwAAADYAAAB/AAAAtwAAAPIAAAEGAAADIP+MYxgAAMAAHgAAAAwAAAAMAAAAEgAAABYAAAAfAAAAOgAAAH0AAADDAAAA/wAAAY8AAAPCAAAAAQD/4xjGJAAsAAUAAAD/AABJAAAAAAAA/wAAAAAAAAAA/wAAAQAA//8AAAAA/v9//99/////wAD/9//+MYxnAAIAAQAAAAEAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAD/nExhdmY1AAAA/+MYyBAAAAACAAADSAAAA6wA/+MYyhAAAAMAAAAIAAAAyAAACCAAAA4QAAAPSAAADAAAAAQEBAQAAAAAAAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYyxAAAAANEMAADwAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwAAAAAAAHAAB4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAcAAHgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAABwAAeAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" preload="auto"></audio>
+<div id="noteModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title" id="noteModalTitle">Tạo Ghi Chú</h2>
+        <div class="form-group">
+            <label class="form-label">Tiêu đề</label>
+            <input type="text" class="form-input" id="noteTitle" placeholder="Tiêu đề ghi chú">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Nội dung</label>
+            <textarea class="form-textarea" id="noteContent" style="min-height:200px" placeholder="Viết nội dung của bạn ở đây..."></textarea>
+        </div>
+        <input type="hidden" id="editNoteId">
+        <div class="modal-actions">
+            <button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button>
+            <button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button>
+        </div>
+    </div>
+</div>
+
+<div id="moviePlayerModal" class="modal">
+    <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h2 class="modal-title" id="moviePlayerTitle" style="margin: 0;"></h2>
+            <button onclick="closeModal('moviePlayerModal')" style="background:none; border:none; color:white; font-size:28px; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center;">&times;</button>
+        </div>
+        <div class="video-container">
+            <iframe id="youtubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
 
 <script>
-const OLD_KEY_V2 = 'mywallet_dark_v2';
-const OLD_KEY_V3 = 'mywallet_dark_v3';
-const CURRENT_KEY = 'mywallet_dark_v4'; // Khóa lưu trữ cho phiên bản hiện tại
+const DB = {
+    getTxns: () => JSON.parse(localStorage.getItem('txns') || '[]'),
+    saveTxns: (txns) => localStorage.setItem('txns', JSON.stringify(txns)),
+    getNotes: () => JSON.parse(localStorage.getItem('notes') || '[]'),
+    saveNotes: (notes) => localStorage.setItem('notes', JSON.stringify(notes)),
+};
 
-let db = { txns: [], notes: [] };
+const formatCurrency = (num) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
 
-// --- DANH SÁCH PHIM MỚI CỦA PHƯƠNG HỮU DƯỠNG (CHỈ CÓ 1 PHIM BẠN YÊU CẦU) ---
-const phuongHuuDuongMovies = [
-    { id: 1, title: "PHD - Thử Thách Người Cuối Cùng Không Ngủ Tập 3", desc: "Thử thách người cuối cùng không ngủ", youtubeId: "8HJFIgI2oPE" }
+// --- NAVIGATION ---
+function goTo(screenId, element) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    element.classList.add('active');
+    
+    window.scrollTo(0, 0); // Cuộn lên đầu trang khi chuyển màn hình
+}
+
+// --- MODAL HANDLING ---
+function openModal(modalId) {
+    document.getElementById(modalId).classList.add('show');
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    modal.classList.remove('show');
+    // Dừng video youtube khi đóng modal
+    if (modalId === 'moviePlayerModal') {
+        const player = document.getElementById('youtubePlayer');
+        player.src = '';
+    }
+}
+
+// --- TRANSACTION LOGIC ---
+const catIcons = {
+    'Ăn uống': '🍔', 'Đi lại': '🚗', 'Mua sắm': '🛍️', 'Hóa đơn': '💡',
+    'Lương': '💰', 'Đầu tư': '📈', 'Giải trí': '🎬', 'Khác': '📌'
+};
+
+function openTxn(type, id = null) {
+    const modal = document.getElementById('txnModal');
+    const title = modal.querySelector('#modalTitle');
+    const amtInput = modal.querySelector('#amt');
+    const catSelect = modal.querySelector('#cat');
+    const noteText = modal.querySelector('#note');
+    const typeInput = modal.querySelector('#type');
+    const editIdInput = modal.querySelector('#editId');
+    const saveBtn = modal.querySelector('#saveTxnBtn');
+
+    // Reset form
+    amtInput.value = '';
+    noteText.value = '';
+    editIdInput.value = '';
+    catSelect.value = 'Ăn uống';
+    
+    typeInput.value = type;
+
+    if (id) { // Chế độ sửa
+        const txns = DB.getTxns();
+        const txn = txns.find(t => t.id === id);
+        title.textContent = 'Chỉnh Sửa Giao Dịch';
+        amtInput.value = txn.amount;
+        catSelect.value = txn.category;
+        noteText.value = txn.note;
+        editIdInput.value = id;
+        typeInput.value = txn.type; // Giữ nguyên type khi sửa
+        saveBtn.className = `btn btn-${txn.type === 'expense' ? 'danger' : (txn.type === 'income' ? 'success' : 'warning')}`;
+    } else { // Chế độ thêm mới
+        if (type === 'expense') {
+            title.textContent = 'Thêm Chi Tiêu';
+            saveBtn.className = 'btn btn-danger';
+        } else if (type === 'income') {
+            title.textContent = 'Thêm Thu Nhập';
+            saveBtn.className = 'btn btn-success';
+        } else {
+            title.textContent = 'Thêm Tiết Kiệm';
+            saveBtn.className = 'btn btn-warning';
+        }
+    }
+    
+    openModal('txnModal');
+}
+
+function saveTxn() {
+    const amount = parseFloat(document.getElementById('amt').value);
+    const category = document.getElementById('cat').value;
+    const note = document.getElementById('note').value.trim();
+    const type = document.getElementById('type').value;
+    const editId = document.getElementById('editId').value;
+
+    if (!amount || amount <= 0) {
+        alert('Vui lòng nhập số tiền hợp lệ.');
+        return;
+    }
+
+    let txns = DB.getTxns();
+    if (editId) { // Sửa
+        const txnIndex = txns.findIndex(t => t.id === editId);
+        if (txnIndex > -1) {
+            txns[txnIndex] = { ...txns[txnIndex], amount, category, note, type };
+        }
+    } else { // Thêm mới
+        const newTxn = {
+            id: 'txn_' + Date.now(),
+            date: new Date().toISOString(),
+            amount,
+            category,
+            note,
+            type // 'income', 'expense', or 'savings'
+        };
+        txns.push(newTxn);
+    }
+    
+    DB.saveTxns(txns);
+    closeModal('txnModal');
+    renderAll();
+}
+
+function deleteTxn(id) {
+    if (confirm('Bạn có chắc muốn xóa giao dịch này không?')) {
+        let txns = DB.getTxns();
+        txns = txns.filter(t => t.id !== id);
+        DB.saveTxns(txns);
+        renderAll();
+    }
+}
+
+function addAmount(val) {
+    const amtInput = document.getElementById('amt');
+    let currentVal = parseFloat(amtInput.value) || 0;
+    amtInput.value = currentVal + val;
+}
+
+function clearAmount() {
+    document.getElementById('amt').value = '';
+}
+
+
+// --- NOTE LOGIC ---
+function openNote(id = null) {
+    const titleInput = document.getElementById('noteTitle');
+    const contentInput = document.getElementById('noteContent');
+    const editIdInput = document.getElementById('editNoteId');
+    const modalTitle = document.getElementById('noteModalTitle');
+
+    if (id) { // Chế độ sửa
+        const notes = DB.getNotes();
+        const note = notes.find(n => n.id === id);
+        modalTitle.textContent = "Chỉnh Sửa Ghi Chú";
+        titleInput.value = note.title;
+        contentInput.value = note.content;
+        editIdInput.value = id;
+    } else { // Chế độ thêm mới
+        modalTitle.textContent = "Tạo Ghi Chú Mới";
+        titleInput.value = '';
+        contentInput.value = '';
+        editIdInput.value = '';
+    }
+    openModal('noteModal');
+}
+
+function saveNote() {
+    const title = document.getElementById('noteTitle').value.trim();
+    const content = document.getElementById('noteContent').value.trim();
+    const editId = document.getElementById('editNoteId').value;
+
+    if (!title) {
+        alert('Vui lòng nhập tiêu đề cho ghi chú.');
+        return;
+    }
+
+    let notes = DB.getNotes();
+    if (editId) { // Sửa
+        const noteIndex = notes.findIndex(n => n.id === editId);
+        if (noteIndex > -1) {
+            notes[noteIndex].title = title;
+            notes[noteIndex].content = content;
+            notes[noteIndex].date = new Date().toISOString();
+        }
+    } else { // Thêm mới
+        const newNote = {
+            id: 'note_' + Date.now(),
+            date: new Date().toISOString(),
+            title,
+            content
+        };
+        notes.unshift(newNote); // Thêm vào đầu mảng
+    }
+    
+    DB.saveNotes(notes);
+    closeModal('noteModal');
+    renderNotes();
+}
+
+function deleteNote(id) {
+    if (confirm('Bạn có chắc muốn xóa ghi chú này không?')) {
+        let notes = DB.getNotes();
+        notes = notes.filter(n => n.id !== id);
+        DB.saveNotes(notes);
+        renderNotes();
+    }
+}
+
+// --- VIDEO/MOVIE LOGIC ---
+const movies = [
+    { id: 'jfKfPfyJRdk', title: 'Lofi Girl - Lofi Hip Hop Radio', channel: 'Lofi Girl', avatar: 'LG' },
+    { id: 'DWcJFNfaw9c', title: 'lofi hip hop radio - beats to sleep/chill to', channel: 'Lofi Girl', avatar: 'LG' },
+    { id: 'rUxyKA_-grg', title: 'coffee shop radio // 24/7 lofi hip-hop beats', channel: 'STEEZYASFUCK', avatar: 'S' },
+    { id: '5qap5aO4i9A', title: 'Night ride with lofi music', channel: 'The Jazz Hop Café', avatar: 'JH' },
+    { id: 'TDrHcs_22n8', title: 'Japanese night cafe vibes - a lofi hiphop mix', channel: 'The Bootleg Boy', avatar: 'BB' },
 ];
 
-function migrateData() {
-    const currentData = localStorage.getItem(CURRENT_KEY);
-    if (currentData) return; // Nếu đã có dữ liệu mới thì không làm gì cả
-
-    const oldDataV3 = localStorage.getItem(OLD_KEY_V3);
-    if (oldDataV3) {
-        console.log("Đang chuyển dữ liệu từ v3 sang v4...");
-        localStorage.setItem(CURRENT_KEY, oldDataV3);
-        localStorage.removeItem(OLD_KEY_V3);
-        return;
-    }
-    
-    const oldDataV2 = localStorage.getItem(OLD_KEY_V2);
-    if (oldDataV2) {
-        console.log("Đang chuyển dữ liệu từ v2 sang v4...");
-        localStorage.setItem(CURRENT_KEY, oldDataV2);
-        localStorage.removeItem(OLD_KEY_V2);
-        return;
-    }
-}
-
-function load() {
-    try { 
-        const s = localStorage.getItem(CURRENT_KEY); 
-        if (s) db = JSON.parse(s); 
-    } catch(e) {}
-}
-
-function save() { 
-    localStorage.setItem(CURRENT_KEY, JSON.stringify(db)); 
-}
-
-function fmt(n) { return new Intl.NumberFormat('vi-VN').format(n) + '₫'; }
-
-function updateClock() {
-    const now = new Date();
-    const dateString = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    const timeString = now.toLocaleTimeString('vi-VN');
-    document.getElementById('currentDate').textContent = dateString.charAt(0).toUpperCase() + dateString.slice(1);
-    document.getElementById('currentTime').textContent = timeString;
-}
-
-function init() {
-    migrateData(); // Chạy hàm chuyển đổi dữ liệu trước khi tải
-    load();
-    updateClock();
-    setInterval(updateClock, 1000); 
-    render();
-}
-
-function render() {
-    renderDash();
-    renderHist();
-    renderNotes();
-    renderPhimList();
-}
-
-// Các hàm render chính
-function renderDash() {
-    let bal = 0, exp = 0, inc = 0, sav = 0;
-    db.txns.forEach(t => {
-        if (t.type === 'expense') exp += t.amount;
-        else if (t.type === 'income') inc += t.amount;
-        else if (t.type === 'savings') sav += t.amount;
-    });
-    bal = inc - exp;
-    
-    document.getElementById('bal').textContent = fmt(bal);
-    document.getElementById('exp').textContent = fmt(exp);
-    document.getElementById('inc').textContent = fmt(inc);
-    document.getElementById('sav').textContent = fmt(sav);
-    
-    const recent = db.txns.slice().reverse().slice(0, 3);
-    document.getElementById('recent').innerHTML = recent.length ? recent.map(t => makeTxn(t, false)).join('') : '<div class="empty">Chưa có giao dịch.</div>';
-}
-function renderHist() {
-    const allTxns = db.txns.slice().reverse();
-    document.getElementById('histList').innerHTML = allTxns.length ? allTxns.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không có giao dịch nào.</div>';
-}
-function renderNotes() {
-    const allNotes = db.notes.slice().reverse();
-    document.getElementById('notesList').innerHTML = allNotes.length > 0 ? allNotes.map(n => `<div class="phim-item" onclick="editNote(${n.id})"><div class="phim-item-info"><div class="phim-item-title">${n.title}</div><div class="phim-item-desc">${n.content.substring(0,100)}...</div></div></div>`).join('') : '<div class="empty">Chưa có ghi chú nào.</div>';
-}
-function renderPhimList() {
-    document.getElementById('phimListContainer').innerHTML = phuongHuuDuongMovies.map(movie => `
-        <div class="phim-item" onclick="openMoviePlayer('${movie.youtubeId}', '${movie.title.replace(/'/g, "\\'")}')">
-            <div class="phim-item-num">${movie.id.toString().padStart(2, '0')}</div>
-            <div class="phim-item-info">
-                <div class="phim-item-title">${movie.title}</div>
-                <div class="phim-item-desc">${movie.desc}</div>
+function renderMovies() {
+    const container = document.getElementById('phimListContainer');
+    container.innerHTML = movies.map(movie => `
+        <div class="video-card" onclick="playMovie('${movie.id}', '${movie.title.replace(/'/g, "\\'")}')">
+            <div class="video-thumbnail" style="background-image: url('https://img.youtube.com/vi/${movie.id}/hqdefault.jpg')">
+                <div class="play-button">▶</div>
             </div>
-            <div class="phim-play-icon">▶</div>
+            <div class="video-info">
+                <div class="video-channel">
+                    <div class="channel-avatar">${movie.avatar}</div>
+                    <div class="channel-name">${movie.channel}</div>
+                </div>
+                <div class="video-title">${movie.title}</div>
+            </div>
         </div>
     `).join('');
 }
 
-// Hàm tạo HTML
-function makeTxn(t, acts) {
-    const icons = { food: '🍔', transport: '🚗', shopping: '🛍️', bills: '💡', salary: '💰', other: '📌' };
-    const names = { food: 'Ăn uống', transport: 'Đi lại', shopping: 'Mua sắm', bills: 'Hóa đơn', salary: 'Lương', other: 'Khác' };
-    const cls = t.type === 'expense' ? 'exp' : (t.type === 'income' ? 'inc' : 'sav');
-    const amtSign = t.type === 'expense' ? '-' : '+';
-    const amtColor = t.type === 'expense' ? 'var(--accent-red)' : 'var(--accent-green)';
-    const btns = acts ? `<div class="txn-acts"><button class="icon-btn" onclick="event.stopPropagation(); editTxn(${t.id})">✏️</button><button class="icon-btn" onclick="event.stopPropagation(); delTxn(${t.id})">🗑️</button></div>` : '';
-    return `<div class="txn-item"><div class="txn-icon ${cls}">${icons[t.cat]||'📌'}</div><div class="txn-info"><div class="txn-cat">${names[t.cat]||'Khác'}</div><div class="txn-date">${new Date(t.date).toLocaleDateString('vi-VN')}</div></div><div class="txn-amt" style="color:${amtColor}">${amtSign}${fmt(t.amount)}</div>${btns}</div>`;
-}
-
-// Hàm điều hướng
-function goTo(scr, element) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    document.getElementById(scr).classList.add('active');
-    element.classList.add('active');
-}
-
-// Hàm tương tác Modal
-function openModal(id) { document.getElementById(id).classList.add('show'); }
-function closeModal(id) {
-    const modal = document.getElementById(id);
-    modal.classList.remove('show');
-    if (id === 'moviePlayerModal') {
-        document.getElementById('youtubePlayer').src = ''; // Dừng video khi đóng
-    }
-}
-
-// Hàm cho Phim
-function openMoviePlayer(youtubeId, title) {
-    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1`;
+function playMovie(youtubeId, title) {
     document.getElementById('moviePlayerTitle').textContent = title;
+    document.getElementById('youtubePlayer').src = `https://www.youtube.com/embed/${youtubeId}?autoplay=1&modestbranding=1&rel=0`;
     openModal('moviePlayerModal');
 }
 
-// Thêm hiệu ứng và âm thanh
-function playEffect() {
-    const input = document.getElementById('amt');
-    const sound = document.getElementById('clickSound');
-    
-    if (sound) {
-        sound.currentTime = 0;
-        sound.play().catch(e => console.error("Audio play failed:", e));
-    }
-    
-    input.classList.remove('flash-animation');
-    void input.offsetWidth; // Trick to restart animation
-    input.classList.add('flash-animation');
+function updateDateTime() {
+    const now = new Date();
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    document.getElementById('currentDate').textContent = now.toLocaleDateString('vi-VN', dateOptions);
+    document.getElementById('currentTime').textContent = now.toLocaleTimeString('vi-VN', timeOptions);
 }
 
-// Hàm cho Giao dịch
-function openTxn(txnType) {
-    document.getElementById('editId').value = '';
-    document.getElementById('amt').value = '';
-    document.getElementById('cat').value = 'food';
-    document.getElementById('note').value = '';
-    document.getElementById('type').value = txnType;
-    const titles = {'expense':'💸 Chi Tiêu Mới','income':'💰 Thu Nhập Mới','savings':'🏦 Tiết Kiệm Mới'};
-    document.getElementById('modalTitle').textContent = titles[txnType];
-    openModal('txnModal');
-}
-function saveTxn() {
-    const id = document.getElementById('editId').value;
-    const amt = parseInt(document.getElementById('amt').value) || 0;
-    if (amt <= 0) { alert('Vui lòng nhập số tiền hợp lệ!'); return; }
-    const txn = {id: id ? parseInt(id) : Date.now(), type: document.getElementById('type').value, amount: amt, cat: document.getElementById('cat').value, note: document.getElementById('note').value, date: id ? db.txns.find(t=>t.id === parseInt(id)).date : new Date().toISOString()};
-    if (id) { const idx = db.txns.findIndex(t => t.id === parseInt(id)); if (idx > -1) db.txns[idx] = txn; } else { db.txns.push(txn); }
-    save(); closeModal('txnModal'); render();
-}
-function editTxn(id) { const t = db.txns.find(x => x.id === id); if (!t) return; openTxn(t.type); document.getElementById('editId').value = t.id; document.getElementById('amt').value = t.amount; document.getElementById('cat').value = t.cat; document.getElementById('note').value = t.note; }
-function delTxn(id) { if (confirm('Xóa giao dịch này?')) { db.txns = db.txns.filter(t => t.id !== id); save(); render(); }}
-function addAmount(value) { 
-    const i = document.getElementById('amt'); 
-    i.value = (parseInt(i.value)||0) + value; 
-    playEffect();
-}
-function clearAmount() { 
-    document.getElementById('amt').value = ''; 
-    playEffect();
-}
 
-// Hàm cho Ghi chú
-function openNote() { document.getElementById('editNoteId').value = ''; document.getElementById('noteTitle').value = ''; document.getElementById('noteContent').value = ''; openModal('noteModal'); }
-function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    if (!title) { alert('Vui lòng nhập tiêu đề!'); return; }
-    const id = document.getElementById('editNoteId').value;
-    const n = {id: id ? parseInt(id) : Date.now(), title, content: document.getElementById('noteContent').value.trim(), date: id ? db.notes.find(x => x.id === parseInt(id)).date : new Date().toISOString()};
-    if (id) { const idx = db.notes.findIndex(x => x.id === parseInt(id)); if (idx > -1) db.notes[idx] = n; } else { db.notes.push(n); }
-    save(); closeModal('noteModal'); render();
-}
-function editNote(id) { const n = db.notes.find(x => x.id === id); if (!n) return; openNote(); document.getElementById('editNoteId').value = n.id; document.getElementById('noteTitle').value = n.title; document.getElementById('noteContent').value = n.content; }
-
-// Hàm tìm kiếm và cài đặt
-function doSearch() {
-    const q = document.getElementById('search').value.toLowerCase();
-    const res = db.txns.slice().reverse().filter(t => t.note.toLowerCase().includes(q) || t.amount.toString().includes(q) || t.cat.toLowerCase().includes(q));
-    document.getElementById('histList').innerHTML = res.length > 0 ? res.map(t => makeTxn(t, true)).join('') : '<div class="empty">Không tìm thấy kết quả.</div>';
-}
+// --- SETTINGS LOGIC ---
 function resetData() {
-    if (confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA TOÀN BỘ DỮ LIỆU?\nHành động này không thể hoàn tác!')) {
-        db = { txns: [], notes: [] }; save(); render(); alert('✅ Đã xóa toàn bộ dữ liệu.');
+    if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu giao dịch và ghi chú. Bạn có chắc chắn muốn tiếp tục không?')) {
+        localStorage.removeItem('txns');
+        localStorage.removeItem('notes');
+        alert('Đã xóa toàn bộ dữ liệu.');
+        renderAll();
     }
 }
 
 function reloadApp() {
-    if (confirm('Bạn có chắc chắn muốn cập nhật phiên bản mới? Trang sẽ tải lại.')) {
-        location.reload(true); // Tải lại trang từ server, bỏ qua bộ nhớ cache
-    }
+    window.location.reload();
 }
 
-init();
+// --- RENDERING FUNCTIONS ---
+function renderStats() {
+    const txns = DB.getTxns();
+    const totalIncome = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const totalExpense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    const totalSavings = txns.filter(t => t.type === 'savings').reduce((sum, t) => sum + t.amount, 0);
+    const balance = totalIncome - totalExpense - totalSavings;
+
+    document.getElementById('bal').textContent = formatCurrency(balance);
+    document.getElementById('inc').textContent = formatCurrency(totalIncome);
+    document.getElementById('exp').textContent = formatCurrency(totalExpense);
+    document.getElementById('sav').textContent = formatCurrency(totalSavings);
+}
+
+function renderRecent() {
+    const container = document.getElementById('recent');
+    const txns = DB.getTxns().sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 4);
+    
+    if (txns.length === 0) {
+        container.innerHTML = `<div class="empty">Chưa có giao dịch nào.</div>`;
+        return;
+    }
+    
+    container.innerHTML = txns.map(txn => {
+        const typeClass = txn.type === 'expense' ? 'exp' : (txn.type === 'income' ? 'inc' : 'sav');
+        const amountSign = txn.type === 'expense' ? '-' : '+';
+        const colorClass = txn.type === 'expense' ? 'red' : (txn.type === 'income' ? 'green' : '');
+        return `
+        <div class="txn-item">
+            <div class="txn-icon ${typeClass}">${catIcons[txn.category] || '📌'}</div>
+            <div class="txn-info">
+                <div class="txn-cat">${txn.category}</div>
+                <div class="txn-date">${new Date(txn.date).toLocaleDateString('vi-VN')}</div>
+            </div>
+            <div class="txn-amt ${colorClass}">${amountSign}${formatCurrency(txn.amount)}</div>
+        </div>`;
+    }).join('');
+}
+
+function renderHistory() {
+    const container = document.getElementById('histList');
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+    const txns = DB.getTxns()
+        .filter(t => 
+            t.category.toLowerCase().includes(searchTerm) || 
+            t.note.toLowerCase().includes(searchTerm) ||
+            t.amount.toString().includes(searchTerm)
+        )
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (txns.length === 0) {
+        container.innerHTML = `<div class="empty">Không tìm thấy giao dịch nào.</div>`;
+        return;
+    }
+
+    container.innerHTML = txns.map(txn => {
+        const typeClass = txn.type === 'expense' ? 'exp' : (txn.type === 'income' ? 'inc' : 'sav');
+        const amountSign = txn.type === 'expense' ? '-' : '+';
+        const colorClass = txn.type === 'expense' ? 'red' : (txn.type === 'income' ? 'green' : '');
+        return `
+        <div class="card" style="margin: 0 0 12px 0; padding: 12px;">
+            <div class="txn-item" style="border: none; padding: 0;">
+                <div class="txn-icon ${typeClass}">${catIcons[txn.category] || '📌'}</div>
+                <div class="txn-info">
+                    <div class="txn-cat">${txn.category}</div>
+                    <div class="txn-date">${new Date(txn.date).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })}</div>
+                    ${txn.note ? `<p style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">${txn.note}</p>` : ''}
+                </div>
+                <div class="txn-amt ${colorClass}">${amountSign}${formatCurrency(txn.amount)}</div>
+                <div class="txn-acts">
+                    <button class="icon-btn" onclick="openTxn(null, '${txn.id}')">✏️</button>
+                    <button class="icon-btn" onclick="deleteTxn('${txn.id}')">🗑️</button>
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function renderNotes() {
+    const container = document.getElementById('notesList');
+    const notes = DB.getNotes();
+
+    if (notes.length === 0) {
+        container.innerHTML = `<div class="empty">Chưa có ghi chú nào. Hãy tạo một ghi chú mới!</div>`;
+        return;
+    }
+    
+    container.innerHTML = notes.map(note => `
+        <div class="note-card">
+            <div class="note-header">
+                <span class="note-title">${note.title}</span>
+                <span class="note-date">${new Date(note.date).toLocaleDateString('vi-VN')}</span>
+            </div>
+            <div class="note-preview">${note.content || '...'}</div>
+            <div class="note-actions">
+                <button class="note-btn" onclick="openNote('${note.id}')">Sửa</button>
+                <button class="note-btn delete" onclick="deleteNote('${note.id}')">Xóa</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+
+function renderAll() {
+    renderStats();
+    renderRecent();
+    renderHistory();
+    renderNotes();
+    renderMovies();
+}
+
+// --- INITIALIZE APP ---
+document.addEventListener('DOMContentLoaded', () => {
+    renderAll();
+    updateDateTime();
+    setInterval(updateDateTime, 1000); // Cập nhật thời gian mỗi giây
+});
+
 </script>
 </body>
 </html>
