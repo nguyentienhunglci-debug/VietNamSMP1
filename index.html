@@ -1012,23 +1012,18 @@ const musicList = [
 
 function renderMusic() {
     const container = document.getElementById('musicListContainer');
-    container.innerHTML = musicList.map(music => `
-        <div class="music-card" onclick="playMusic('${music.id}', '${music.title.replace(/'/g, "\\'")}')">
-            <div class="music-thumbnail" style="background-image: url('https://img.youtube.com/vi/${music.id}/hqdefault.jpg')">
-                <div class="play-button">▶</div>
-            </div>
-            <div class="music-info">
-                <div class="channel-info">
-                    <div class="channel-avatar">${music.avatar}</div>
-                    <div class="channel-name">${music.channel}</div>
-                </div>
-                <div class="music-title">${music.title}</div>
-            </div>
+    // Display "Under Maintenance" message
+    container.innerHTML = `
+        <div class="empty" style="text-align: center; padding: 60px 20px;">
+            <p style="font-size: 18px; color: var(--text-secondary);">🎵 Phần Âm nhạc đang được bảo trì. 🛠️</p>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-top: 10px;">Vui lòng quay lại sau.</p>
         </div>
-    `).join('');
+    `;
 }
 
 function playMusic(youtubeId, title) {
+    // This function will not be called as renderMusic no longer renders playable cards.
+    // However, keeping it for completeness, though it won't be triggered.
     const playerScreen = document.getElementById('musicPlayerScreen');
     const mainContainer = document.querySelector('.main-container');
     const bottomNav = document.querySelector('.bottom-nav');
@@ -1186,7 +1181,7 @@ function renderAll() {
     renderRecent();
     renderHistory();
     renderNotes();
-    renderMusic(); // THAY ĐỔI: Gọi hàm renderMusic
+    renderMusic(); // Now calls the modified function
 }
 
 // --- INITIALIZE APP ---
