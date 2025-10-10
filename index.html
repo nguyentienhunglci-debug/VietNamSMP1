@@ -134,7 +134,13 @@
         .modal.show { display: flex; opacity: 1; }
         .modal-content { background: var(--bg-secondary); border-radius: 16px; padding: 24px; width: 90%; max-width: 440px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border); box-shadow: 0 20px 60px rgba(0,0,0,0.8); transform: scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease; }
         .modal.show .modal-content { transform: scale(1); }
-        .form-input, .form-select, .form-textarea { background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); transition: all 0.3s ease; }
+        .form-input, .form-select, .form-textarea { background: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border); transition: all 0.3s ease; width: 100%; padding: 12px; border-radius: 8px; font-size: 15px; }
+        .form-group { margin-bottom: 16px; position: relative; }
+        .form-label { display: block; color: var(--text-secondary); font-size: 13px; margin-bottom: 8px; font-weight: 500; }
+        .modal-title { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .quick-add-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+        .quick-add-btn { padding: 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: var(--card-bg); color: var(--accent-blue); }
         #schedule-container { text-align: center; padding: 10px 0px; }
         #clock-time { font-size: 56px; font-weight: 700; color: var(--text-primary); letter-spacing: 2px; }
         #clock-date { font-size: 16px; color: var(--text-secondary); margin-top: -5px; margin-bottom: 25px; }
@@ -232,11 +238,24 @@
 </div>
 
 <div id="txnModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title" id="modalTitle"></h2>
+        <div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
+            <div class="quick-add-grid">
+                <button class="quick-add-btn" onclick="addAmount(10000)">+10K</button><button class="quick-add-btn" onclick="addAmount(50000)">+50K</button><button class="quick-add-btn" onclick="addAmount(100000)">+100K</button>
+                <button class="quick-add-btn" onclick="addAmount(200000)">+200K</button><button class="quick-add-btn" onclick="addAmount(500000)">+500K</button><button class="quick-add-btn" onclick="addAmount(1000000)">+1M</button>
+            </div>
+        </div>
+        <div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">🍔 Ăn uống</option><option value="Đi lại">🚗 Đi lại</option><option value="Mua sắm">🛍️ Mua sắm</option><option value="Hóa đơn">💡 Hóa đơn</option><option value="Lương">💰 Lương</option><option value="Giải trí">🎬 Giải trí</option><option value="Khác">📌 Khác</option></select></div>
+        <div class="form-group"><label class="form-label">Ghi chú (không bắt buộc)</label><textarea class="form-textarea" id="note" placeholder="VD: Cà phê với bạn bè..."></textarea></div>
+        <input type="hidden" id="type"><input type="hidden" id="editId">
+        <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" id="saveTxnBtn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div>
     </div>
+</div>
 <div id="noteModal" class="modal">
-    </div>
+    <div class="modal-content"><h2 class="modal-title" id="noteModalTitle">Tạo Ghi Chú</h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle" placeholder="Tiêu đề ghi chú"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" style="min-height:200px" placeholder="Viết nội dung của bạn ở đây..."></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal">
-    </div>
+    <div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
 <script>
 (function initializeTheme() {
@@ -255,82 +274,15 @@ const DB = {
     getPasswords: () => JSON.parse(localStorage.getItem('passwords') || '[]'),
     savePasswords: (passwords) => localStorage.setItem('passwords', JSON.stringify(passwords)),
 };
-
-const scheduleData = [
-    { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
-    { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] },
-    { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] },
-    { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] },
-    { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] },
-    { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] },
-    { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
-];
-
-let lastRenderedDay = -1;
+const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] }, { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] }, { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] }, { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] }, { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
+let lastRenderedDay = -1; 
 let clockInterval = null;
-
-function goTo(screenId, element) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    element.classList.add('active');
-    window.scrollTo(0, 0);
-}
-
-function updateClockAndSchedule() {
-    const now = new Date();
-    const dayIndex = now.getDay();
-    document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false });
-    if (dayIndex !== lastRenderedDay) {
-        renderFullSchedule(now);
-        lastRenderedDay = dayIndex;
-    }
-}
-
-function renderFullSchedule(now) {
-    const dayIndex = now.getDay();
-    document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' });
-    const todaySchedule = scheduleData[dayIndex];
-    const todayContainer = document.getElementById('today-schedule');
-    let todayHTML = '<h3>Lịch học hôm nay</h3>';
-    if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) {
-        todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`;
-    } else {
-        if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join('');
-        if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join('');
-        else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`;
-    }
-    todayContainer.innerHTML = todayHTML;
-    const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7;
-    const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex];
-    const futureContainer = document.getElementById('future-schedule');
-    let futureHTML = '<h3>Lịch trình sắp tới</h3>';
-    futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`;
-    futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`;
-    futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`;
-    futureContainer.innerHTML = futureHTML;
-}
-
-function toggleTheme() {
-    const htmlEl = document.documentElement;
-    htmlEl.classList.toggle('light-theme');
-    const isLight = htmlEl.classList.contains('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}
-
-function renderAll() {
-    if (!clockInterval) {
-        updateClockAndSchedule();
-        clockInterval = setInterval(updateClockAndSchedule, 1000);
-    }
-    renderStats();
-    renderHistory();
-    renderNotes();
-    renderPasswords();
-}
-
+function goTo(screenId, element) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); element.classList.add('active'); window.scrollTo(0, 0); }
+function updateClockAndSchedule() { const now = new Date(); const dayIndex = now.getDay(); document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); if (dayIndex !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = dayIndex; } }
+function renderFullSchedule(now) { const dayIndex = now.getDay(); document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }); const todaySchedule = scheduleData[dayIndex]; const todayContainer = document.getElementById('today-schedule'); let todayHTML = '<h3>Lịch học hôm nay</h3>'; if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) { todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`; } else { if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join(''); if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join(''); else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`; } todayContainer.innerHTML = todayHTML; const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7; const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex]; const futureContainer = document.getElementById('future-schedule'); let futureHTML = '<h3>Lịch trình sắp tới</h3>'; futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`; futureContainer.innerHTML = futureHTML; }
+function toggleTheme() { const htmlEl = document.documentElement; htmlEl.classList.toggle('light-theme'); const isLight = htmlEl.classList.contains('light-theme'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); }
+function renderAll() { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderStats(); renderHistory(); renderNotes(); renderPasswords(); }
 document.addEventListener('DOMContentLoaded', renderAll);
-
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
 function renderStats() { const txns = DB.getTxns(); const totalIncome = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const totalExpense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('bal').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(balance); document.getElementById('inc').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalIncome); document.getElementById('exp').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalExpense); }
@@ -347,7 +299,7 @@ function openPasswordModal(id = null) { const modalTitle = document.getElementBy
 function savePassword() { const service = document.getElementById('passwordService').value.trim(), username = document.getElementById('passwordUsername').value.trim(), password = document.getElementById('passwordValue').value, editId = document.getElementById('editPasswordId').value; if (!service || !password) { alert('Vui lòng nhập dịch vụ và mật khẩu.'); return; } let passwords = DB.getPasswords(); if (editId) { const index = passwords.findIndex(p => p.id === editId); if (index > -1) { passwords[index] = { ...passwords[index], service, username, password }; } } else { passwords.unshift({ id: 'pass_' + Date.now(), service, username, password }); } DB.savePasswords(passwords); closeModal('passwordModal'); renderPasswords(); }
 function deletePassword(id) { if (confirm('Bạn có chắc muốn xóa mật khẩu này?')) { DB.savePasswords(DB.getPasswords().filter(p => p.id !== id)); renderPasswords(); } }
 function togglePasswordVisibility(id) { const passField = document.getElementById(`pass-val-${id}`); const passwordObj = DB.getPasswords().find(item => item.id === id); if (!passwordObj) return; passField.textContent = passField.textContent === '••••••••' ? passwordObj.password : '••••••••'; }
-function toggleModalPasswordVisibility() { const passInput = document.getElementById('passwordValue'); const button = passInput.nextElementSibling; if (passInput.type === 'password') { passInput.type = 'text'; button.textContent = '🙈'; } else { passInput.type = 'password'; button.textContent = '👁️'; } }
+function toggleModalPasswordVisibility() { const passInput = document.getElementById('passwordValue'); const button = passInput.closest('.password-input-wrapper').querySelector('button'); if (passInput.type === 'password') { passInput.type = 'text'; button.textContent = '🙈'; } else { passInput.type = 'password'; button.textContent = '👁️'; } }
 function showToast(message) { const existingToast = document.querySelector('.copy-toast'); if (existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.textContent = message; toast.className = 'copy-toast'; document.body.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000); }
 function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
 function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
