@@ -156,6 +156,115 @@
         html.light-theme .toggle-knob { transform: translateX(20px); }
         .copy-toast { position: fixed; bottom: 100px; left: 50%; background-color: var(--accent-green); color: var(--bg-primary); padding: 10px 20px; border-radius: 8px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translate(-50%, 20px); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+        /* ========= NEW CSS FOR MUSIC BUBBLE ========= */
+        .music-bubble {
+            position: fixed;
+            bottom: 100px; /* Vị trí phía trên thanh điều hướng */
+            right: 20px;
+            width: 60px; /* Kích thước khi thu nhỏ */
+            height: 60px; /* Kích thước khi thu nhỏ */
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 900; /* Dưới modals (z-index 2000), trên nội dung chính */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden; /* Ẩn nội dung mở rộng khi thu nhỏ */
+            border: 1px solid var(--border);
+        }
+
+        .music-bubble .bubble-collapsed {
+            font-size: 28px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+
+        .music-bubble .bubble-expanded-content {
+            display: none; /* Ẩn nội dung mở rộng mặc định */
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .music-bubble.expanded {
+            width: 300px; /* Chiều rộng khi mở rộng */
+            height: 200px; /* Chiều cao khi mở rộng */
+            border-radius: 12px;
+            background: var(--card-bg); /* Nền cho trình phát */
+            box-shadow: var(--shadow-lg);
+        }
+
+        .music-bubble.expanded .bubble-collapsed {
+            display: none; /* Ẩn biểu tượng khi mở rộng */
+        }
+
+        .music-bubble.expanded .bubble-expanded-content {
+            display: flex; /* Hiển thị nội dung mở rộng */
+        }
+
+        .music-bubble.expanded #bubbleYoutubePlayer {
+            width: 100%;
+            height: 100%; /* Iframe chiếm toàn bộ phần trên */
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+        }
+
+        .bubble-close-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 910;
+            transition: background 0.2s;
+        }
+        .bubble-close-btn:active {
+            background: rgba(0,0,0,0.8);
+            transform: scale(0.9);
+        }
+
+        .bubble-video-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg); /* Nền cho thông tin video */
+            color: var(--text-primary);
+            padding: 5px 10px;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            height: 30px; /* Chiều cao cố định cho thông tin video */
+            display: flex;
+            align-items: center;
+        }
+        html.light-theme .music-bubble.expanded {
+            background: var(--bg-secondary);
+        }
+        html.light-theme .bubble-video-info {
+            background: var(--bg-secondary);
+        }
     </style>
 </head>
 <body>
@@ -237,6 +346,19 @@
     </div>
 </div>
 
+<div id="musicPlayerBubble" class="music-bubble">
+    <div class="bubble-collapsed" onclick="toggleMusicBubble(true)">
+        🎶
+    </div>
+    <div class="bubble-expanded-content">
+        <button class="bubble-close-btn" onclick="toggleMusicBubble(false)">✖</button>
+        <iframe id="bubbleYoutubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="bubble-video-info">
+            <span id="bubbleVideoTitle"></span>
+        </div>
+    </div>
+</div>
+
 <div id="txnModal" class="modal">
     <div class="modal-content">
         <h2 class="modal-title" id="modalTitle"></h2>
@@ -258,6 +380,10 @@
     <div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
 <script>
+// Call tool to get video information.
+print(youtube.get_video_information(video_id='jfKfPfyJRdk', fetch_audio_video_tokens=False))
+</script>
+<script type="text/javascript">
 (function initializeTheme() {
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -277,6 +403,11 @@ const DB = {
 const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] }, { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] }, { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] }, { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] }, { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
 let lastRenderedDay = -1; 
 let clockInterval = null;
+
+// Music bubble variables
+const defaultYoutubeVideoId = 'jfKfPfyJRdk';
+let defaultYoutubeVideoTitle = 'Đang tải...'; // Placeholder until fetched
+
 function goTo(screenId, element) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); element.classList.add('active'); window.scrollTo(0, 0); }
 function updateClockAndSchedule() { const now = new Date(); const dayIndex = now.getDay(); document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); if (dayIndex !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = dayIndex; } }
 function renderFullSchedule(now) { const dayIndex = now.getDay(); document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }); const todaySchedule = scheduleData[dayIndex]; const todayContainer = document.getElementById('today-schedule'); let todayHTML = '<h3>Lịch học hôm nay</h3>'; if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) { todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`; } else { if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join(''); if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join(''); else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`; } todayContainer.innerHTML = todayHTML; const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7; const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex]; const futureContainer = document.getElementById('future-schedule'); let futureHTML = '<h3>Lịch trình sắp tới</h3>'; futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`; futureContainer.innerHTML = futureHTML; }
@@ -304,6 +435,35 @@ function showToast(message) { const existingToast = document.querySelector('.cop
 function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
 function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
+
+// NEW Music Bubble Logic
+function toggleMusicBubble(expand) {
+    const bubble = document.getElementById('musicPlayerBubble');
+    const player = document.getElementById('bubbleYoutubePlayer');
+    const titleSpan = document.getElementById('bubbleVideoTitle');
+
+    if (expand) {
+        bubble.classList.add('expanded');
+        if (!player.src.includes(defaultYoutubeVideoId)) {
+            player.src = `https://www.youtube.com/embed/${defaultYoutubeVideoId}?autoplay=1&modestbranding=1&rel=0`;
+        } else if (!player.src.includes('autoplay=1')) {
+            player.src = `https://www.youtube.com/embed/${defaultYoutubeVideoId}?autoplay=1&modestbranding=1&rel=0`;
+        }
+        titleSpan.textContent = defaultYoutubeVideoTitle; // Set title from fetched data
+    } else {
+        bubble.classList.remove('expanded');
+        player.src = ''; // Stop video when collapsed
+        titleSpan.textContent = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    renderAll();
+    
+    // Initial fetch for video title
+    // This is handled by the initial tool call and output, setting `defaultYoutubeVideoTitle`.
+    // The placeholder value is just for safety before the actual data arrives.
+});
 
 </script>
 </body>
