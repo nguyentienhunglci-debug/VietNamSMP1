@@ -118,7 +118,6 @@
         .copy-toast { position: fixed; bottom: 100px; left: 50%; background-color: var(--accent-green); color: var(--bg-primary); padding: 10px 20px; border-radius: 8px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translate(-50%, 20px); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-        /* ========= NEW CSS FOR PASSWORD PROTECTION ========= */
         .screen-overlay { display: none; position: fixed; inset: 0; background: var(--bg-primary); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
         .screen-overlay.show { display: flex; }
         .passcode-container { max-width: 300px; }
@@ -133,54 +132,87 @@
         .keypad-btn:active { background: var(--card-hover); }
         .keypad-btn.action { font-size: 18px; }
 
-        /* ========= NEW CSS FOR PASSWORD LIST BUTTONS ========= */
-        .password-field-container {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-        }
-        .password-value-container {
-            background: var(--bg-primary);
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            letter-spacing: 2px;
-            font-family: monospace;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        .password-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .btn-view-copy {
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .btn-view-copy.view-btn {
-            background: var(--accent-blue);
-            color: white;
-        }
-        .btn-view-copy.copy-btn {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-        }
-        .btn-view-copy:active {
-            transform: scale(0.97);
-            opacity: 0.8;
-        }
+        .password-field-container { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .password-value-container { background: var(--bg-primary); padding: 12px; border-radius: 8px; font-size: 16px; letter-spacing: 2px; font-family: monospace; color: var(--text-secondary); margin-bottom: 12px; text-align: center; }
+        .password-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-view-copy { padding: 12px; border-radius: 8px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+        .btn-view-copy.view-btn { background: var(--accent-blue); color: white; }
+        .btn-view-copy.copy-btn { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-view-copy:active { transform: scale(0.97); opacity: 0.8; }
 
-        /* ========= LOGO ========= */
         .title-with-logo { display: flex; align-items: center; gap: 12px; }
         .app-logo { height: 32px; width: 32px; border-radius: 8px; object-fit: cover; }
+        
+        /* ========= NEW CSS FOR PHOTOS ========= */
+        #photosGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .photo-item:active img {
+            transform: scale(1.05);
+        }
+        .photo-item .delete-photo-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        .photo-item:hover .delete-photo-btn {
+            opacity: 1;
+        }
+        .photo-item-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            font-size: 12px;
+            padding: 12px 8px 6px 8px;
+            text-align: center;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        #photoPreview {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
     </style>
 </head>
 <body>
@@ -203,10 +235,7 @@
 
     <div id="finance" class="screen">
         <div class="screen-title-bar">
-            <div class="title-with-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
-                <h2>Tài Chính</h2>
-            </div>
+             <div class="title-with-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo"><h2>Tài Chính</h2></div>
         </div>
         <div class="card">
             <div class="stat-grid">
@@ -228,21 +257,23 @@
 
     <div id="notes" class="screen">
         <div class="screen-title-bar">
-            <div class="title-with-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
-                <h2>Ghi Chú</h2>
-            </div>
+            <div class="title-with-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo"><h2>Ghi Chú</h2></div>
             <button class="btn" onclick="openNote()">📝 Mới</button>
         </div>
         <div id="notesList"></div>
     </div>
 
+    <div id="photos" class="screen">
+        <div class="screen-title-bar">
+            <div class="title-with-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo"><h2>Ảnh Quan Trọng</h2></div>
+            <button class="btn" onclick="openPhotoModal()">🖼️ Thêm</button>
+        </div>
+        <div id="photosGrid"></div>
+    </div>
+
     <div id="passwords" class="screen">
         <div class="screen-title-bar">
-            <div class="title-with-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
-                <h2>Mật Khẩu</h2>
-            </div>
+            <div class="title-with-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo"><h2>Mật Khẩu</h2></div>
             <button class="btn" onclick="openPasswordModal()">🔑 Mới</button>
         </div>
         <div id="passwordsList"></div>
@@ -250,31 +281,16 @@
 
     <div id="settings" class="screen">
         <div class="screen-title-bar">
-            <div class="title-with-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
-                <h2>Cài Đặt</h2>
-            </div>
+            <div class="title-with-logo"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo"><h2>Cài Đặt</h2></div>
         </div>
         <div class="card">
             <h3>Giao Diện & Bảo Mật</h3>
-            <div class="setting-item">
-                <span>Chế độ sáng</span>
-                <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()">
-                    <div class="toggle-knob"></div>
-                </div>
-            </div>
-            <div class="setting-item">
-                <span>Bảo vệ Mật khẩu</span>
-                <div class="toggle-switch" id="password-protection-toggle" onclick="togglePasswordProtection()">
-                    <div class="toggle-knob"></div>
-                </div>
-            </div>
+            <div class="setting-item"><span>Chế độ sáng</span><div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()"><div class="toggle-knob"></div></div></div>
+            <div class="setting-item"><span>Bảo vệ Mật khẩu</span><div class="toggle-switch" id="password-protection-toggle" onclick="togglePasswordProtection()"><div class="toggle-knob"></div></div></div>
         </div>
         <div class="card">
             <h3>Quản Lý Dữ Liệu</h3>
-            <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">
-                Xóa toàn bộ dữ liệu hoặc tải lại trang để áp dụng cập nhật.
-            </p>
+            <p style="color: var(--text-secondary); font-size: 14px; margin: 12px 0;">Xóa toàn bộ dữ liệu hoặc tải lại trang để áp dụng cập nhật.</p>
             <button class="btn btn-danger" onclick="resetData()">🗑️ Xóa Toàn Bộ Dữ Liệu</button>
             <button class="btn btn-sec" onclick="reloadApp()">🔄 Tải Lại Trang</button>
         </div>
@@ -284,67 +300,58 @@
         <div class="nav-item active" onclick="goTo('schedule', this)"><div class="nav-icon">🗓️</div><div class="nav-label">TKB</div></div>
         <div class="nav-item" onclick="goTo('finance', this)"><div class="nav-icon">📊</div><div class="nav-label">Tài Chính</div></div>
         <div class="nav-item" onclick="goTo('notes', this)"><div class="nav-icon">📝</div><div class="nav-label">Ghi Chú</div></div>
+        <div class="nav-item" onclick="goTo('photos', this)"><div class="nav-icon">🖼️</div><div class="nav-label">Ảnh</div></div>
         <div class="nav-item" onclick="goTo('passwords', this)"><div class="nav-icon">🔑</div><div class="nav-label">Mật khẩu</div></div>
         <div class="nav-item" onclick="goTo('settings', this)"><div class="nav-icon">⚙️</div><div class="nav-label">Cài Đặt</div></div>
     </div>
 </div>
 
+<div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"><div class="quick-add-grid"><button class="quick-add-btn" onclick="addAmount(10000)">+10K</button><button class="quick-add-btn" onclick="addAmount(50000)">+50K</button><button class="quick-add-btn" onclick="addAmount(100000)">+100K</button><button class="quick-add-btn" onclick="addAmount(200000)">+200K</button><button class="quick-add-btn" onclick="addAmount(500000)">+500K</button><button class="quick-add-btn" onclick="addAmount(1000000)">+1M</button></div></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">🍔 Ăn uống</option><option value="Đi lại">🚗 Đi lại</option><option value="Mua sắm">🛍️ Mua sắm</option><option value="Hóa đơn">💡 Hóa đơn</option><option value="Lương">💰 Lương</option><option value="Giải trí">🎬 Giải trí</option><option value="Khác">📌 Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú (không bắt buộc)</label><textarea class="form-textarea" id="note" placeholder="VD: Cà phê với bạn bè..."></textarea></div><input type="hidden" id="type"><input type="hidden" id="editId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" id="saveTxnBtn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
+<div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle">Tạo Ghi Chú</h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle" placeholder="Tiêu đề ghi chú"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" style="min-height:200px" placeholder="Viết nội dung của bạn ở đây..."></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
+<div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
-<div id="txnModal" class="modal">
+<div id="photoModal" class="modal">
     <div class="modal-content">
-        <h2 class="modal-title" id="modalTitle"></h2>
-        <div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric">
-            <div class="quick-add-grid">
-                <button class="quick-add-btn" onclick="addAmount(10000)">+10K</button><button class="quick-add-btn" onclick="addAmount(50000)">+50K</button><button class="quick-add-btn" onclick="addAmount(100000)">+100K</button>
-                <button class="quick-add-btn" onclick="addAmount(200000)">+200K</button><button class="quick-add-btn" onclick="addAmount(500000)">+500K</button><button class="quick-add-btn" onclick="addAmount(1000000)">+1M</button>
-            </div>
+        <h2 class="modal-title">Lưu Ảnh Mới</h2>
+        <div class="form-group">
+            <label class="form-label">Tiêu đề (không bắt buộc)</label>
+            <input type="text" class="form-input" id="photoTitle" placeholder="VD: Ảnh CCCD">
         </div>
-        <div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">🍔 Ăn uống</option><option value="Đi lại">🚗 Đi lại</option><option value="Mua sắm">🛍️ Mua sắm</option><option value="Hóa đơn">💡 Hóa đơn</option><option value="Lương">💰 Lương</option><option value="Giải trí">🎬 Giải trí</option><option value="Khác">📌 Khác</option></select></div>
-        <div class="form-group"><label class="form-label">Ghi chú (không bắt buộc)</label><textarea class="form-textarea" id="note" placeholder="VD: Cà phê với bạn bè..."></textarea></div>
-        <input type="hidden" id="type"><input type="hidden" id="editId">
-        <div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" id="saveTxnBtn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div>
+        <div class="form-group">
+            <label class="form-label">Chọn ảnh</label>
+            <input type="file" class="form-input" id="photoFile" accept="image/*" onchange="handlePhotoPreview(event)">
+            <img id="photoPreview" src="" alt="Xem trước ảnh">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-sec" onclick="closeModal('photoModal')" style="flex:1; margin:0;">Hủy</button>
+            <button class="btn" onclick="savePhoto()" style="flex:1; margin:0;">Lưu</button>
+        </div>
     </div>
 </div>
-<div id="noteModal" class="modal">
-    <div class="modal-content"><h2 class="modal-title" id="noteModalTitle">Tạo Ghi Chú</h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle" placeholder="Tiêu đề ghi chú"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" style="min-height:200px" placeholder="Viết nội dung của bạn ở đây..."></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="passwordModal" class="modal">
-    <div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
-<div id="passcode-screen" class="screen-overlay">
-    <div class="passcode-container">
-        <h3 id="passcode-title">Nhập mật mã</h3>
-        <div class="passcode-dots-container" id="passcode-dots">
-            <div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div>
-        </div>
-        <p id="passcode-error"></p>
-        <div class="passcode-keypad">
-            <button class="keypad-btn" onclick="passcode.keyPress('1')">1</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('2')">2</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('3')">3</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('4')">4</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('5')">5</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('6')">6</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('7')">7</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('8')">8</button>
-            <button class="keypad-btn" onclick="passcode.keyPress('9')">9</button>
-            <div></div> <button class="keypad-btn" onclick="passcode.keyPress('0')">0</button>
-            <button class="keypad-btn action" onclick="passcode.backspace()">⌫</button>
-        </div>
-    </div>
-</div>
+<div id="passcode-screen" class="screen-overlay"><div class="passcode-container"><h3 id="passcode-title">Nhập mật mã</h3><div class="passcode-dots-container" id="passcode-dots"><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div></div><p id="passcode-error"></p><div class="passcode-keypad"><button class="keypad-btn" onclick="passcode.keyPress('1')">1</button><button class="keypad-btn" onclick="passcode.keyPress('2')">2</button><button class="keypad-btn" onclick="passcode.keyPress('3')">3</button><button class="keypad-btn" onclick="passcode.keyPress('4')">4</button><button class="keypad-btn" onclick="passcode.keyPress('5')">5</button><button class="keypad-btn" onclick="passcode.keyPress('6')">6</button><button class="keypad-btn" onclick="passcode.keyPress('7')">7</button><button class="keypad-btn" onclick="passcode.keyPress('8')">8</button><button class="keypad-btn" onclick="passcode.keyPress('9')">9</button><div></div> <button class="keypad-btn" onclick="passcode.keyPress('0')">0</button><button class="keypad-btn action" onclick="passcode.backspace()">⌫</button></div></div></div>
+
 <script type="text/javascript">
-(function initializeTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const isLight = savedTheme === 'light';
-    if (isLight) {
-        document.documentElement.classList.add('light-theme');
-    }
-    document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
-})();
-(function initializePasswordProtection() {
-    const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
-    document.getElementById('password-protection-toggle')?.classList.toggle('active', isEnabled);
-})();
+(function initializeTheme() { const savedTheme = localStorage.getItem('theme'); const isLight = savedTheme === 'light'; if (isLight) { document.documentElement.classList.add('light-theme'); } document.getElementById('theme-toggle')?.classList.toggle('active', isLight); })();
+(function initializePasswordProtection() { const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true'; document.getElementById('password-protection-toggle')?.classList.toggle('active', isEnabled); })();
+
+// ========= NEW: IndexedDB Helper for Photos =========
+const IDB = {
+    db: null, DB_NAME: 'PersonalAssistantDB', STORE_NAME: 'photos',
+    async init() {
+        if (this.db) return;
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.DB_NAME, 1);
+            request.onerror = e => { console.error("IndexedDB error:", e.target.errorCode); reject("IndexedDB error"); };
+            request.onsuccess = e => { this.db = e.target.result; resolve(); };
+            request.onupgradeneeded = e => { if (!e.target.result.objectStoreNames.contains(this.STORE_NAME)) { e.target.result.createObjectStore(this.STORE_NAME, { keyPath: 'id' }); }};
+        });
+    },
+    async add(item) { await this.init(); return new Promise((resolve, reject) => { const transaction = this.db.transaction([this.STORE_NAME], 'readwrite'); const request = transaction.objectStore(this.STORE_NAME).add(item); request.onsuccess = () => resolve(); request.onerror = e => reject(e.target.error); }); },
+    async getAll() { await this.init(); return new Promise((resolve, reject) => { const request = this.db.transaction([this.STORE_NAME], 'readonly').objectStore(this.STORE_NAME).getAll(); request.onsuccess = () => resolve(request.result.reverse()); request.onerror = e => reject(e.target.error); }); },
+    async delete(id) { await this.init(); return new Promise((resolve, reject) => { const request = this.db.transaction([this.STORE_NAME], 'readwrite').objectStore(this.STORE_NAME).delete(id); request.onsuccess = () => resolve(); request.onerror = e => reject(e.target.error); }); },
+    async clear() { await this.init(); return new Promise((resolve, reject) => { const request = this.db.transaction([this.STORE_NAME], 'readwrite').objectStore(this.STORE_NAME).clear(); request.onsuccess = () => resolve(); request.onerror = e => reject(e.target.error); }); }
+};
 
 const DB = {
     getTxns: () => JSON.parse(localStorage.getItem('txns') || '[]'),
@@ -355,226 +362,103 @@ const DB = {
     savePasswords: (passwords) => localStorage.setItem('passwords', JSON.stringify(passwords)),
 };
 const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] }, { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] }, { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] }, { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] }, { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
-let lastRenderedDay = -1; 
-let clockInterval = null;
+let lastRenderedDay = -1, clockInterval = null;
 
-function goTo(screenId, element) {
-    if (screenId === 'passwords') {
-        const isProtectionEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
-        const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
-        if (isProtectionEnabled && !isAuthenticated) {
-            passcode.prompt(
-                () => goTo(screenId, element), // on success
-                () => {} // on failure
-            );
-            return;
-        }
-    }
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
-    document.getElementById(screenId).classList.add('active'); 
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
-    element.classList.add('active'); 
-    window.scrollTo(0, 0); 
-}
+function goTo(screenId, element) { if (screenId === 'passwords' && localStorage.getItem('passwordProtectionEnabled') === 'true' && sessionStorage.getItem('isAuthenticated') !== 'true') { passcode.prompt(() => goTo(screenId, element), () => {}); return; } document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); element.classList.add('active'); window.scrollTo(0, 0); }
 function updateClockAndSchedule() { const now = new Date(); const dayIndex = now.getDay(); document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); if (dayIndex !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = dayIndex; } }
 function renderFullSchedule(now) { const dayIndex = now.getDay(); document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }); const todaySchedule = scheduleData[dayIndex]; const todayContainer = document.getElementById('today-schedule'); let todayHTML = '<h3>Lịch học hôm nay</h3>'; if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) { todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`; } else { if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join(''); if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join(''); else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`; } todayContainer.innerHTML = todayHTML; const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7; const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex]; const futureContainer = document.getElementById('future-schedule'); let futureHTML = '<h3>Lịch trình sắp tới</h3>'; futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`; futureContainer.innerHTML = futureHTML; }
 function toggleTheme() { const htmlEl = document.documentElement; htmlEl.classList.toggle('light-theme'); const isLight = htmlEl.classList.contains('light-theme'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); document.getElementById('theme-toggle').classList.toggle('active', isLight); }
-function renderAll() { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderStats(); renderHistory(); renderNotes(); renderPasswords(); }
+function renderAll() { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderStats(); renderHistory(); renderNotes(); renderPasswords(); renderPhotos(); }
 document.addEventListener('DOMContentLoaded', renderAll);
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
-function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
+function closeModal(modalId) { const modal = document.getElementById(modalId); modal.classList.remove('show'); if (modalId === 'photoModal') { modal.querySelector('#photoFile').value = ''; modal.querySelector('#photoTitle').value = ''; modal.querySelector('#photoPreview').style.display = 'none'; modal.querySelector('#photoPreview').src = ''; } }
 function renderStats() { const txns = DB.getTxns(); const totalIncome = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const totalExpense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('bal').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(balance); document.getElementById('inc').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalIncome); document.getElementById('exp').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalExpense); }
-function renderHistory() { const container = document.getElementById('histList'); const searchTerm = document.getElementById('search').value.toLowerCase(); const txns = DB.getTxns().filter(t => t.note?.toLowerCase().includes(searchTerm) || t.amount.toString().includes(searchTerm)).sort((a, b) => new Date(b.date) - new Date(a.date)); if (txns.length === 0) { container.innerHTML = `<div class="empty">Không có giao dịch nào.</div>`; return; } container.innerHTML = txns.map(txn => { const typeClass = txn.type === 'expense' ? 'red' : 'green', amountSign = txn.type === 'expense' ? '-' : '+'; return `<div class="data-card" style="display: flex; align-items: center; justify-content: space-between; padding: 12px;"><div><div class="data-title">${txn.category}</div><div class="data-subtitle">${new Date(txn.date).toLocaleString('vi-VN')}</div></div><div class="stat-value ${typeClass}">${amountSign}${new Intl.NumberFormat('vi-VN').format(txn.amount)}₫</div></div>`; }).join(''); }
+function renderHistory() { const container = document.getElementById('histList'); const searchTerm = document.getElementById('search').value.toLowerCase(); const txns = DB.getTxns().filter(t => t.note?.toLowerCase().includes(searchTerm) || t.amount.toString().includes(searchTerm)).sort((a, b) => new Date(b.date) - new Date(a.date)); if (txns.length === 0) { container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Không có giao dịch nào.</p>`; return; } container.innerHTML = txns.map(txn => { const typeClass = txn.type === 'expense' ? 'red' : 'green', amountSign = txn.type === 'expense' ? '-' : '+'; return `<div class="data-card" style="display: flex; align-items: center; justify-content: space-between; padding: 12px;"><div><div class="data-title">${txn.category}</div><div class="data-subtitle">${new Date(txn.date).toLocaleString('vi-VN')}</div></div><div class="stat-value ${typeClass}">${amountSign}${new Intl.NumberFormat('vi-VN').format(txn.amount)}₫</div></div>`; }).join(''); }
 function openTxn(type, id = null) { const modal = document.getElementById('txnModal'), title = modal.querySelector('#modalTitle'), amtInput = modal.querySelector('#amt'), catSelect = modal.querySelector('#cat'), noteText = modal.querySelector('#note'), typeInput = modal.querySelector('#type'), editIdInput = modal.querySelector('#editId'), saveBtn = modal.querySelector('#saveTxnBtn'); amtInput.value = ''; noteText.value = ''; editIdInput.value = ''; catSelect.value = 'Ăn uống'; typeInput.value = type; if (id) { const txns = DB.getTxns(), txn = txns.find(t => t.id === id); title.textContent = 'Chỉnh Sửa Giao Dịch'; amtInput.value = txn.amount; catSelect.value = txn.category; noteText.value = txn.note; editIdInput.value = id; typeInput.value = txn.type; saveBtn.className = `btn btn-${txn.type === 'expense' ? 'danger' : 'success'}`; } else { title.textContent = type === 'expense' ? 'Thêm Chi Tiêu' : 'Thêm Thu Nhập'; saveBtn.className = type === 'expense' ? 'btn btn-danger' : 'btn'; saveBtn.style.background = type === 'expense' ? '' : 'var(--accent-green)'; } openModal('txnModal'); }
 function saveTxn() { const amount = parseFloat(document.getElementById('amt').value), category = document.getElementById('cat').value, note = document.getElementById('note').value.trim(), type = document.getElementById('type').value, editId = document.getElementById('editId').value; if (!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ.'); return; } let txns = DB.getTxns(); if (editId) { const txnIndex = txns.findIndex(t => t.id === editId); if (txnIndex > -1) { txns[txnIndex] = { ...txns[txnIndex], amount, category, note, type }; } } else { txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category, note, type }); } DB.saveTxns(txns); closeModal('txnModal'); renderStats(); renderHistory(); }
 function addAmount(val) { const amtInput = document.getElementById('amt'); amtInput.value = (parseFloat(amtInput.value) || 0) + val; }
-function renderNotes() { const container = document.getElementById('notesList'); const notes = DB.getNotes(); if (notes.length === 0) { container.innerHTML = `<div class="empty">Chưa có ghi chú nào.</div>`; return; } container.innerHTML = notes.map(note => `<div class="data-card"><div class="data-header"><span class="data-title">${note.title}</span><span class="data-subtitle">${new Date(note.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${note.content || '...'}</div><div class="data-actions"><button class="data-btn" onclick="openNote('${note.id}')">Sửa</button><button class="data-btn delete" onclick="deleteNote('${note.id}')">Xóa</button></div></div>`).join(''); }
+function renderNotes() { const container = document.getElementById('notesList'); const notes = DB.getNotes(); if (notes.length === 0) { container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có ghi chú nào.</p>`; return; } container.innerHTML = notes.map(note => `<div class="data-card"><div class="data-header"><span class="data-title">${note.title}</span><span class="data-subtitle">${new Date(note.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${note.content || '...'}</div><div class="data-actions"><button class="data-btn" onclick="openNote('${note.id}')">Sửa</button><button class="data-btn delete" onclick="deleteNote('${note.id}')">Xóa</button></div></div>`).join(''); }
 function openNote(id = null) { const titleInput = document.getElementById('noteTitle'), contentInput = document.getElementById('noteContent'), editIdInput = document.getElementById('editNoteId'), modalTitle = document.getElementById('noteModalTitle'); if (id) { const notes = DB.getNotes(), note = notes.find(n => n.id === id); modalTitle.textContent = "Chỉnh Sửa Ghi Chú"; titleInput.value = note.title; contentInput.value = note.content; editIdInput.value = id; } else { modalTitle.textContent = "Tạo Ghi Chú Mới"; titleInput.value = ''; contentInput.value = ''; editIdInput.value = ''; } openModal('noteModal'); }
 function saveNote() { const title = document.getElementById('noteTitle').value.trim(), content = document.getElementById('noteContent').value.trim(), editId = document.getElementById('editNoteId').value; if (!title) { alert('Vui lòng nhập tiêu đề.'); return; } let notes = DB.getNotes(); if (editId) { const noteIndex = notes.findIndex(n => n.id === editId); if (noteIndex > -1) { notes[noteIndex] = { ...notes[noteIndex], title, content, date: new Date().toISOString() }; } } else { notes.unshift({ id: 'note_' + Date.now(), date: new Date().toISOString(), title, content }); } DB.saveNotes(notes); closeModal('noteModal'); renderNotes(); }
 function deleteNote(id) { if (confirm('Bạn có chắc muốn xóa ghi chú này?')) { DB.saveNotes(DB.getNotes().filter(n => n.id !== id)); renderNotes(); } }
-// UPDATED Password Functions
-function renderPasswords() {
-    const container = document.getElementById('passwordsList');
-    const passwords = DB.getPasswords();
-    if (passwords.length === 0) {
-        container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có mật khẩu nào được lưu.</p>`;
-        return;
-    }
-    container.innerHTML = passwords.map(p => `
-        <div class="data-card">
-            <div class="data-header">
-                <span class="data-title">${p.service}</span>
-            </div>
-            <div class="data-content">${p.username}</div>
-            <div class="password-field-container">
-                <div class="password-value-container" id="pass-val-${p.id}">••••••••</div>
-                <div class="password-actions">
-                    <button class="btn-view-copy view-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button>
-                    <button class="btn-view-copy copy-btn" onclick="copyPassword('${p.id}')">Sao chép</button>
-                </div>
-            </div>
-            <div class="data-actions">
-                <button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button>
-                <button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button>
-            </div>
-        </div>`).join('');
-}
+function renderPasswords() { const container = document.getElementById('passwordsList'); const passwords = DB.getPasswords(); if (passwords.length === 0) { container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có mật khẩu nào được lưu.</p>`; return; } container.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="data-content">${p.username}</div><div class="password-field-container"><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="btn-view-copy view-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="btn-view-copy copy-btn" onclick="copyPassword('${p.id}')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join('');}
 function openPasswordModal(id = null) { const modalTitle = document.getElementById('passwordModalTitle'), serviceInput = document.getElementById('passwordService'), usernameInput = document.getElementById('passwordUsername'), passwordInput = document.getElementById('passwordValue'), editIdInput = document.getElementById('editPasswordId'); if (id) { const passwords = DB.getPasswords(), p = passwords.find(item => item.id === id); modalTitle.textContent = "Chỉnh Sửa Mật Khẩu"; serviceInput.value = p.service; usernameInput.value = p.username; passwordInput.value = p.password; editIdInput.value = id; } else { modalTitle.textContent = "Thêm Mật Khẩu Mới"; serviceInput.value = ''; usernameInput.value = ''; passwordInput.value = ''; editIdInput.value = ''; } openModal('passwordModal'); }
 function savePassword() { const service = document.getElementById('passwordService').value.trim(), username = document.getElementById('passwordUsername').value.trim(), password = document.getElementById('passwordValue').value, editId = document.getElementById('editPasswordId').value; if (!service || !password) { alert('Vui lòng nhập dịch vụ và mật khẩu.'); return; } let passwords = DB.getPasswords(); if (editId) { const index = passwords.findIndex(p => p.id === editId); if (index > -1) { passwords[index] = { ...passwords[index], service, username, password }; } } else { passwords.unshift({ id: 'pass_' + Date.now(), service, username, password }); } DB.savePasswords(passwords); closeModal('passwordModal'); renderPasswords(); }
 function deletePassword(id) { if (confirm('Bạn có chắc muốn xóa mật khẩu này?')) { DB.savePasswords(DB.getPasswords().filter(p => p.id !== id)); renderPasswords(); } }
-function togglePasswordVisibility(id, button) {
-    const passField = document.getElementById(`pass-val-${id}`);
-    const passwordObj = DB.getPasswords().find(item => item.id === id);
-    if (!passwordObj) return;
-
-    if (passField.textContent === '••••••••') {
-        passField.textContent = passwordObj.password;
-        button.textContent = 'Ẩn';
-    } else {
-        passField.textContent = '••••••••';
-        button.textContent = 'Xem';
-    }
-}
+function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); const passwordObj = DB.getPasswords().find(item => item.id === id); if (!passwordObj) return; if (passField.textContent === '••••••••') { passField.textContent = passwordObj.password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; }}
 function toggleModalPasswordVisibility() { const passInput = document.getElementById('passwordValue'); const button = passInput.closest('.password-input-wrapper').querySelector('button'); if (passInput.type === 'password') { passInput.type = 'text'; button.textContent = '🙈'; } else { passInput.type = 'password'; button.textContent = '👁️'; } }
 function showToast(message) { const existingToast = document.querySelector('.copy-toast'); if (existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.textContent = message; toast.className = 'copy-toast'; document.body.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000); }
 function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
-function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu (tài chính, ghi chú, mật khẩu đã lưu và cài đặt bảo vệ). Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
+async function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu (tài chính, ghi chú, mật khẩu, ảnh đã lưu và cài đặt bảo vệ). Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); await IDB.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
 
-// NEW: Passcode Protection Logic
-const passcode = {
-    PASSCODE_LENGTH: 4,
-    currentInput: "",
-    firstInput: "",
-    mode: 'verify', // 'verify', 'set', 'confirm'
-    onSuccess: null,
-    onFailure: null,
-    elements: {
-        screen: document.getElementById('passcode-screen'),
-        title: document.getElementById('passcode-title'),
-        dots: document.getElementById('passcode-dots').children,
-        error: document.getElementById('passcode-error'),
-    },
-    reset() {
-        this.currentInput = "";
-        this.firstInput = "";
-        this.updateDots();
-        this.elements.error.textContent = "";
-    },
-    updateDots() {
-        for (let i = 0; i < this.PASSCODE_LENGTH; i++) {
-            this.elements.dots[i].classList.toggle('filled', i < this.currentInput.length);
+// ========= NEW PHOTO FUNCTIONS =========
+function openPhotoModal() { openModal('photoModal'); }
+function handlePhotoPreview(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        const preview = document.getElementById('photoPreview');
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
         }
-    },
-    keyPress(key) {
-        if (this.currentInput.length >= this.PASSCODE_LENGTH) return;
-        this.currentInput += key;
-        this.updateDots();
-        if (this.currentInput.length === this.PASSCODE_LENGTH) {
-            setTimeout(() => this.handleSubmit(), 200);
-        }
-    },
-    backspace() {
-        this.currentInput = this.currentInput.slice(0, -1);
-        this.updateDots();
-    },
-    handleSubmit() {
-        switch (this.mode) {
-            case 'verify': this.verify(); break;
-            case 'set': this.set(); break;
-            case 'confirm': this.confirm(); break;
-        }
-    },
-    show() { this.elements.screen.classList.add('show'); },
-    hide() { this.elements.screen.classList.remove('show'); },
-    prompt(onSuccess, onFailure) {
-        this.mode = 'verify';
-        this.onSuccess = onSuccess;
-        this.onFailure = onFailure;
-        this.reset();
-        this.elements.title.textContent = 'Nhập mật mã';
-        this.show();
-    },
-    startSetup(onSuccess) {
-        this.mode = 'set';
-        this.onSuccess = onSuccess;
-        this.reset();
-        this.elements.title.textContent = 'Tạo mật mã mới';
-        this.show();
-    },
-    verify() {
-        const storedPasscode = localStorage.getItem('masterPassword');
-        if (this.currentInput === storedPasscode) {
-            sessionStorage.setItem('isAuthenticated', 'true');
-            this.hide();
-            if (this.onSuccess) this.onSuccess();
-        } else {
-            this.elements.error.textContent = "Mật mã không đúng. Thử lại.";
-            this.elements.screen.style.animation = 'shake 0.5s';
-            setTimeout(() => {
-                this.elements.screen.style.animation = '';
-                this.reset();
-            }, 500);
-        }
-    },
-    set() {
-        this.firstInput = this.currentInput;
-        this.currentInput = "";
-        this.updateDots();
-        this.mode = 'confirm';
-        this.elements.title.textContent = 'Xác nhận mật mã';
-    },
-    confirm() {
-        if (this.currentInput === this.firstInput) {
-            localStorage.setItem('masterPassword', this.currentInput);
-            localStorage.setItem('passwordProtectionEnabled', 'true');
-            sessionStorage.setItem('isAuthenticated', 'true');
-            this.hide();
-            if (this.onSuccess) this.onSuccess();
-        } else {
-            this.elements.error.textContent = "Mật mã không khớp. Vui lòng thử lại.";
-            setTimeout(() => {
-                this.mode = 'set';
-                this.elements.title.textContent = 'Tạo mật mã mới';
-                this.reset();
-            }, 1500);
-        }
+        reader.readAsDataURL(file);
     }
-};
-
-function togglePasswordProtection() {
-    const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
-    const toggleElement = document.getElementById('password-protection-toggle');
-    const masterPassword = localStorage.getItem('masterPassword');
-
-    if (isEnabled) { // Turning OFF
-        passcode.prompt(
-            () => { // On success
-                localStorage.setItem('passwordProtectionEnabled', 'false');
-                localStorage.removeItem('masterPassword'); // Optional: remove password when disabled
-                sessionStorage.removeItem('isAuthenticated');
-                toggleElement.classList.remove('active');
-                showToast('Đã tắt bảo vệ mật khẩu.');
-            },
-            () => { // On failure
-                showToast('Không thể tắt bảo vệ.');
-            }
-        );
-    } else { // Turning ON
-        if (masterPassword) { // If a password exists, just re-enable
-             localStorage.setItem('passwordProtectionEnabled', 'true');
-             toggleElement.classList.add('active');
-             showToast('Đã bật bảo vệ mật khẩu.');
-        } else { // No password, start setup
-            passcode.startSetup(
-                () => { // On success
-                    toggleElement.classList.add('active');
-                    showToast('Đã thiết lập và bật bảo vệ.');
-                }
-            );
+}
+async function savePhoto() {
+    const title = document.getElementById('photoTitle').value.trim();
+    const imageData = document.getElementById('photoPreview').src;
+    if (!imageData || imageData === window.location.href) { // check if src is empty or just the base url
+        alert('Vui lòng chọn một ảnh để lưu.');
+        return;
+    }
+    const photo = { id: 'photo_' + Date.now(), title: title || "Không có tiêu đề", imageData };
+    try {
+        await IDB.add(photo);
+        closeModal('photoModal');
+        renderPhotos();
+        showToast('✅ Đã lưu ảnh thành công!');
+    } catch (e) {
+        console.error('Lỗi khi lưu ảnh:', e);
+        showToast('❌ Lỗi khi lưu ảnh.');
+    }
+}
+async function renderPhotos() {
+    const container = document.getElementById('photosGrid');
+    try {
+        const photos = await IDB.getAll();
+        if (photos.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color: var(--text-secondary); grid-column: 1 / -1;">Chưa có ảnh nào được lưu.</p>`;
+            return;
+        }
+        container.innerHTML = photos.map(photo => `
+            <div class="photo-item">
+                <img src="${photo.imageData}" alt="${photo.title}" loading="lazy">
+                <div class="photo-item-title">${photo.title}</div>
+                <button class="delete-photo-btn" onclick="deletePhoto('${photo.id}')">×</button>
+            </div>
+        `).join('');
+    } catch (e) {
+        console.error("Lỗi khi tải ảnh:", e);
+        container.innerHTML = `<p style="text-align:center; color: var(--text-secondary); grid-column: 1 / -1;">Không thể tải ảnh đã lưu.</p>`;
+    }
+}
+async function deletePhoto(id) {
+    if (confirm('Bạn có chắc muốn xóa ảnh này?')) {
+        try {
+            await IDB.delete(id);
+            renderPhotos();
+            showToast('🗑️ Đã xóa ảnh.');
+        } catch(e) {
+            console.error('Lỗi khi xóa ảnh:', e);
+            showToast('❌ Lỗi khi xóa ảnh.');
         }
     }
 }
+
+const passcode = { PASSCODE_LENGTH: 4, currentInput: "", firstInput: "", mode: 'verify', onSuccess: null, onFailure: null, elements: { screen: document.getElementById('passcode-screen'), title: document.getElementById('passcode-title'), dots: document.getElementById('passcode-dots').children, error: document.getElementById('passcode-error'), }, reset() { this.currentInput = ""; this.firstInput = ""; this.updateDots(); this.elements.error.textContent = ""; }, updateDots() { for (let i = 0; i < this.PASSCODE_LENGTH; i++) { this.elements.dots[i].classList.toggle('filled', i < this.currentInput.length); } }, keyPress(key) { if (this.currentInput.length >= this.PASSCODE_LENGTH) return; this.currentInput += key; this.updateDots(); if (this.currentInput.length === this.PASSCODE_LENGTH) { setTimeout(() => this.handleSubmit(), 200); } }, backspace() { this.currentInput = this.currentInput.slice(0, -1); this.updateDots(); }, handleSubmit() { switch (this.mode) { case 'verify': this.verify(); break; case 'set': this.set(); break; case 'confirm': this.confirm(); break; } }, show() { this.elements.screen.classList.add('show'); }, hide() { this.elements.screen.classList.remove('show'); }, prompt(onSuccess, onFailure) { this.mode = 'verify'; this.onSuccess = onSuccess; this.onFailure = onFailure; this.reset(); this.elements.title.textContent = 'Nhập mật mã'; this.show(); }, startSetup(onSuccess) { this.mode = 'set'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Tạo mật mã mới'; this.show(); }, verify() { const storedPasscode = localStorage.getItem('masterPassword'); if (this.currentInput === storedPasscode) { sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không đúng. Thử lại."; this.elements.screen.style.animation = 'shake 0.5s'; setTimeout(() => { this.elements.screen.style.animation = ''; this.reset(); }, 500); } }, set() { this.firstInput = this.currentInput; this.currentInput = ""; this.updateDots(); this.mode = 'confirm'; this.elements.title.textContent = 'Xác nhận mật mã'; }, confirm() { if (this.currentInput === this.firstInput) { localStorage.setItem('masterPassword', this.currentInput); localStorage.setItem('passwordProtectionEnabled', 'true'); sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không khớp. Vui lòng thử lại."; setTimeout(() => { this.mode = 'set'; this.elements.title.textContent = 'Tạo mật mã mới'; this.reset(); }, 1500); } } };
+function togglePasswordProtection() { const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true'; const toggleElement = document.getElementById('password-protection-toggle'); const masterPassword = localStorage.getItem('masterPassword'); if (isEnabled) { passcode.prompt(() => { localStorage.setItem('passwordProtectionEnabled', 'false'); localStorage.removeItem('masterPassword'); sessionStorage.removeItem('isAuthenticated'); toggleElement.classList.remove('active'); showToast('Đã tắt bảo vệ mật khẩu.'); }, () => { showToast('Không thể tắt bảo vệ.'); }); } else { if (masterPassword) { localStorage.setItem('passwordProtectionEnabled', 'true'); toggleElement.classList.add('active'); showToast('Đã bật bảo vệ mật khẩu.'); } else { passcode.startSetup(() => { toggleElement.classList.add('active'); showToast('Đã thiết lập và bật bảo vệ.'); }); } } }
 </script>
 </body>
 </html>
