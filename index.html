@@ -27,6 +27,7 @@
             --border-color: #38383a;
             --shadow: none;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --gradient-bg: linear-gradient(135deg, #0d1b2a, #1a2a44, #4a4e69, #0d1b2a);
         }
 
         html.light-theme {
@@ -37,6 +38,7 @@
             --text-secondary: #636366;
             --accent-primary: #007aff;
             --border-color: #e5e5ea;
+            --gradient-bg: linear-gradient(135deg, #e0eafc, #cfdef3, #e0eafc, #f7faff);
         }
         
         /* =================================================================
@@ -57,6 +59,26 @@
             padding-bottom: 90px;
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+            overflow-x: hidden; /* Ngăn cuộn ngang do hiệu ứng */
+        }
+
+        /* === ADDED: Animated Background === */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--gradient-bg);
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: moveGradient 20s ease infinite;
+            transition: background 0.5s ease;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* =================================================================
@@ -298,14 +320,6 @@
         .txn-amount.red { color: var(--accent-red); }
         .txn-amount.green { color: var(--accent-green); }
 
-        /* --- Photos Screen --- */
-        #photosGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
-        .photo-item { position: relative; aspect-ratio: 1 / 1; background-color: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
-        .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .photo-item:active img { transform: scale(1.05); }
-        .photo-item .delete-photo-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(5px); }
-        .photo-item:hover .delete-photo-btn { opacity: 1; }
-        
         /* --- Passwords Screen --- */
         .password-field-container { margin-top: 12px; }
         .password-label { font-size: 13px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -370,9 +384,15 @@
             display: none; align-items: center; justify-content: space-between; width: 100%;
         }
         #music-player-bubble.expanded .player-controls { display: flex; }
-        #music-player-bubble .player-controls .title { font-weight: 600; font-size: 15px; }
+        #music-player-bubble .player-controls .title { font-weight: 600; font-size: 15px; margin-right: auto; }
+        /* MODIFIED: Styling for player buttons */
+        #music-player-bubble .player-controls .buttons-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
         #music-player-bubble .player-controls button {
-            background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 5px;
+            background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 5px; line-height: 1;
         }
         #music-player-bubble iframe { display: none; width: 100%; height: 180px; border: none; border-radius: 10px; margin-top: 12px; }
         #music-player-bubble.expanded iframe { display: block; }
@@ -437,18 +457,7 @@
         </div>
         <div id="notesList"></div>
     </div>
-
-    <div id="photos" class="screen">
-        <div class="screen-title-bar">
-            <h2>Ảnh</h2>
-            <button class="btn btn-small" onclick="openPhotoModal()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                <span>Thêm ảnh</span>
-            </button>
-        </div>
-        <div id="photosGrid"></div>
-    </div>
-
+    
     <div id="passwords" class="screen">
         <div class="screen-title-bar">
             <h2>Mật khẩu</h2>
@@ -495,10 +504,6 @@
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <div class="nav-label">Ghi chú</div>
         </div>
-        <div class="nav-item" onclick="goTo('photos', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <div class="nav-label">Ảnh</div>
-        </div>
         <div class="nav-item" onclick="goTo('passwords', this)">
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
             <div class="nav-label">Mật khẩu</div>
@@ -513,14 +518,16 @@
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú (không bắt buộc)</label><textarea class="form-textarea" id="note" placeholder="VD: Cà phê với bạn bè..."></textarea></div><input type="hidden" id="type"><input type="hidden" id="editId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" id="saveTxnBtn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle">Tạo ghi chú</h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle" placeholder="Tiêu đề ghi chú"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent" placeholder="Viết nội dung của bạn ở đây..."></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="photoModal" class="modal"><div class="modal-content"><h2 class="modal-title">Lưu ảnh mới</h2><div class="form-group"><label class="form-label">Tiêu đề (không bắt buộc)</label><input type="text" class="form-input" id="photoTitle" placeholder="VD: Ảnh CCCD"></div><div class="form-group"><label class="form-label">Chọn ảnh</label><input type="file" class="form-input" id="photoFile" accept="image/*" onchange="handlePhotoPreview(event)"><img id="photoPreview" src="" alt="Xem trước ảnh" style="width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px; margin-top: 10px; display: none;"></div><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('photoModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePhoto()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passcode-screen" class="screen-overlay"><div class="passcode-container"><h3 id="passcode-title">Nhập mật mã</h3><div class="passcode-dots-container" id="passcode-dots"><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div></div><p id="passcode-error" style="color: var(--accent-red); font-size: 14px; min-height: 20px;"></p><div class="passcode-keypad"><button class="keypad-btn" onclick="passcode.keyPress('1')">1</button><button class="keypad-btn" onclick="passcode.keyPress('2')">2</button><button class="keypad-btn" onclick="passcode.keyPress('3')">3</button><button class="keypad-btn" onclick="passcode.keyPress('4')">4</button><button class="keypad-btn" onclick="passcode.keyPress('5')">5</button><button class="keypad-btn" onclick="passcode.keyPress('6')">6</button><button class="keypad-btn" onclick="passcode.keyPress('7')">7</button><button class="keypad-btn" onclick="passcode.keyPress('8')">8</button><button class="keypad-btn" onclick="passcode.keyPress('9')">9</button><div></div><button class="keypad-btn" onclick="passcode.keyPress('0')">0</button><button class="keypad-btn action" onclick="passcode.backspace()">⌫</button></div></div></div>
 
 <div id="music-player-bubble" onclick="musicPlayer.toggleExpand(event)">
     <span class="bubble-icon">🎵</span>
     <div class="player-controls">
         <span class="title">Lofi Radio</span>
-        <button onclick="musicPlayer.togglePlayPause(event)">⏯</button>
+        <div class="buttons-wrapper">
+            <button onclick="musicPlayer.togglePlayPause(event)">⏯</button>
+            <button onclick="musicPlayer.collapse(event)" style="font-size: 28px;">&times;</button>
+        </div>
     </div>
     <iframe id="youtube-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media"></iframe>
 </div>
@@ -567,22 +574,7 @@ function onYouTubeIframeAPIReady() {
 // =================================================================
 // 2. DATABASE & STATE MANAGEMENT
 // =================================================================
-const IDB = {
-    db: null, DB_NAME: 'PersonalAssistantDB_v2', STORE_NAME: 'photos',
-    async init() {
-        if (this.db) return;
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(this.DB_NAME, 1);
-            request.onerror = e => { console.error("IndexedDB error:", e.target.errorCode); reject("IndexedDB error"); };
-            request.onsuccess = e => { this.db = e.target.result; resolve(); };
-            request.onupgradeneeded = e => { if (!e.target.result.objectStoreNames.contains(this.STORE_NAME)) { e.target.result.createObjectStore(this.STORE_NAME, { keyPath: 'id' }); }};
-        });
-    },
-    async add(item) { await this.init(); return new Promise((resolve, reject) => { const tx = this.db.transaction([this.STORE_NAME], 'readwrite'); tx.objectStore(this.STORE_NAME).add(item); tx.oncomplete = () => resolve(); tx.onerror = e => reject(e.target.error); }); },
-    async getAll() { await this.init(); return new Promise((resolve, reject) => { const req = this.db.transaction([this.STORE_NAME]).objectStore(this.STORE_NAME).getAll(); req.onsuccess = () => resolve(req.result.reverse()); req.onerror = e => reject(e.target.error); }); },
-    async delete(id) { await this.init(); return new Promise((resolve, reject) => { const tx = this.db.transaction([this.STORE_NAME], 'readwrite'); tx.objectStore(this.STORE_NAME).delete(id); tx.oncomplete = () => resolve(); tx.onerror = e => reject(e.target.error); }); },
-    async clear() { await this.init(); return new Promise((resolve, reject) => { const tx = this.db.transaction([this.STORE_NAME], 'readwrite'); tx.objectStore(this.STORE_NAME).clear(); tx.oncomplete = () => resolve(); tx.onerror = e => reject(e.target.error); }); }
-};
+// DELETED: IDB (IndexedDB) for photos is no longer needed
 
 const DB = {
     get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
@@ -654,14 +646,7 @@ function toggleTheme() {
 
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.classList.remove('show');
-    if (modalId === 'photoModal') {
-        modal.querySelector('#photoFile').value = '';
-        modal.querySelector('#photoTitle').value = '';
-        modal.querySelector('#photoPreview').style.display = 'none';
-        modal.querySelector('#photoPreview').src = '';
-    }
+    document.getElementById(modalId).classList.remove('show');
 }
 
 function showToast(message) {
@@ -679,7 +664,7 @@ function showToast(message) {
 }
 
 // =================================================================
-// 4. FEATURE MODULES (Finance, Notes, Photos, etc.)
+// 4. FEATURE MODULES (Finance, Notes, etc.)
 // =================================================================
 
 // --- Finance ---
@@ -805,60 +790,7 @@ function deleteNote(id) {
     }
 }
 
-// --- Photos ---
-async function renderPhotos() {
-    const container = document.getElementById('photosGrid');
-    try {
-        const photos = await IDB.getAll();
-        if (photos.length === 0) {
-            container.innerHTML = `<p style="text-align:center; color: var(--text-secondary); padding: 40px 0; grid-column: 1 / -1;">Chưa có ảnh nào được lưu.</p>`;
-            return;
-        }
-        container.innerHTML = photos.map(photo => `
-            <div class="photo-item">
-                <img src="${photo.imageData}" alt="${photo.title}" loading="lazy">
-                <button class="delete-photo-btn" onclick="deletePhoto('${photo.id}')">×</button>
-            </div>`).join('');
-    } catch (e) {
-        console.error("Lỗi khi tải ảnh:", e);
-        container.innerHTML = `<p style="text-align:center; color: var(--accent-red); padding: 40px 0; grid-column: 1 / -1;">Không thể tải ảnh đã lưu.</p>`;
-    }
-}
-function openPhotoModal() { openModal('photoModal'); }
-function handlePhotoPreview(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const preview = document.getElementById('photoPreview');
-            preview.src = e.target.result;
-            preview.style.display = 'block';
-        }
-        reader.readAsDataURL(file);
-    }
-}
-async function savePhoto() {
-    const imageData = document.getElementById('photoPreview').src;
-    if (!imageData || imageData.startsWith('http')) { alert('Vui lòng chọn một ảnh để lưu.'); return; }
-    const photo = { id: 'photo_' + Date.now(), title: document.getElementById('photoTitle').value.trim() || "Không có tiêu đề", imageData };
-    try {
-        await IDB.add(photo);
-        closeModal('photoModal');
-        renderPhotos();
-        showToast('Đã lưu ảnh thành công!');
-    } catch (e) {
-        showToast('Lỗi khi lưu ảnh.');
-    }
-}
-async function deletePhoto(id) {
-    if (confirm('Bạn có chắc muốn xóa ảnh này?')) {
-        try {
-            await IDB.delete(id);
-            renderPhotos();
-            showToast('Đã xóa ảnh.');
-        } catch(e) { showToast('Lỗi khi xóa ảnh.'); }
-    }
-}
+// --- DELETED: Photos functions removed ---
 
 // --- Passwords ---
 function renderPasswords() {
@@ -958,7 +890,7 @@ async function resetData() {
     if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) {
         localStorage.clear();
         sessionStorage.clear();
-        await IDB.clear();
+        // MODIFIED: No longer need to clear IDB
         alert('Đã xóa toàn bộ dữ liệu.');
         window.location.reload();
     }
@@ -980,10 +912,19 @@ const musicPlayer = {
     toggleExpand(event) {
         event.stopPropagation();
         const bubble = document.getElementById('music-player-bubble');
+        // Only expand if clicking the bubble icon itself when collapsed
         if (event.target !== bubble && !event.target.classList.contains('bubble-icon')) return;
         this.expanded = !this.expanded;
         bubble.classList.toggle('expanded', this.expanded);
         if (!this.expanded && this.playerReady) player.pauseVideo();
+    },
+    // ADDED: Collapse function
+    collapse(event) {
+        event.stopPropagation();
+        const bubble = document.getElementById('music-player-bubble');
+        this.expanded = false;
+        bubble.classList.remove('expanded');
+        if (this.playerReady) player.pauseVideo();
     }
 };
 
@@ -1060,7 +1001,7 @@ function renderAllScreens() {
     renderHistory();
     renderNotes();
     renderPasswords();
-    renderPhotos();
+    // DELETED: renderPhotos() call is removed
 }
 
 document.addEventListener('DOMContentLoaded', () => {
