@@ -143,76 +143,14 @@
         .title-with-logo { display: flex; align-items: center; gap: 12px; }
         .app-logo { height: 32px; width: 32px; border-radius: 8px; object-fit: cover; }
         
-        /* ========= NEW CSS FOR PHOTOS ========= */
-        #photosGrid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
-        }
-        .photo-item {
-            position: relative;
-            aspect-ratio: 1 / 1;
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .photo-item:active img {
-            transform: scale(1.05);
-        }
-        .photo-item .delete-photo-btn {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 24px;
-            height: 24px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            line-height: 1;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        .photo-item:hover .delete-photo-btn {
-            opacity: 1;
-        }
-        .photo-item-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            font-size: 12px;
-            padding: 12px 8px 6px 8px;
-            text-align: center;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        #photoPreview {
-            width: 100%;
-            max-height: 250px;
-            object-fit: contain;
-            border-radius: 8px;
-            background: var(--bg-primary);
-            margin-top: 10px;
-            display: none; /* Hidden by default */
-        }
+        #photosGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+        .photo-item { position: relative; aspect-ratio: 1 / 1; background-color: var(--card-bg); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .photo-item:active img { transform: scale(1.05); }
+        .photo-item .delete-photo-btn { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; line-height: 1; opacity: 0; transition: opacity 0.2s ease; }
+        .photo-item:hover .delete-photo-btn { opacity: 1; }
+        .photo-item-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; font-size: 12px; padding: 12px 8px 6px 8px; text-align: center; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        #photoPreview { width: 100%; max-height: 250px; object-fit: contain; border-radius: 8px; background: var(--bg-primary); margin-top: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -335,7 +273,6 @@
 (function initializeTheme() { const savedTheme = localStorage.getItem('theme'); const isLight = savedTheme === 'light'; if (isLight) { document.documentElement.classList.add('light-theme'); } document.getElementById('theme-toggle')?.classList.toggle('active', isLight); })();
 (function initializePasswordProtection() { const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true'; document.getElementById('password-protection-toggle')?.classList.toggle('active', isEnabled); })();
 
-// ========= NEW: IndexedDB Helper for Photos =========
 const IDB = {
     db: null, DB_NAME: 'PersonalAssistantDB', STORE_NAME: 'photos',
     async init() {
@@ -381,18 +318,61 @@ function renderNotes() { const container = document.getElementById('notesList');
 function openNote(id = null) { const titleInput = document.getElementById('noteTitle'), contentInput = document.getElementById('noteContent'), editIdInput = document.getElementById('editNoteId'), modalTitle = document.getElementById('noteModalTitle'); if (id) { const notes = DB.getNotes(), note = notes.find(n => n.id === id); modalTitle.textContent = "Chỉnh Sửa Ghi Chú"; titleInput.value = note.title; contentInput.value = note.content; editIdInput.value = id; } else { modalTitle.textContent = "Tạo Ghi Chú Mới"; titleInput.value = ''; contentInput.value = ''; editIdInput.value = ''; } openModal('noteModal'); }
 function saveNote() { const title = document.getElementById('noteTitle').value.trim(), content = document.getElementById('noteContent').value.trim(), editId = document.getElementById('editNoteId').value; if (!title) { alert('Vui lòng nhập tiêu đề.'); return; } let notes = DB.getNotes(); if (editId) { const noteIndex = notes.findIndex(n => n.id === editId); if (noteIndex > -1) { notes[noteIndex] = { ...notes[noteIndex], title, content, date: new Date().toISOString() }; } } else { notes.unshift({ id: 'note_' + Date.now(), date: new Date().toISOString(), title, content }); } DB.saveNotes(notes); closeModal('noteModal'); renderNotes(); }
 function deleteNote(id) { if (confirm('Bạn có chắc muốn xóa ghi chú này?')) { DB.saveNotes(DB.getNotes().filter(n => n.id !== id)); renderNotes(); } }
-function renderPasswords() { const container = document.getElementById('passwordsList'); const passwords = DB.getPasswords(); if (passwords.length === 0) { container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có mật khẩu nào được lưu.</p>`; return; } container.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="data-content">${p.username}</div><div class="password-field-container"><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="btn-view-copy view-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="btn-view-copy copy-btn" onclick="copyPassword('${p.id}')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join('');}
+
+// ========= START: UPDATED PASSWORD FUNCTIONS =========
+function renderPasswords() {
+    const container = document.getElementById('passwordsList');
+    const passwords = DB.getPasswords();
+    if (passwords.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có mật khẩu nào được lưu.</p>`;
+        return;
+    }
+    container.innerHTML = passwords.map(p => `
+    <div class="data-card" style="border-left-color: var(--accent-orange);">
+        <div class="data-header">
+            <span class="data-title">${p.service}</span>
+        </div>
+        
+        <div style="margin-bottom: 16px; margin-top: 12px;">
+            <label class="form-label" style="font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Tên đăng nhập</label>
+            <div style="display: flex; align-items: center; gap: 10px; background: var(--bg-primary); padding: 10px 12px; border-radius: 8px;">
+                <span style="flex-grow: 1; font-family: monospace; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.username || 'N/A'}</span>
+                <button class="data-btn" style="padding: 5px 12px; font-size: 13px; margin: 0; background: var(--bg-secondary);" onclick="copyUsername('${p.id}')">Sao chép</button>
+            </div>
+        </div>
+
+        <div class="password-field-container" style="border-top: none; margin-top: 0; padding-top: 0;">
+             <label class="form-label" style="font-size: 12px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Mật khẩu</label>
+            <div class="password-value-container" id="pass-val-${p.id}" style="margin-bottom: 10px;">••••••••</div>
+            <div class="password-actions">
+                <button class="btn-view-copy view-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button>
+                <button class="btn-view-copy copy-btn" onclick="copyPassword('${p.id}')">Sao chép</button>
+            </div>
+        </div>
+        
+        <div class="data-actions" style="border-top: 1px solid var(--border); margin-top: 16px; padding-top: 12px;">
+            <button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button>
+            <button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button>
+        </div>
+    </div>`).join('');
+}
+
 function openPasswordModal(id = null) { const modalTitle = document.getElementById('passwordModalTitle'), serviceInput = document.getElementById('passwordService'), usernameInput = document.getElementById('passwordUsername'), passwordInput = document.getElementById('passwordValue'), editIdInput = document.getElementById('editPasswordId'); if (id) { const passwords = DB.getPasswords(), p = passwords.find(item => item.id === id); modalTitle.textContent = "Chỉnh Sửa Mật Khẩu"; serviceInput.value = p.service; usernameInput.value = p.username; passwordInput.value = p.password; editIdInput.value = id; } else { modalTitle.textContent = "Thêm Mật Khẩu Mới"; serviceInput.value = ''; usernameInput.value = ''; passwordInput.value = ''; editIdInput.value = ''; } openModal('passwordModal'); }
 function savePassword() { const service = document.getElementById('passwordService').value.trim(), username = document.getElementById('passwordUsername').value.trim(), password = document.getElementById('passwordValue').value, editId = document.getElementById('editPasswordId').value; if (!service || !password) { alert('Vui lòng nhập dịch vụ và mật khẩu.'); return; } let passwords = DB.getPasswords(); if (editId) { const index = passwords.findIndex(p => p.id === editId); if (index > -1) { passwords[index] = { ...passwords[index], service, username, password }; } } else { passwords.unshift({ id: 'pass_' + Date.now(), service, username, password }); } DB.savePasswords(passwords); closeModal('passwordModal'); renderPasswords(); }
 function deletePassword(id) { if (confirm('Bạn có chắc muốn xóa mật khẩu này?')) { DB.savePasswords(DB.getPasswords().filter(p => p.id !== id)); renderPasswords(); } }
 function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); const passwordObj = DB.getPasswords().find(item => item.id === id); if (!passwordObj) return; if (passField.textContent === '••••••••') { passField.textContent = passwordObj.password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; }}
 function toggleModalPasswordVisibility() { const passInput = document.getElementById('passwordValue'); const button = passInput.closest('.password-input-wrapper').querySelector('button'); if (passInput.type === 'password') { passInput.type = 'text'; button.textContent = '🙈'; } else { passInput.type = 'password'; button.textContent = '👁️'; } }
 function showToast(message) { const existingToast = document.querySelector('.copy-toast'); if (existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.textContent = message; toast.className = 'copy-toast'; document.body.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000); }
-function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
+
+function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép mật khẩu!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép mật khẩu!'); } catch (err) { showToast('❌ Lỗi!'); } } }
+
+function copyUsername(id) { const usernameToCopy = DB.getPasswords().find(p => p.id === id)?.username; if (!usernameToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(usernameToCopy).then(() => showToast('✅ Đã sao chép tên đăng nhập!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = usernameToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép tên đăng nhập!'); } catch (err) { showToast('❌ Lỗi!'); } } }
+
+// ========= END: UPDATED PASSWORD FUNCTIONS =========
+
 async function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu (tài chính, ghi chú, mật khẩu, ảnh đã lưu và cài đặt bảo vệ). Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); await IDB.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
 
-// ========= NEW PHOTO FUNCTIONS =========
 function openPhotoModal() { openModal('photoModal'); }
 function handlePhotoPreview(event) {
     const file = event.target.files[0];
@@ -409,7 +389,7 @@ function handlePhotoPreview(event) {
 async function savePhoto() {
     const title = document.getElementById('photoTitle').value.trim();
     const imageData = document.getElementById('photoPreview').src;
-    if (!imageData || imageData === window.location.href) { // check if src is empty or just the base url
+    if (!imageData || imageData === window.location.href) { 
         alert('Vui lòng chọn một ảnh để lưu.');
         return;
     }
