@@ -7,8 +7,10 @@
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
     <link rel="manifest" href="manifest.webmanifest">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <link rel="apple-touch-icon" href="logo.png">
 
     <style>
         :root {
@@ -53,7 +55,6 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        /* Tối ưu cấu trúc header chung */
         .main-header {
             padding: 60px 20px 0 20px;
         }
@@ -103,7 +104,6 @@
         .btn-sec { background: linear-gradient(135deg, #4a4a4a, #3f3f3f); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         html.light-theme .btn-sec { background: linear-gradient(135deg, #e0e0e0, #d5d5d5); color: var(--text-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-danger { background: linear-gradient(135deg, var(--accent-red), #cc0000); box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3); }
-        /* Thêm class .btn-success */
         .btn-success { background: linear-gradient(135deg, var(--accent-green), #00994d); box-shadow: 0 4px 12px rgba(0, 209, 102, 0.3); }
         
         .card { 
@@ -163,14 +163,12 @@
         .setting-item span { font-size: 16px; font-weight: 500; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--border); border-radius: 15px; position: relative; transition: background-color 0.3s ease; }
         .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        /* Cải thiện CSS cho toggle switch */
         .toggle-switch.active { background-color: var(--accent-green); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
 
         .copy-toast { position: fixed; bottom: 100px; left: 50%; background-color: var(--accent-green); color: var(--bg-primary); padding: 10px 20px; border-radius: 8px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translate(-50%, 20px); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-        /* ========= MUSIC BUBBLE CSS (No change needed) ========= */
         .music-bubble {
             position: fixed; bottom: 100px; right: 20px; width: 60px; height: 60px;
             background: var(--accent-blue); border-radius: 50%; display: flex; align-items: center;
@@ -211,11 +209,11 @@
     <header class="main-header">
         <div class="screen-title-bar">
             <div class="title-with-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <img src="logo.png" alt="Logo" class="app-logo">
                 <h2 id="screen-title">Thời Khóa Biểu</h2>
             </div>
             <div id="header-action-button-container">
-                </div>
+            </div>
         </div>
     </header>
 
@@ -316,9 +314,7 @@
     <div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
 <script>
-// Sửa lỗi #1: Xóa bỏ đoạn script không hợp lệ và cung cấp dữ liệu mặc định.
 const defaultYoutubeVideoId = 'jfKfPfyJRdk';
-// Thông tin này được lấy thủ công từ video ID trên.
 const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to'; 
 
 (function initializeApp() {
@@ -330,18 +326,16 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
         getPasswords: () => JSON.parse(localStorage.getItem('passwords') || '[]'),
         savePasswords: (passwords) => localStorage.setItem('passwords', JSON.stringify(passwords)),
     };
-    window.DB = DB; // Đưa DB ra global scope để các hàm onclick cũ vẫn dùng được
+    window.DB = DB;
 
     const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['Chào cờ', 'Toán', 'Vật Lý'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] }, { dayName: 'Thứ Ba', morning: ['Hóa Học', 'Sinh Học', 'Lịch Sử'], afternoon: ['Địa Lý', 'Toán'] }, { dayName: 'Thứ Tư', morning: ['Thể dục', 'Ngữ Văn', 'Toán'], afternoon: ['Tiếng Anh', 'GDCD'] }, { dayName: 'Thứ Năm', morning: ['Vật Lý', 'Hóa Học', 'Lịch Sử'], afternoon: ['Ngữ Văn', 'Toán'] }, { dayName: 'Thứ Sáu', morning: ['Sử', 'Hoá', 'Toán', 'Âm nhạc', 'Công nghệ'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
     let lastRenderedDay = -1; 
     let clockInterval = null;
 
-    // --- CÁC HÀM TIỆN ÍCH ---
     window.openModal = (modalId) => document.getElementById(modalId).classList.add('show');
     window.closeModal = (modalId) => document.getElementById(modalId).classList.remove('show');
     const formatCurrency = (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
     
-    // --- KHỞI TẠO GIAO DIỆN & SỰ KIỆN ---
     function initializeTheme() {
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
@@ -377,7 +371,7 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
     
     function updateHeaderActions(screenId) {
         const container = document.getElementById('header-action-button-container');
-        container.innerHTML = ''; // Xóa các nút cũ
+        container.innerHTML = '';
         if (screenId === 'notes') {
             container.innerHTML = `<button class="btn" onclick="openNote()">📝 Mới</button>`;
         } else if (screenId === 'passwords') {
@@ -385,7 +379,6 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
         }
     }
 
-    // --- CÁC HÀM RENDER ---
     function updateClockAndSchedule() { 
         const now = new Date(); const dayIndex = now.getDay(); 
         document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); 
@@ -413,7 +406,6 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
             .filter(t => t.note?.toLowerCase().includes(searchTerm) || t.amount.toString().includes(searchTerm))
             .sort((a, b) => new Date(b.date) - new Date(a.date));
         if (txns.length === 0) { container.innerHTML = `<div class="empty">Không có giao dịch nào.</div>`; return; }
-        // Sửa lỗi #3: Dùng hàm formatCurrency
         container.innerHTML = txns.map(txn => {
             const typeClass = txn.type === 'expense' ? 'red' : 'green';
             const amountSign = txn.type === 'expense' ? '-' : '+';
@@ -435,10 +427,9 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
     function renderAll() {
         if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); }
         renderStats(); renderHistory(); renderNotes(); renderPasswords();
-        updateHeaderActions('schedule'); // Cập nhật header cho màn hình mặc định
+        updateHeaderActions('schedule');
     }
 
-    // --- CÁC HÀM XỬ LÝ DỮ LIỆU (Vẫn giữ onclick để tránh sửa quá nhiều) ---
     window.openTxn = (type, id = null) => { const modal = document.getElementById('txnModal'), title = modal.querySelector('#modalTitle'), amtInput = modal.querySelector('#amt'), catSelect = modal.querySelector('#cat'), noteText = modal.querySelector('#note'), typeInput = modal.querySelector('#type'), editIdInput = modal.querySelector('#editId'), saveBtn = modal.querySelector('#saveTxnBtn'); amtInput.value = ''; noteText.value = ''; editIdInput.value = ''; catSelect.value = 'Ăn uống'; typeInput.value = type; if (id) { const txns = DB.getTxns(), txn = txns.find(t => t.id === id); title.textContent = 'Chỉnh Sửa Giao Dịch'; amtInput.value = txn.amount; catSelect.value = txn.category; noteText.value = txn.note; editIdInput.value = id; typeInput.value = txn.type; saveBtn.className = `btn btn-${txn.type === 'expense' ? 'danger' : 'success'}`; } else { title.textContent = type === 'expense' ? 'Thêm Chi Tiêu' : 'Thêm Thu Nhập'; saveBtn.className = type === 'expense' ? 'btn btn-danger' : 'btn btn-success'; } openModal('txnModal'); };
     window.saveTxn = () => { const amount = parseFloat(document.getElementById('amt').value.replace(/,/g, '')), category = document.getElementById('cat').value, note = document.getElementById('note').value.trim(), type = document.getElementById('type').value, editId = document.getElementById('editId').value; if (isNaN(amount) || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ.'); return; } let txns = DB.getTxns(); if (editId) { const txnIndex = txns.findIndex(t => t.id === editId); if (txnIndex > -1) { txns[txnIndex] = { ...txns[txnIndex], amount, category, note, type }; } } else { txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category, note, type }); } DB.saveTxns(txns); closeModal('txnModal'); renderStats(); renderHistory(); };
     window.addAmount = (val) => { const amtInput = document.getElementById('amt'); amtInput.value = (parseFloat(amtInput.value.replace(/,/g, '')) || 0) + val; };
@@ -455,7 +446,6 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
     function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
     function reloadApp() { window.location.reload(); }
 
-    // --- MUSIC BUBBLE ---
     function toggleMusicBubble(expand) {
         const bubble = document.getElementById('musicPlayerBubble');
         const player = document.getElementById('bubbleYoutubePlayer');
@@ -470,16 +460,14 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
             titleSpan.textContent = defaultYoutubeVideoTitle;
         } else {
             bubble.classList.remove('expanded');
-            // Gửi lệnh postMessage để dừng video thay vì xóa src, giúp mượt hơn
             if (player.contentWindow) {
                 player.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
             }
-            setTimeout(() => { player.src = ''; }, 300); // Xóa src sau khi animation kết thúc
+            setTimeout(() => { player.src = ''; }, 300);
             titleSpan.textContent = '';
         }
     }
     
-    // --- GẮN SỰ KIỆN ---
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', () => goTo(item.dataset.screen, item));
     });
@@ -492,7 +480,6 @@ const defaultYoutubeVideoTitle = 'lofi hip hop radio - beats to relax/study to';
     musicBubble.querySelector('.bubble-collapsed').addEventListener('click', () => toggleMusicBubble(true));
     musicBubble.querySelector('.bubble-close-btn').addEventListener('click', () => toggleMusicBubble(false));
 
-    // --- KHỞI CHẠY ---
     initializeTheme();
     renderAll();
 })();
