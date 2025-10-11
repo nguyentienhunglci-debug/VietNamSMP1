@@ -265,13 +265,31 @@
         html.light-theme .bubble-video-info {
             background: var(--bg-secondary);
         }
+
+        /* ========= NEW CSS FOR LOGO ========= */
+        .title-with-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Khoảng cách giữa logo và tiêu đề */
+        }
+        .app-logo {
+            height: 32px; /* Điều chỉnh kích thước */
+            width: 32px;
+            border-radius: 8px; /* Bo tròn góc */
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
 
 <div class="main-container">
     <div id="schedule" class="screen active">
-        <div class="screen-title-bar"><h2>Thời Khóa Biểu</h2></div>
+        <div class="screen-title-bar">
+            <div class="title-with-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <h2>Thời Khóa Biểu</h2>
+            </div>
+        </div>
         <div id="schedule-container">
             <div id="clock-time">--:--:--</div>
             <div id="clock-date">---, --/--/----</div>
@@ -281,7 +299,12 @@
     </div>
 
     <div id="finance" class="screen">
-        <div class="screen-title-bar"><h2>Tài Chính</h2></div>
+        <div class="screen-title-bar">
+            <div class="title-with-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <h2>Tài Chính</h2>
+            </div>
+        </div>
         <div class="card">
             <div class="stat-grid">
                 <div class="stat-card full-width"><div class="stat-label">Tổng Số Dư</div><div class="stat-value" id="bal">0₫</div></div>
@@ -302,7 +325,10 @@
 
     <div id="notes" class="screen">
         <div class="screen-title-bar">
-            <h2>Ghi Chú</h2>
+            <div class="title-with-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <h2>Ghi Chú</h2>
+            </div>
             <button class="btn" onclick="openNote()">📝 Mới</button>
         </div>
         <div id="notesList"></div>
@@ -310,14 +336,22 @@
 
     <div id="passwords" class="screen">
         <div class="screen-title-bar">
-            <h2>Mật Khẩu</h2>
+            <div class="title-with-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <h2>Mật Khẩu</h2>
+            </div>
             <button class="btn" onclick="openPasswordModal()">🔑 Mới</button>
         </div>
         <div id="passwordsList"></div>
     </div>
 
     <div id="settings" class="screen">
-        <div class="screen-title-bar"><h2>Cài Đặt</h2></div>
+        <div class="screen-title-bar">
+            <div class="title-with-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsNLZ84bVb5vTxhVI_mIYGyETfn1z9tpe6D57YMcjkKQ&s=10" alt="Logo" class="app-logo">
+                <h2>Cài Đặt</h2>
+            </div>
+        </div>
         <div class="card">
             <h3>Giao Diện</h3>
             <div class="setting-item" onclick="toggleTheme()">
