@@ -39,12 +39,7 @@
             --header-gradient: var(--text-primary);
         }
         
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         html { color-scheme: dark; }
         html.light-theme { color-scheme: light; }
@@ -58,52 +53,20 @@
             transition: background 0.3s ease, color 0.3s ease;
         }
 
-        .screen { 
-            display: none; 
-            padding: 60px 20px 0 20px;
-        }
-        .screen.active { 
-            display: block; 
-        }
+        .screen { display: none; padding: 60px 20px 0 20px; }
+        .screen.active { display: block; }
         
-        .screen-title-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .screen-title-bar h2 {
-            font-size: 28px;
-            font-weight: 700;
-            background: var(--header-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .screen-title-bar .btn {
-            width: auto;
-            margin: 0;
-            padding: 10px 16px;
-            font-size: 14px;
-        }
+        .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .screen-title-bar h2 { font-size: 28px; font-weight: 700; background: var(--header-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .screen-title-bar .btn { width: auto; margin: 0; padding: 10px 16px; font-size: 14px; }
 
-        .btn {
-            padding: 14px 24px; border: none; border-radius: 12px; font-size: 16px;
-            font-weight: 600; cursor: pointer; background: linear-gradient(135deg, var(--accent-blue), #0066cc);
-            color: white; width: 100%; margin-top: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 12px rgba(62, 166, 255, 0.3); position: relative; overflow: hidden;
-        }
+        .btn { padding: 14px 24px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; background: linear-gradient(135deg, var(--accent-blue), #0066cc); color: white; width: 100%; margin-top: 16px; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 12px rgba(62, 166, 255, 0.3); position: relative; overflow: hidden; }
         .btn:active { transform: scale(0.98) translateY(1px); box-shadow: 0 2px 8px rgba(62, 166, 255, 0.4); }
         .btn-sec { background: linear-gradient(135deg, #4a4a4a, #3f3f3f); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
         html.light-theme .btn-sec { background: linear-gradient(135deg, #e0e0e0, #d5d5d5); color: var(--text-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .btn-danger { background: linear-gradient(135deg, var(--accent-red), #cc0000); box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3); }
         
-        .card { 
-            background: var(--card-bg); border-radius: 16px; padding: 20px;
-            margin: 16px 0;
-            box-shadow: var(--shadow); border: 1px solid var(--border);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin: 16px 0; box-shadow: var(--shadow); border: 1px solid var(--border); transition: background 0.3s ease, border-color 0.3s ease; }
         .card h3 { font-size: 18px; margin-bottom: 16px; color: var(--text-primary); }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 0; }
         .stat-card { background: var(--bg-primary); padding: 20px; border-radius: 12px; text-align: center; border: 1px solid var(--border); transition: background 0.3s ease; }
@@ -112,10 +75,7 @@
         .stat-value { font-size: 22px; font-weight: 700; }
         .stat-value.red { color: var(--accent-red); }
         .stat-value.green { color: var(--accent-green); }
-        .data-card {
-            background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px;
-            border-left: 4px solid var(--accent-blue); transition: all 0.2s ease; position: relative;
-        }
+        .data-card { background: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid var(--accent-blue); transition: all 0.2s ease; position: relative; }
         .data-card:active { transform: scale(0.99); background: var(--card-hover); }
         .data-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .data-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
@@ -148,136 +108,79 @@
         .schedule-item { background: var(--bg-secondary); color: var(--text-primary); padding: 15px; border-radius: 10px; margin-bottom: 10px; font-size: 16px; font-weight: 500; border-left: 4px solid var(--accent-green); text-align: left; }
         .schedule-item-off { border-left-color: var(--accent-orange); }
         .schedule-item span { color: var(--text-secondary); font-size: 13px; margin-left: 8px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; cursor: pointer; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 5px; cursor: pointer; border-bottom: 1px solid var(--border); }
+        .setting-item:last-child { border-bottom: none; }
         .setting-item span { font-size: 16px; font-weight: 500; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--border); border-radius: 15px; position: relative; transition: background-color 0.3s ease; }
         .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        html.light-theme .toggle-switch { background-color: var(--accent-green); }
-        html.light-theme .toggle-knob { transform: translateX(20px); }
+        .toggle-switch.active { background-color: var(--accent-green); }
+        .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         .copy-toast { position: fixed; bottom: 100px; left: 50%; background-color: var(--accent-green); color: var(--bg-primary); padding: 10px 20px; border-radius: 8px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translate(-50%, 20px); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, 0); }
 
-        /* ========= NEW CSS FOR MUSIC BUBBLE ========= */
-        .music-bubble {
-            position: fixed;
-            bottom: 100px; /* Vị trí phía trên thanh điều hướng */
-            right: 20px;
-            width: 60px; /* Kích thước khi thu nhỏ */
-            height: 60px; /* Kích thước khi thu nhỏ */
-            background: var(--accent-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
+        /* ========= NEW CSS FOR PASSWORD PROTECTION ========= */
+        .screen-overlay { display: none; position: fixed; inset: 0; background: var(--bg-primary); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+        .screen-overlay.show { display: flex; }
+        .passcode-container { max-width: 300px; }
+        #passcode-title { font-size: 20px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary); }
+        .passcode-dots-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; height: 20px; }
+        .passcode-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--text-secondary); transition: background-color 0.2s ease; }
+        .passcode-dot.filled { background-color: var(--accent-blue); border-color: var(--accent-blue); }
+        #passcode-error { color: var(--accent-red); font-size: 14px; min-height: 20px; font-weight: 500; }
+        .passcode-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+        .keypad-btn { width: 75px; height: 75px; border-radius: 50%; border: none; background: var(--card-bg); color: var(--text-primary); font-size: 28px; font-weight: 400; cursor: pointer; transition: background-color 0.2s; }
+        html.light-theme .keypad-btn { background: #e5e5e5; }
+        .keypad-btn:active { background: var(--card-hover); }
+        .keypad-btn.action { font-size: 18px; }
+
+        /* ========= NEW CSS FOR PASSWORD LIST BUTTONS ========= */
+        .password-field-container {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .password-value-container {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            letter-spacing: 2px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        .password-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .btn-view-copy {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            z-index: 900; /* Dưới modals (z-index 2000), trên nội dung chính */
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden; /* Ẩn nội dung mở rộng khi thu nhỏ */
+            transition: all 0.2s ease;
+        }
+        .btn-view-copy.view-btn {
+            background: var(--accent-blue);
+            color: white;
+        }
+        .btn-view-copy.copy-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             border: 1px solid var(--border);
         }
-
-        .music-bubble .bubble-collapsed {
-            font-size: 28px;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            position: absolute;
+        .btn-view-copy:active {
+            transform: scale(0.97);
+            opacity: 0.8;
         }
 
-        .music-bubble .bubble-expanded-content {
-            display: none; /* Ẩn nội dung mở rộng mặc định */
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-        }
-
-        .music-bubble.expanded {
-            width: 300px; /* Chiều rộng khi mở rộng */
-            height: 200px; /* Chiều cao khi mở rộng */
-            border-radius: 12px;
-            background: var(--card-bg); /* Nền cho trình phát */
-            box-shadow: var(--shadow-lg);
-        }
-
-        .music-bubble.expanded .bubble-collapsed {
-            display: none; /* Ẩn biểu tượng khi mở rộng */
-        }
-
-        .music-bubble.expanded .bubble-expanded-content {
-            display: flex; /* Hiển thị nội dung mở rộng */
-        }
-
-        .music-bubble.expanded #bubbleYoutubePlayer {
-            width: 100%;
-            height: 100%; /* Iframe chiếm toàn bộ phần trên */
-            border-top-left-radius: 12px;
-            border-top-right-radius: 12px;
-        }
-
-        .bubble-close-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 910;
-            transition: background 0.2s;
-        }
-        .bubble-close-btn:active {
-            background: rgba(0,0,0,0.8);
-            transform: scale(0.9);
-        }
-
-        .bubble-video-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card-bg); /* Nền cho thông tin video */
-            color: var(--text-primary);
-            padding: 5px 10px;
-            font-size: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-bottom-left-radius: 12px;
-            border-bottom-right-radius: 12px;
-            height: 30px; /* Chiều cao cố định cho thông tin video */
-            display: flex;
-            align-items: center;
-        }
-        html.light-theme .music-bubble.expanded {
-            background: var(--bg-secondary);
-        }
-        html.light-theme .bubble-video-info {
-            background: var(--bg-secondary);
-        }
-
-        /* ========= NEW CSS FOR LOGO ========= */
-        .title-with-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px; /* Khoảng cách giữa logo và tiêu đề */
-        }
-        .app-logo {
-            height: 32px; /* Điều chỉnh kích thước */
-            width: 32px;
-            border-radius: 8px; /* Bo tròn góc */
-            object-fit: cover;
-        }
+        /* ========= LOGO ========= */
+        .title-with-logo { display: flex; align-items: center; gap: 12px; }
+        .app-logo { height: 32px; width: 32px; border-radius: 8px; object-fit: cover; }
     </style>
 </head>
 <body>
@@ -313,7 +216,7 @@
             </div>
              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px;">
                 <button class="btn btn-danger" style="margin: 0;" onclick="openTxn('expense')">💸 Chi Tiêu</button>
-                <button class="btn btn-success" style="margin: 0;" onclick="openTxn('income')">💰 Thu Nhập</button>
+                <button class="btn" style="margin: 0; background: var(--accent-green);" onclick="openTxn('income')">💰 Thu Nhập</button>
             </div>
         </div>
         <div class="card">
@@ -353,10 +256,16 @@
             </div>
         </div>
         <div class="card">
-            <h3>Giao Diện</h3>
-            <div class="setting-item" onclick="toggleTheme()">
+            <h3>Giao Diện & Bảo Mật</h3>
+            <div class="setting-item">
                 <span>Chế độ sáng</span>
-                <div class="toggle-switch">
+                <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()">
+                    <div class="toggle-knob"></div>
+                </div>
+            </div>
+            <div class="setting-item">
+                <span>Bảo vệ Mật khẩu</span>
+                <div class="toggle-switch" id="password-protection-toggle" onclick="togglePasswordProtection()">
                     <div class="toggle-knob"></div>
                 </div>
             </div>
@@ -380,18 +289,6 @@
     </div>
 </div>
 
-<div id="musicPlayerBubble" class="music-bubble">
-    <div class="bubble-collapsed" onclick="toggleMusicBubble(true)">
-        🎶
-    </div>
-    <div class="bubble-expanded-content">
-        <button class="bubble-close-btn" onclick="toggleMusicBubble(false)">✖</button>
-        <iframe id="bubbleYoutubePlayer" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <div class="bubble-video-info">
-            <span id="bubbleVideoTitle"></span>
-        </div>
-    </div>
-</div>
 
 <div id="txnModal" class="modal">
     <div class="modal-content">
@@ -413,17 +310,40 @@
 <div id="passwordModal" class="modal">
     <div class="modal-content"><h2 class="modal-title" id="passwordModalTitle">Thêm Mật khẩu</h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService" placeholder="VD: Zalo, Facebook..."></div><div class="form-group"><label class="form-label">Tên đăng nhập / Email / SĐT</label><input type="text" class="form-input" id="passwordUsername" placeholder="VD: example@email.com"></div><div class="form-group"><label class="form-label">Mật khẩu</label><div class="password-input-wrapper" style="position: relative;"><input type="password" class="form-input" id="passwordValue" placeholder="Nhập mật khẩu của bạn"><button style="position: absolute; right: 1px; top: 1px; height: calc(100% - 2px); width: 40px; background: none; border: none; font-size: 18px; color: var(--text-secondary); cursor: pointer;" onclick="toggleModalPasswordVisibility()">👁️</button></div></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 
-<script>
-// Call tool to get video information.
-print(youtube.get_video_information(video_id='jfKfPfyJRdk', fetch_audio_video_tokens=False))
-</script>
+<div id="passcode-screen" class="screen-overlay">
+    <div class="passcode-container">
+        <h3 id="passcode-title">Nhập mật mã</h3>
+        <div class="passcode-dots-container" id="passcode-dots">
+            <div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div>
+        </div>
+        <p id="passcode-error"></p>
+        <div class="passcode-keypad">
+            <button class="keypad-btn" onclick="passcode.keyPress('1')">1</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('2')">2</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('3')">3</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('4')">4</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('5')">5</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('6')">6</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('7')">7</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('8')">8</button>
+            <button class="keypad-btn" onclick="passcode.keyPress('9')">9</button>
+            <div></div> <button class="keypad-btn" onclick="passcode.keyPress('0')">0</button>
+            <button class="keypad-btn action" onclick="passcode.backspace()">⌫</button>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
 (function initializeTheme() {
     const savedTheme = localStorage.getItem('theme');
-    const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
-    if (savedTheme === 'light' || (!savedTheme && systemPrefersLight)) {
+    const isLight = savedTheme === 'light';
+    if (isLight) {
         document.documentElement.classList.add('light-theme');
     }
+    document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
+})();
+(function initializePasswordProtection() {
+    const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
+    document.getElementById('password-protection-toggle')?.classList.toggle('active', isEnabled);
 })();
 
 const DB = {
@@ -438,67 +358,223 @@ const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, 
 let lastRenderedDay = -1; 
 let clockInterval = null;
 
-// Music bubble variables
-const defaultYoutubeVideoId = 'jfKfPfyJRdk';
-let defaultYoutubeVideoTitle = 'Đang tải...'; // Placeholder until fetched
-
-function goTo(screenId, element) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(screenId).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); element.classList.add('active'); window.scrollTo(0, 0); }
+function goTo(screenId, element) {
+    if (screenId === 'passwords') {
+        const isProtectionEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
+        const isAuthenticated = sessionStorage.getItem('isAuthenticated') === 'true';
+        if (isProtectionEnabled && !isAuthenticated) {
+            passcode.prompt(
+                () => goTo(screenId, element), // on success
+                () => {} // on failure
+            );
+            return;
+        }
+    }
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+    document.getElementById(screenId).classList.add('active'); 
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); 
+    element.classList.add('active'); 
+    window.scrollTo(0, 0); 
+}
 function updateClockAndSchedule() { const now = new Date(); const dayIndex = now.getDay(); document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN', { hour12: false }); if (dayIndex !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = dayIndex; } }
 function renderFullSchedule(now) { const dayIndex = now.getDay(); document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }); const todaySchedule = scheduleData[dayIndex]; const todayContainer = document.getElementById('today-schedule'); let todayHTML = '<h3>Lịch học hôm nay</h3>'; if ([...todaySchedule.morning, ...todaySchedule.afternoon].length === 0) { todayHTML += `<div class="schedule-item schedule-item-off">🎉 Hôm nay được nghỉ!</div>`; } else { if (todaySchedule.morning.length > 0) todayHTML += todaySchedule.morning.map(s => `<div class="schedule-item">${s} <span>(Sáng)</span></div>`).join(''); if (todaySchedule.afternoon.length > 0) todayHTML += todaySchedule.afternoon.map(s => `<div class="schedule-item">${s} <span>(Chiều)</span></div>`).join(''); else todayHTML += `<div class="schedule-item schedule-item-off">Buổi chiều được nghỉ</div>`; } todayContainer.innerHTML = todayHTML; const tomorrowIndex = (dayIndex + 1) % 7, dayAfterTomorrowIndex = (dayIndex + 2) % 7; const tomorrowSchedule = scheduleData[tomorrowIndex], dayAfterTomorrowSchedule = scheduleData[dayAfterTomorrowIndex]; const futureContainer = document.getElementById('future-schedule'); let futureHTML = '<h3>Lịch trình sắp tới</h3>'; futureHTML += `<div class="schedule-item">${tomorrowSchedule.dayName} (Ngày mai): ${tomorrowSchedule.morning.length + tomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item">${dayAfterTomorrowSchedule.dayName} (Ngày kia): ${dayAfterTomorrowSchedule.morning.length + dayAfterTomorrowSchedule.afternoon.length === 0 ? 'Được nghỉ' : 'Đi học'}</div>`; futureHTML += `<div class="schedule-item schedule-item-off">Tuần sau: Chưa có thời khóa biểu</div>`; futureContainer.innerHTML = futureHTML; }
-function toggleTheme() { const htmlEl = document.documentElement; htmlEl.classList.toggle('light-theme'); const isLight = htmlEl.classList.contains('light-theme'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); }
+function toggleTheme() { const htmlEl = document.documentElement; htmlEl.classList.toggle('light-theme'); const isLight = htmlEl.classList.contains('light-theme'); localStorage.setItem('theme', isLight ? 'light' : 'dark'); document.getElementById('theme-toggle').classList.toggle('active', isLight); }
 function renderAll() { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderStats(); renderHistory(); renderNotes(); renderPasswords(); }
 document.addEventListener('DOMContentLoaded', renderAll);
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
 function renderStats() { const txns = DB.getTxns(); const totalIncome = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const totalExpense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const balance = totalIncome - totalExpense; document.getElementById('bal').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(balance); document.getElementById('inc').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalIncome); document.getElementById('exp').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalExpense); }
 function renderHistory() { const container = document.getElementById('histList'); const searchTerm = document.getElementById('search').value.toLowerCase(); const txns = DB.getTxns().filter(t => t.note?.toLowerCase().includes(searchTerm) || t.amount.toString().includes(searchTerm)).sort((a, b) => new Date(b.date) - new Date(a.date)); if (txns.length === 0) { container.innerHTML = `<div class="empty">Không có giao dịch nào.</div>`; return; } container.innerHTML = txns.map(txn => { const typeClass = txn.type === 'expense' ? 'red' : 'green', amountSign = txn.type === 'expense' ? '-' : '+'; return `<div class="data-card" style="display: flex; align-items: center; justify-content: space-between; padding: 12px;"><div><div class="data-title">${txn.category}</div><div class="data-subtitle">${new Date(txn.date).toLocaleString('vi-VN')}</div></div><div class="stat-value ${typeClass}">${amountSign}${new Intl.NumberFormat('vi-VN').format(txn.amount)}₫</div></div>`; }).join(''); }
-function openTxn(type, id = null) { const modal = document.getElementById('txnModal'), title = modal.querySelector('#modalTitle'), amtInput = modal.querySelector('#amt'), catSelect = modal.querySelector('#cat'), noteText = modal.querySelector('#note'), typeInput = modal.querySelector('#type'), editIdInput = modal.querySelector('#editId'), saveBtn = modal.querySelector('#saveTxnBtn'); amtInput.value = ''; noteText.value = ''; editIdInput.value = ''; catSelect.value = 'Ăn uống'; typeInput.value = type; if (id) { const txns = DB.getTxns(), txn = txns.find(t => t.id === id); title.textContent = 'Chỉnh Sửa Giao Dịch'; amtInput.value = txn.amount; catSelect.value = txn.category; noteText.value = txn.note; editIdInput.value = id; typeInput.value = txn.type; saveBtn.className = `btn btn-${txn.type === 'expense' ? 'danger' : 'success'}`; } else { title.textContent = type === 'expense' ? 'Thêm Chi Tiêu' : 'Thêm Thu Nhập'; saveBtn.className = type === 'expense' ? 'btn btn-danger' : 'btn btn-success'; } openModal('txnModal'); }
+function openTxn(type, id = null) { const modal = document.getElementById('txnModal'), title = modal.querySelector('#modalTitle'), amtInput = modal.querySelector('#amt'), catSelect = modal.querySelector('#cat'), noteText = modal.querySelector('#note'), typeInput = modal.querySelector('#type'), editIdInput = modal.querySelector('#editId'), saveBtn = modal.querySelector('#saveTxnBtn'); amtInput.value = ''; noteText.value = ''; editIdInput.value = ''; catSelect.value = 'Ăn uống'; typeInput.value = type; if (id) { const txns = DB.getTxns(), txn = txns.find(t => t.id === id); title.textContent = 'Chỉnh Sửa Giao Dịch'; amtInput.value = txn.amount; catSelect.value = txn.category; noteText.value = txn.note; editIdInput.value = id; typeInput.value = txn.type; saveBtn.className = `btn btn-${txn.type === 'expense' ? 'danger' : 'success'}`; } else { title.textContent = type === 'expense' ? 'Thêm Chi Tiêu' : 'Thêm Thu Nhập'; saveBtn.className = type === 'expense' ? 'btn btn-danger' : 'btn'; saveBtn.style.background = type === 'expense' ? '' : 'var(--accent-green)'; } openModal('txnModal'); }
 function saveTxn() { const amount = parseFloat(document.getElementById('amt').value), category = document.getElementById('cat').value, note = document.getElementById('note').value.trim(), type = document.getElementById('type').value, editId = document.getElementById('editId').value; if (!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ.'); return; } let txns = DB.getTxns(); if (editId) { const txnIndex = txns.findIndex(t => t.id === editId); if (txnIndex > -1) { txns[txnIndex] = { ...txns[txnIndex], amount, category, note, type }; } } else { txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category, note, type }); } DB.saveTxns(txns); closeModal('txnModal'); renderStats(); renderHistory(); }
 function addAmount(val) { const amtInput = document.getElementById('amt'); amtInput.value = (parseFloat(amtInput.value) || 0) + val; }
 function renderNotes() { const container = document.getElementById('notesList'); const notes = DB.getNotes(); if (notes.length === 0) { container.innerHTML = `<div class="empty">Chưa có ghi chú nào.</div>`; return; } container.innerHTML = notes.map(note => `<div class="data-card"><div class="data-header"><span class="data-title">${note.title}</span><span class="data-subtitle">${new Date(note.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${note.content || '...'}</div><div class="data-actions"><button class="data-btn" onclick="openNote('${note.id}')">Sửa</button><button class="data-btn delete" onclick="deleteNote('${note.id}')">Xóa</button></div></div>`).join(''); }
 function openNote(id = null) { const titleInput = document.getElementById('noteTitle'), contentInput = document.getElementById('noteContent'), editIdInput = document.getElementById('editNoteId'), modalTitle = document.getElementById('noteModalTitle'); if (id) { const notes = DB.getNotes(), note = notes.find(n => n.id === id); modalTitle.textContent = "Chỉnh Sửa Ghi Chú"; titleInput.value = note.title; contentInput.value = note.content; editIdInput.value = id; } else { modalTitle.textContent = "Tạo Ghi Chú Mới"; titleInput.value = ''; contentInput.value = ''; editIdInput.value = ''; } openModal('noteModal'); }
 function saveNote() { const title = document.getElementById('noteTitle').value.trim(), content = document.getElementById('noteContent').value.trim(), editId = document.getElementById('editNoteId').value; if (!title) { alert('Vui lòng nhập tiêu đề.'); return; } let notes = DB.getNotes(); if (editId) { const noteIndex = notes.findIndex(n => n.id === editId); if (noteIndex > -1) { notes[noteIndex] = { ...notes[noteIndex], title, content, date: new Date().toISOString() }; } } else { notes.unshift({ id: 'note_' + Date.now(), date: new Date().toISOString(), title, content }); } DB.saveNotes(notes); closeModal('noteModal'); renderNotes(); }
 function deleteNote(id) { if (confirm('Bạn có chắc muốn xóa ghi chú này?')) { DB.saveNotes(DB.getNotes().filter(n => n.id !== id)); renderNotes(); } }
-function renderPasswords() { const container = document.getElementById('passwordsList'); const passwords = DB.getPasswords(); if (passwords.length === 0) { container.innerHTML = `<div class="empty">Chưa có mật khẩu nào.</div>`; return; } container.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="data-content">${p.username}</div><div class="password-field"><span class="password-value" id="pass-val-${p.id}">••••••••</span><button class="data-btn" onclick="togglePasswordVisibility('${p.id}')">👁️</button><button class="data-btn" onclick="copyPassword('${p.id}')">📄</button></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join(''); }
+// UPDATED Password Functions
+function renderPasswords() {
+    const container = document.getElementById('passwordsList');
+    const passwords = DB.getPasswords();
+    if (passwords.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color: var(--text-secondary);">Chưa có mật khẩu nào được lưu.</p>`;
+        return;
+    }
+    container.innerHTML = passwords.map(p => `
+        <div class="data-card">
+            <div class="data-header">
+                <span class="data-title">${p.service}</span>
+            </div>
+            <div class="data-content">${p.username}</div>
+            <div class="password-field-container">
+                <div class="password-value-container" id="pass-val-${p.id}">••••••••</div>
+                <div class="password-actions">
+                    <button class="btn-view-copy view-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button>
+                    <button class="btn-view-copy copy-btn" onclick="copyPassword('${p.id}')">Sao chép</button>
+                </div>
+            </div>
+            <div class="data-actions">
+                <button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button>
+                <button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button>
+            </div>
+        </div>`).join('');
+}
 function openPasswordModal(id = null) { const modalTitle = document.getElementById('passwordModalTitle'), serviceInput = document.getElementById('passwordService'), usernameInput = document.getElementById('passwordUsername'), passwordInput = document.getElementById('passwordValue'), editIdInput = document.getElementById('editPasswordId'); if (id) { const passwords = DB.getPasswords(), p = passwords.find(item => item.id === id); modalTitle.textContent = "Chỉnh Sửa Mật Khẩu"; serviceInput.value = p.service; usernameInput.value = p.username; passwordInput.value = p.password; editIdInput.value = id; } else { modalTitle.textContent = "Thêm Mật Khẩu Mới"; serviceInput.value = ''; usernameInput.value = ''; passwordInput.value = ''; editIdInput.value = ''; } openModal('passwordModal'); }
 function savePassword() { const service = document.getElementById('passwordService').value.trim(), username = document.getElementById('passwordUsername').value.trim(), password = document.getElementById('passwordValue').value, editId = document.getElementById('editPasswordId').value; if (!service || !password) { alert('Vui lòng nhập dịch vụ và mật khẩu.'); return; } let passwords = DB.getPasswords(); if (editId) { const index = passwords.findIndex(p => p.id === editId); if (index > -1) { passwords[index] = { ...passwords[index], service, username, password }; } } else { passwords.unshift({ id: 'pass_' + Date.now(), service, username, password }); } DB.savePasswords(passwords); closeModal('passwordModal'); renderPasswords(); }
 function deletePassword(id) { if (confirm('Bạn có chắc muốn xóa mật khẩu này?')) { DB.savePasswords(DB.getPasswords().filter(p => p.id !== id)); renderPasswords(); } }
-function togglePasswordVisibility(id) { const passField = document.getElementById(`pass-val-${id}`); const passwordObj = DB.getPasswords().find(item => item.id === id); if (!passwordObj) return; passField.textContent = passField.textContent === '••••••••' ? passwordObj.password : '••••••••'; }
+function togglePasswordVisibility(id, button) {
+    const passField = document.getElementById(`pass-val-${id}`);
+    const passwordObj = DB.getPasswords().find(item => item.id === id);
+    if (!passwordObj) return;
+
+    if (passField.textContent === '••••••••') {
+        passField.textContent = passwordObj.password;
+        button.textContent = 'Ẩn';
+    } else {
+        passField.textContent = '••••••••';
+        button.textContent = 'Xem';
+    }
+}
 function toggleModalPasswordVisibility() { const passInput = document.getElementById('passwordValue'); const button = passInput.closest('.password-input-wrapper').querySelector('button'); if (passInput.type === 'password') { passInput.type = 'text'; button.textContent = '🙈'; } else { passInput.type = 'password'; button.textContent = '👁️'; } }
 function showToast(message) { const existingToast = document.querySelector('.copy-toast'); if (existingToast) existingToast.remove(); const toast = document.createElement('div'); toast.textContent = message; toast.className = 'copy-toast'; document.body.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000); }
 function copyPassword(id) { const passwordToCopy = DB.getPasswords().find(p => p.id === id)?.password; if (!passwordToCopy) return; if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(passwordToCopy).then(() => showToast('✅ Đã sao chép!')).catch(err => showToast('❌ Lỗi!')); } else { try { const textArea = document.createElement("textarea"); textArea.value = passwordToCopy; textArea.style.position = "absolute"; textArea.style.left = "-9999px"; document.body.appendChild(textArea); textArea.select(); document.execCommand('copy'); document.body.removeChild(textArea); showToast('✅ Đã sao chép!'); } catch (err) { showToast('❌ Lỗi!'); } } }
-function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
+function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu (tài chính, ghi chú, mật khẩu đã lưu và cài đặt bảo vệ). Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
 
-// NEW Music Bubble Logic
-function toggleMusicBubble(expand) {
-    const bubble = document.getElementById('musicPlayerBubble');
-    const player = document.getElementById('bubbleYoutubePlayer');
-    const titleSpan = document.getElementById('bubbleVideoTitle');
-
-    if (expand) {
-        bubble.classList.add('expanded');
-        if (!player.src.includes(defaultYoutubeVideoId)) {
-            player.src = `https://www.youtube.com/embed/${defaultYoutubeVideoId}?autoplay=1&modestbranding=1&rel=0`;
-        } else if (!player.src.includes('autoplay=1')) {
-            player.src = `https://www.youtube.com/embed/${defaultYoutubeVideoId}?autoplay=1&modestbranding=1&rel=0`;
+// NEW: Passcode Protection Logic
+const passcode = {
+    PASSCODE_LENGTH: 4,
+    currentInput: "",
+    firstInput: "",
+    mode: 'verify', // 'verify', 'set', 'confirm'
+    onSuccess: null,
+    onFailure: null,
+    elements: {
+        screen: document.getElementById('passcode-screen'),
+        title: document.getElementById('passcode-title'),
+        dots: document.getElementById('passcode-dots').children,
+        error: document.getElementById('passcode-error'),
+    },
+    reset() {
+        this.currentInput = "";
+        this.firstInput = "";
+        this.updateDots();
+        this.elements.error.textContent = "";
+    },
+    updateDots() {
+        for (let i = 0; i < this.PASSCODE_LENGTH; i++) {
+            this.elements.dots[i].classList.toggle('filled', i < this.currentInput.length);
         }
-        titleSpan.textContent = defaultYoutubeVideoTitle; // Set title from fetched data
-    } else {
-        bubble.classList.remove('expanded');
-        player.src = ''; // Stop video when collapsed
-        titleSpan.textContent = '';
+    },
+    keyPress(key) {
+        if (this.currentInput.length >= this.PASSCODE_LENGTH) return;
+        this.currentInput += key;
+        this.updateDots();
+        if (this.currentInput.length === this.PASSCODE_LENGTH) {
+            setTimeout(() => this.handleSubmit(), 200);
+        }
+    },
+    backspace() {
+        this.currentInput = this.currentInput.slice(0, -1);
+        this.updateDots();
+    },
+    handleSubmit() {
+        switch (this.mode) {
+            case 'verify': this.verify(); break;
+            case 'set': this.set(); break;
+            case 'confirm': this.confirm(); break;
+        }
+    },
+    show() { this.elements.screen.classList.add('show'); },
+    hide() { this.elements.screen.classList.remove('show'); },
+    prompt(onSuccess, onFailure) {
+        this.mode = 'verify';
+        this.onSuccess = onSuccess;
+        this.onFailure = onFailure;
+        this.reset();
+        this.elements.title.textContent = 'Nhập mật mã';
+        this.show();
+    },
+    startSetup(onSuccess) {
+        this.mode = 'set';
+        this.onSuccess = onSuccess;
+        this.reset();
+        this.elements.title.textContent = 'Tạo mật mã mới';
+        this.show();
+    },
+    verify() {
+        const storedPasscode = localStorage.getItem('masterPassword');
+        if (this.currentInput === storedPasscode) {
+            sessionStorage.setItem('isAuthenticated', 'true');
+            this.hide();
+            if (this.onSuccess) this.onSuccess();
+        } else {
+            this.elements.error.textContent = "Mật mã không đúng. Thử lại.";
+            this.elements.screen.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                this.elements.screen.style.animation = '';
+                this.reset();
+            }, 500);
+        }
+    },
+    set() {
+        this.firstInput = this.currentInput;
+        this.currentInput = "";
+        this.updateDots();
+        this.mode = 'confirm';
+        this.elements.title.textContent = 'Xác nhận mật mã';
+    },
+    confirm() {
+        if (this.currentInput === this.firstInput) {
+            localStorage.setItem('masterPassword', this.currentInput);
+            localStorage.setItem('passwordProtectionEnabled', 'true');
+            sessionStorage.setItem('isAuthenticated', 'true');
+            this.hide();
+            if (this.onSuccess) this.onSuccess();
+        } else {
+            this.elements.error.textContent = "Mật mã không khớp. Vui lòng thử lại.";
+            setTimeout(() => {
+                this.mode = 'set';
+                this.elements.title.textContent = 'Tạo mật mã mới';
+                this.reset();
+            }, 1500);
+        }
+    }
+};
+
+function togglePasswordProtection() {
+    const isEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
+    const toggleElement = document.getElementById('password-protection-toggle');
+    const masterPassword = localStorage.getItem('masterPassword');
+
+    if (isEnabled) { // Turning OFF
+        passcode.prompt(
+            () => { // On success
+                localStorage.setItem('passwordProtectionEnabled', 'false');
+                localStorage.removeItem('masterPassword'); // Optional: remove password when disabled
+                sessionStorage.removeItem('isAuthenticated');
+                toggleElement.classList.remove('active');
+                showToast('Đã tắt bảo vệ mật khẩu.');
+            },
+            () => { // On failure
+                showToast('Không thể tắt bảo vệ.');
+            }
+        );
+    } else { // Turning ON
+        if (masterPassword) { // If a password exists, just re-enable
+             localStorage.setItem('passwordProtectionEnabled', 'true');
+             toggleElement.classList.add('active');
+             showToast('Đã bật bảo vệ mật khẩu.');
+        } else { // No password, start setup
+            passcode.startSetup(
+                () => { // On success
+                    toggleElement.classList.add('active');
+                    showToast('Đã thiết lập và bật bảo vệ.');
+                }
+            );
+        }
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    renderAll();
-    
-    // Initial fetch for video title
-    // This is handled by the initial tool call and output, setting `defaultYoutubeVideoTitle`.
-    // The placeholder value is just for safety before the actual data arrives.
-});
-
 </script>
 </body>
 </html>
