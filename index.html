@@ -263,7 +263,7 @@
             padding: 16px; border-radius: 10px; margin-bottom: 10px;
             font-size: 16px; font-weight: 500;
             border-left: 3px solid var(--accent-green);
-            display: flex; justify-content: space-between; text-align: left;
+            display: flex; justify-content: space-between; align-items: center; text-align: left;
         }
         .schedule-item-off { border-left-color: var(--accent-orange); }
         .schedule-item span { color: var(--text-secondary); font-size: 14px; }
@@ -500,13 +500,34 @@ const DB = {
     save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
 };
 
+// ▼▼▼ THỜI KHÓA BIỂU ĐÃ ĐƯỢC CẬP NHẬT CHI TIẾT ▼▼▼
 const scheduleData = [
     { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
-    { dayName: 'Thứ Hai', morning: ['Toán', 'Vật Lý', 'Công nghệ'], afternoon: ['Ngữ Văn', 'Tiếng Anh'] },
-    { dayName: 'Thứ Ba', morning: ['Toán', 'Hóa Học', 'Sinh Học'], afternoon: ['Lịch Sử', 'Địa Lý'] },
-    { dayName: 'Thứ Tư', morning: ['Ngữ Văn', 'Tiếng Anh', 'Toán'], afternoon: ['GDCD', 'Thể dục'] },
-    { dayName: 'Thứ Năm', morning: ['Ngữ Văn', 'Vật Lý', 'Hóa Học'], afternoon: ['Lịch Sử', 'Địa Lý'] },
-    { dayName: 'Thứ Sáu', morning: ['Toán', 'Tiếng Anh', 'Sinh Học'], afternoon: ['Ngữ Văn', 'Công nghệ'] },
+    { 
+        dayName: 'Thứ Hai', 
+        morning: ['HĐTN - H.Nhung', 'GDTC - Tuấn', 'Tin - Ánh', 'Văn - Đ. Hoa', 'C.Nghệ - H.Vân'], 
+        afternoon: ['GDCD - Huệ', 'LS&ĐL(Địa) - H. Nhung', 'HĐTN - Tr. Hương'] 
+    },
+    { 
+        dayName: 'Thứ Ba', 
+        morning: ['T.Anh - Đ.Oanh', 'T.Anh - Đ.Oanh', 'Toán - Đ. Mai', 'Văn - Đ. Hoa', 'LS&ĐL(Địa) - H. Nhung'], 
+        afternoon: [] 
+    },
+    { 
+        dayName: 'Thứ Tư', 
+        morning: ['Toán - Đ. Mai', 'LS&ĐL (Sử) - Giang', 'KHTN(Sinh) - P. Nhưng', 'C.Nghệ - H.Vân'], 
+        afternoon: ['GDĐP - H. Vân', 'GDTC - Tuấn', 'Nghệ thuật (MT) - Thúy'] 
+    },
+    { 
+        dayName: 'Thứ Năm', 
+        morning: ['Văn - Đ. Hoa', 'Toán - Đ. Mai', 'T.Anh - Đ.Oanh', 'HĐTN - Tr.Hương', 'KHTN(Hóa) - P. Nhưng'], 
+        afternoon: [] 
+    },
+    { 
+        dayName: 'Thứ Sáu', 
+        morning: ['KHTN(Lý) - T. Thủy', 'KHTN(Hóa) - P. Nhung', 'Toán - Đ. Mai', 'Nghệ thuật(AN) - T.Nga'], 
+        afternoon: [] 
+    },
     { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
 ];
 let lastRenderedDay = -1, clockInterval = null;
@@ -536,6 +557,7 @@ function updateClockAndSchedule() {
     }
 }
 
+// ▼▼▼ HÀM NÀY ĐÃ ĐƯỢC CẬP NHẬT ĐỂ THÊM TIÊU ĐỀ BUỔI CHIỀU ▼▼▼
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -553,8 +575,14 @@ function renderFullSchedule(now) {
     if (today.morning.length === 0 && today.afternoon.length === 0) {
         todayHTML += `<div class="schedule-item schedule-item-off">Hôm nay được nghỉ</div>`;
     } else {
-        todayHTML += today.morning.map(s => `<div class="schedule-item">${s} <span>Sáng</span></div>`).join('');
-        todayHTML += today.afternoon.map(s => `<div class="schedule-item">${s} <span>Chiều</span></div>`).join('');
+        todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+        
+        // Thêm tiêu đề phân cách nếu có lịch buổi chiều
+        if (today.morning.length > 0 && today.afternoon.length > 0) {
+            todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
+        }
+        
+        todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
     }
     todayContainer.innerHTML = todayHTML;
 
@@ -563,7 +591,7 @@ function renderFullSchedule(now) {
         [1, 2, 3, 4, 5].map(offset => {
             const nextDayIndex = (dayIndex + offset) % 7;
             const nextDay = scheduleData[nextDayIndex];
-            if (nextDay.dayName === 'Chủ Nhật') return ''; 
+            if (nextDay.dayName === 'Chủ Nhật' || nextDay.dayName === 'Thứ Bảy') return ''; 
             const hasClasses = nextDay.morning.length + nextDay.afternoon.length > 0;
             return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}">${nextDay.dayName} <span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
         }).join('');
@@ -588,8 +616,14 @@ function toggleTomorrowSchedule() {
         if (tomorrow.morning.length === 0 && tomorrow.afternoon.length === 0) {
             tomorrowHTML += `<div class="schedule-item schedule-item-off">Ngày mai được nghỉ</div>`;
         } else {
-            tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item">${s} <span>Sáng</span></div>`).join('');
-            tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item">${s} <span>Chiều</span></div>`).join('');
+            tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+            
+            // Thêm tiêu đề phân cách nếu có lịch buổi chiều
+            if (tomorrow.morning.length > 0 && tomorrow.afternoon.length > 0) {
+                tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
+            }
+            
+            tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
         }
         container.innerHTML = tomorrowHTML;
         container.style.display = 'block';
@@ -722,7 +756,6 @@ function deleteNote(id) {
 }
 
 // --- Passwords ---
-// ▼▼▼ THÊM NÚT "SAO CHÉP" CHO TÊN ĐĂNG NHẬP Ở ĐÂY ▼▼▼
 function renderPasswords() {
     const passwords = DB.get('passwords');
     const listEl = document.getElementById('passwordsList');
