@@ -96,7 +96,7 @@
             padding: 12px 0 8px 0;
             cursor: pointer;
             color: var(--text-secondary);
-            transition: color 0.2s ease, transform 0.15s ease; /* MODIFIED: Added transform transition */
+            transition: color 0.2s ease, transform 0.15s ease;
         }
         .nav-item .nav-icon {
             width: 24px;
@@ -110,8 +110,8 @@
         }
         .nav-item.active { color: var(--accent-primary); }
         .nav-item:active {
-            transform: scale(0.92); /* MODIFIED: Added press effect */
-            color: var(--accent-primary); /* MODIFIED: Highlight on press */
+            transform: scale(0.92);
+            color: var(--accent-primary);
         }
 
         .btn {
@@ -120,14 +120,14 @@
             border: none; border-radius: 10px;
             font-size: 16px; font-weight: 600;
             cursor: pointer; width: 100%; margin-top: 16px;
-            transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease; /* MODIFIED: Added transform transition */
+            transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease;
             background-color: var(--accent-primary);
             color: white;
         }
         .btn .icon { width: 18px; height: 18px; stroke-width: 2.5; }
         .btn:active {
-            opacity: 0.8; /* MODIFIED: Adjusted opacity */
-            transform: scale(0.97); /* MODIFIED: Added press effect */
+            opacity: 0.8;
+            transform: scale(0.97);
         }
 
         .btn-sec { 
@@ -149,11 +149,11 @@
             background-color: var(--card-bg);
             border-radius: 12px; padding: 16px;
             margin-bottom: 12px; border: 1px solid var(--border-color);
-            transition: background-color 0.2s ease, transform 0.2s ease; /* MODIFIED: Added transition */
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
         .data-card:active {
             background-color: var(--bg-primary);
-            transform: scale(0.98); /* MODIFIED: Added press effect */
+            transform: scale(0.98);
         }
         .data-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
         .data-title { font-size: 17px; font-weight: 600; }
@@ -165,20 +165,17 @@
             padding: 8px 16px; border-radius: 8px;
             border: 1px solid var(--border-color);
             font-size: 14px; font-weight: 500; cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.15s ease; /* MODIFIED: Added transition */
+            transition: opacity 0.2s ease, transform 0.15s ease;
         }
         .data-btn.delete { color: var(--accent-red); }
         .data-btn:active {
             opacity: 0.7;
-            transform: scale(0.96); /* MODIFIED: Added press effect */
+            transform: scale(0.96);
         }
         
-        /* =================================================================
-           MODAL: MODIFIED FOR IOS-STYLE SLIDE-UP ANIMATION
-           ================================================================= */
         .modal {
             display: flex;
-            align-items: flex-end; /* Align to bottom for slide-up effect on mobile */
+            align-items: flex-end;
             justify-content: center;
             position: fixed;
             inset: 0;
@@ -186,17 +183,17 @@
             z-index: 2000;
             opacity: 0;
             transition: opacity 0.4s ease-in-out;
-            pointer-events: none; /* Prevent clicks when hidden */
+            pointer-events: none;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
         .modal.show {
             opacity: 1;
-            pointer-events: auto; /* Allow clicks when shown */
+            pointer-events: auto;
         }
         .modal-content {
             background-color: var(--bg-secondary);
-            border-radius: 18px 18px 0 0; /* Rounded top corners for bottom sheet style */
+            border-radius: 18px 18px 0 0;
             padding: 24px;
             width: 100%;
             max-width: 500px;
@@ -204,25 +201,24 @@
             overflow-y: auto;
             border: 1px solid var(--border-color);
             border-bottom: none;
-            transform: translateY(100%); /* Start off-screen at the bottom */
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); /* Springy animation */
-            padding-bottom: calc(24px + env(safe-area-inset-bottom)); /* Safe area for home bar */
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+            padding-bottom: calc(24px + env(safe-area-inset-bottom));
         }
         .modal.show .modal-content {
-            transform: translateY(0); /* Slide into view */
+            transform: translateY(0);
         }
 
-        /* Revert to centered modal on larger screens (tablets, desktops) */
         @media (min-width: 600px) {
             .modal {
-                align-items: center; /* Center vertically */
+                align-items: center;
             }
             .modal-content {
                 width: 92%;
                 max-width: 440px;
-                border-radius: 18px; /* All corners rounded */
-                border-bottom: 1px solid var(--border-color); /* Restore bottom border */
-                transform: translateY(20px) scale(0.95); /* Start slightly down and scaled */
+                border-radius: 18px;
+                border-bottom: 1px solid var(--border-color);
+                transform: translateY(20px) scale(0.95);
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
                 opacity: 0;
             }
@@ -258,7 +254,6 @@
         }
         .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
 
-        /* --- Schedule Screen --- */
         #schedule-container { text-align: center; padding-top: 10px; }
         #clock-time { font-size: 56px; font-weight: 600; letter-spacing: 1px; }
         #clock-date { font-size: 17px; color: var(--text-secondary); margin-top: -5px; margin-bottom: 30px; }
@@ -273,7 +268,6 @@
         .schedule-item-off { border-left-color: var(--accent-orange); }
         .schedule-item span { color: var(--text-secondary); font-size: 14px; }
         
-        /* --- Finance Screen --- */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .stat-card { background-color: var(--bg-primary); padding: 16px; border-radius: 10px; text-align: left; border: 1px solid var(--border-color); }
         .stat-card.full-width { grid-column: 1 / -1; }
@@ -289,18 +283,16 @@
         .txn-amount.red { color: var(--accent-red); }
         .txn-amount.green { color: var(--accent-green); }
         
-        /* --- Passwords Screen --- */
         .password-field-container { margin-top: 12px; }
         .password-label { font-size: 13px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
         .password-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; } /* MODIFIED: Added transition */
+        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; }
         .password-btn:active {
              background-color: var(--bg-primary);
-             transform: scale(0.96); /* MODIFIED: Added press effect */
+             transform: scale(0.96);
         }
 
-        /* --- Settings Screen --- */
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 4px; border-bottom: 1px solid var(--border-color); }
         .setting-item:last-child { border-bottom: none; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--bg-primary); border-radius: 15px; position: relative; border: 1px solid var(--border-color); }
@@ -309,7 +301,6 @@
         .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
-        /* --- Passcode Screen --- */
         .screen-overlay { display: none; position: fixed; inset: 0; background: var(--bg-primary); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
         .screen-overlay.show { display: flex; }
         #passcode-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
@@ -317,11 +308,10 @@
         .passcode-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border-color); }
         .passcode-dot.filled { background-color: var(--accent-primary); border-color: var(--accent-primary); }
         .passcode-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
-        .keypad-btn { width: 75px; height: 75px; border-radius: 50%; border: none; background-color: var(--bg-secondary); color: var(--text-primary); font-size: 32px; cursor: pointer; transition: background-color 0.2s; } /* MODIFIED: Added transition */
+        .keypad-btn { width: 75px; height: 75px; border-radius: 50%; border: none; background-color: var(--bg-secondary); color: var(--text-primary); font-size: 32px; cursor: pointer; transition: background-color 0.2s; }
         .keypad-btn:active { background-color: #333; }
         html.light-theme .keypad-btn:active { background-color: #eee; }
         
-        /* --- Music Player --- */
         #music-player-bubble {
             position: fixed;
             bottom: calc(85px + 15px); right: 15px;
@@ -569,12 +559,10 @@ function renderFullSchedule(now) {
     todayContainer.innerHTML = todayHTML;
 
     const futureContainer = document.getElementById('future-schedule');
-    // ▼▼▼ THAY ĐỔI Ở ĐÂY: Hiển thị 5 ngày tiếp theo thay vì 2 ▼▼▼
     futureContainer.innerHTML = `<h3>Sắp tới</h3>` +
         [1, 2, 3, 4, 5].map(offset => {
             const nextDayIndex = (dayIndex + offset) % 7;
             const nextDay = scheduleData[nextDayIndex];
-            // Bỏ qua Chủ nhật trong danh sách "Sắp tới" nếu nó xuất hiện
             if (nextDay.dayName === 'Chủ Nhật') return ''; 
             const hasClasses = nextDay.morning.length + nextDay.afternoon.length > 0;
             return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}">${nextDay.dayName} <span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
@@ -734,6 +722,7 @@ function deleteNote(id) {
 }
 
 // --- Passwords ---
+// ▼▼▼ THÊM NÚT "SAO CHÉP" CHO TÊN ĐĂNG NHẬP Ở ĐÂY ▼▼▼
 function renderPasswords() {
     const passwords = DB.get('passwords');
     const listEl = document.getElementById('passwordsList');
@@ -745,10 +734,15 @@ function renderPasswords() {
     <div class="data-card">
         <div class="data-header"><span class="data-title">${p.service}</span></div>
         <div class="password-field-container">
-            <div class="password-label">Tên đăng nhập</div><div class="password-value-container">${p.username || 'N/A'}</div>
+            <div class="password-label">Tên đăng nhập</div>
+            <div class="password-value-container">${p.username || 'N/A'}</div>
+            <div class="password-actions" style="grid-template-columns: 1fr;">
+                <button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button>
+            </div>
         </div>
         <div class="password-field-container">
-            <div class="password-label">Mật khẩu</div><div class="password-value-container" id="pass-val-${p.id}">••••••••</div>
+            <div class="password-label">Mật khẩu</div>
+            <div class="password-value-container" id="pass-val-${p.id}">••••••••</div>
             <div class="password-actions">
                 <button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button>
                 <button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button>
@@ -760,6 +754,7 @@ function renderPasswords() {
         </div>
     </div>`).join('');
 }
+
 function openPasswordModal(id = null) {
     const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el));
     if (id) {
@@ -807,14 +802,37 @@ function togglePasswordVisibility(id, button) {
         button.textContent = 'Xem';
     }
 }
-async function copyToClipboard(text, type) {
-    try {
-        await navigator.clipboard.writeText(text);
-        showToast(`Đã sao chép ${type}!`);
-    } catch (err) {
-        showToast(`Lỗi khi sao chép!`);
+
+function copyToClipboard(text, type) {
+    if (!text) {
+        showToast(`Không có ${type} để sao chép!`);
+        return;
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(`Đã sao chép ${type}!`);
+        }).catch(err => {
+            showToast(`Lỗi khi sao chép!`);
+        });
+    } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.top = '-9999px';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast(`Đã sao chép ${type}!`);
+        } catch (err) {
+            showToast(`Lỗi khi sao chép!`);
+        }
+        document.body.removeChild(textArea);
     }
 }
+
 
 // --- Settings & General ---
 function resetData() {
@@ -832,18 +850,15 @@ const musicPlayer = {
     playerReady: false,
     expanded: false,
     toggleExpand(event) {
-        // Only expand if clicking the bubble itself, not the close button inside it
         if (event.target.classList.contains('player-close-btn')) return;
-        
         this.expanded = !this.expanded;
         const bubble = document.getElementById('music-player-bubble');
         bubble.classList.toggle('expanded', this.expanded);
-        
         if (this.expanded && this.playerReady) player.playVideo();
         if (!this.expanded && this.playerReady) player.pauseVideo();
     },
     close(event) {
-        event.stopPropagation(); // Prevent the main bubble's click event
+        event.stopPropagation();
         const bubble = document.getElementById('music-player-bubble');
         if (this.playerReady) player.stopVideo();
         this.expanded = false;
