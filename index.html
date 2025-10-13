@@ -283,6 +283,15 @@
         .txn-amount.red { color: var(--accent-red); }
         .txn-amount.green { color: var(--accent-green); }
         
+        /* ▼▼▼ NEW STYLE FOR DATE HEADERS ▼▼▼ */
+        .date-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 16px 4px 8px 4px;
+            background-color: var(--bg-primary);
+        }
+        
         .password-field-container { margin-top: 12px; }
         .password-label { font-size: 13px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
@@ -367,6 +376,10 @@
     <div id="finance" class="screen">
         <div class="screen-title-bar"><h2>Tài chính</h2></div>
         <div class="card">
+             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h3 style="margin: 0;">Tổng quan tháng này</h3>
+                <button class="btn btn-small btn-sec" style="margin: 0;" onclick="showLastMonthSummary()">Tháng trước</button>
+            </div>
             <div class="stat-grid">
                 <div class="stat-card full-width"><div class="stat-label">Tổng số dư</div><div class="stat-value" id="bal">0₫</div></div>
                 <div class="stat-card"><div class="stat-label">Đã chi</div><div class="stat-value red" id="exp">0₫</div></div>
@@ -378,7 +391,7 @@
             </div>
         </div>
         <div class="card">
-            <h3>Lịch sử giao dịch</h3>
+            <h3>Lịch sử giao dịch (Tháng này)</h3>
             <input type="text" class="form-input" placeholder="Tìm kiếm giao dịch..." id="search" oninput="renderHistory()" style="margin-bottom: 15px;">
             <div id="histList"></div>
         </div>
@@ -454,6 +467,16 @@
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passcode-screen" class="screen-overlay"><div class="passcode-container"><h3 id="passcode-title"></h3><div class="passcode-dots-container" id="passcode-dots"><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div></div><p id="passcode-error" style="color:var(--accent-red);min-height:20px;"></p><div class="passcode-keypad"><button class="keypad-btn" onclick="passcode.keyPress('1')">1</button><button class="keypad-btn" onclick="passcode.keyPress('2')">2</button><button class="keypad-btn" onclick="passcode.keyPress('3')">3</button><button class="keypad-btn" onclick="passcode.keyPress('4')">4</button><button class="keypad-btn" onclick="passcode.keyPress('5')">5</button><button class="keypad-btn" onclick="passcode.keyPress('6')">6</button><button class="keypad-btn" onclick="passcode.keyPress('7')">7</button><button class="keypad-btn" onclick="passcode.keyPress('8')">8</button><button class="keypad-btn" onclick="passcode.keyPress('9')">9</button><div></div><button class="keypad-btn" onclick="passcode.keyPress('0')">0</button><button class="keypad-btn action" onclick="passcode.backspace()">⌫</button></div></div></div>
+
+<div id="summaryModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">Thống kê tháng trước</h2>
+        <div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div>
+        <div class="modal-actions">
+            <button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button>
+        </div>
+    </div>
+</div>
 
 <div id="music-player-bubble" onclick="musicPlayer.toggleExpand(event)">
     <span class="bubble-icon">🎵</span>
@@ -557,7 +580,6 @@ function updateClockAndSchedule() {
     }
 }
 
-// ▼▼▼ HÀM NÀY ĐÃ ĐƯỢC CẬP NHẬT ĐỂ THÊM TIÊU ĐỀ BUỔI CHIỀU ▼▼▼
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -576,12 +598,9 @@ function renderFullSchedule(now) {
         todayHTML += `<div class="schedule-item schedule-item-off">Hôm nay được nghỉ</div>`;
     } else {
         todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-        
-        // Thêm tiêu đề phân cách nếu có lịch buổi chiều
         if (today.morning.length > 0 && today.afternoon.length > 0) {
             todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
         }
-        
         todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
     }
     todayContainer.innerHTML = todayHTML;
@@ -617,12 +636,9 @@ function toggleTomorrowSchedule() {
             tomorrowHTML += `<div class="schedule-item schedule-item-off">Ngày mai được nghỉ</div>`;
         } else {
             tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-            
-            // Thêm tiêu đề phân cách nếu có lịch buổi chiều
             if (tomorrow.morning.length > 0 && tomorrow.afternoon.length > 0) {
                 tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
             }
-            
             tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
         }
         container.innerHTML = tomorrowHTML;
@@ -660,8 +676,18 @@ function showToast(message) {
 // =================================================================
 
 // --- Finance ---
+// ▼▼▼ MODIFIED: renderFinance now only shows data for the CURRENT month ▼▼▼
 function renderFinance() {
-    const txns = DB.get('txns');
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    const allTxns = DB.get('txns');
+    const txns = allTxns.filter(t => {
+        const txDate = new Date(t.date);
+        return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
+    });
+
     const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
     const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
     const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
@@ -670,19 +696,73 @@ function renderFinance() {
     document.getElementById('exp').textContent = format(expense);
     renderHistory();
 }
+
+// ▼▼▼ NEW: Helper function to format date headers ▼▼▼
+function formatDateHeader(date) {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const d = new Date(date); // Create a copy to avoid modifying original
+    today.setHours(0, 0, 0, 0);
+    yesterday.setHours(0, 0, 0, 0);
+    d.setHours(0, 0, 0, 0);
+
+    if (d.getTime() === today.getTime()) return 'Hôm nay';
+    if (d.getTime() === yesterday.getTime()) return 'Hôm qua';
+    return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
+}
+
+// ▼▼▼ MODIFIED: renderHistory now groups by date and shows notes ▼▼▼
 function renderHistory() {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
     const query = document.getElementById('search').value.toLowerCase();
-    const txns = DB.get('txns').filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Filter for current month first
+    const txns = DB.get('txns')
+        .filter(t => {
+            const txDate = new Date(t.date);
+            return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
+        })
+        .filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query))
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+
     const listEl = document.getElementById('histList');
     if (txns.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch.</p>`;
+        listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`;
         return;
     }
-    listEl.innerHTML = txns.map(t => {
+
+    let lastDateStr = '';
+    let html = '';
+    txns.forEach(t => {
+        const txDate = new Date(t.date);
+        const dateStr = txDate.toLocaleDateString('vi-VN');
+        
+        if (dateStr !== lastDateStr) {
+            html += `<div class="date-header">${formatDateHeader(txDate)}</div>`;
+            lastDateStr = dateStr;
+        }
+
         const isExpense = t.type === 'expense';
-        return `<div class="txn-item"><div><div class="data-title">${t.category}</div><div class="data-subtitle">${new Date(t.date).toLocaleDateString('vi-VN')}</div></div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`;
-    }).join('');
+        const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : '';
+
+        html += `
+            <div class="txn-item">
+                <div style="flex: 1; margin-right: 10px;">
+                    <div class="data-title">${t.category}</div>
+                    ${noteHTML}
+                </div>
+                <div class="txn-amount ${isExpense ? 'red' : 'green'}">
+                    ${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫
+                </div>
+            </div>`;
+    });
+    listEl.innerHTML = html;
 }
+
 function openTxn(type) {
     document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập';
     document.getElementById('type').value = type;
@@ -704,6 +784,50 @@ function saveTxn() {
     closeModal('txnModal');
     renderFinance();
 }
+
+// ▼▼▼ NEW: Function to show the previous month's expense summary ▼▼▼
+function showLastMonthSummary() {
+    const now = new Date();
+    const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); // Gets last day of previous month
+    const prevMonth = prevMonthDate.getMonth();
+    const prevYear = prevMonthDate.getFullYear();
+
+    const prevMonthExpenses = DB.get('txns').filter(t => {
+        const txDate = new Date(t.date);
+        return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear;
+    });
+
+    const summaryContentEl = document.getElementById('summaryContent');
+    if (prevMonthExpenses.length === 0) {
+        summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`;
+    } else {
+        const byCategory = prevMonthExpenses.reduce((acc, txn) => {
+            acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
+            return acc;
+        }, {});
+
+        const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a);
+        const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0);
+        
+        let summaryHTML = sortedCategories.map(([category, amount]) => `
+            <div class="txn-item">
+                <div><div class="data-title">${category}</div></div>
+                <div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div>
+            </div>`).join('');
+        
+        summaryHTML += `
+            <div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
+                <div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div>
+                <div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div>
+            </div>`;
+        
+        summaryContentEl.innerHTML = summaryHTML;
+    }
+    
+    document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`;
+    openModal('summaryModal');
+}
+
 
 // --- Notes ---
 function renderNotes() {
