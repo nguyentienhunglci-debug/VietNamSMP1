@@ -54,7 +54,6 @@
             font-family: var(--font-family);
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            /* Increased padding-bottom to make space for the floating nav */
             padding-bottom: 120px; 
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -81,28 +80,33 @@
             color: var(--text-primary);
         }
 
-        /* ▼▼▼ UPDATED NAVIGATION BAR STYLES FOR BUBBLE EFFECT ▼▼▼ */
+        /* ▼▼▼ UPDATED NAVIGATION BAR STYLES ▼▼▼ */
         .bottom-nav {
-            position: fixed;
+            position: fixed; /* This makes the bar stay in place on scroll */
             bottom: calc(15px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 32px);
             max-width: 450px;
-            background-color: var(--bg-secondary);
+            
+            /* MODIFIED: Added translucency and blur effect */
+            background-color: rgba(28, 28, 30, 0.75); /* Dark background with 75% opacity */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
             border: 1px solid var(--border-color);
             border-radius: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             display: flex;
             padding: 6px;
             z-index: 1000;
-            /* Added for bubble positioning */
             position: relative; 
         }
 
         html.light-theme .bottom-nav {
-             background-color: #f8f8f8;
-             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+             /* MODIFIED: Translucent background for light theme */
+            background-color: rgba(248, 248, 248, 0.75);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         .nav-item {
@@ -112,7 +116,6 @@
             cursor: pointer;
             color: var(--text-secondary);
             transition: color 0.3s ease, transform 0.15s ease;
-            /* Added for proper layering */
             z-index: 1; 
         }
         .nav-item .nav-icon {
@@ -132,16 +135,13 @@
             transform: scale(0.92);
         }
 
-        /* The moving bubble */
         #nav-active-bubble {
             position: absolute;
             top: 6px;
             height: calc(100% - 12px);
             background-color: var(--bg-primary);
             border-radius: 24px;
-            /* Smooth transition for movement and size changes */
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            /* Sits behind the nav items */
             z-index: 0; 
         }
         html.light-theme #nav-active-bubble {
@@ -499,7 +499,7 @@
             <div class="nav-label">Cài đặt</div>
         </div>
     </div>
-    </div>
+</div>
 
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
@@ -595,13 +595,9 @@ let lastRenderedDay = -1, clockInterval = null;
 // =================================================================
 // 3. CORE APP LOGIC & UI
 // =================================================================
-
-// ▼▼▼ NEW: Function to move the navigation bubble ▼▼▼
 function updateNavBubble(activeElement) {
     const bubble = document.getElementById('nav-active-bubble');
     if (!activeElement || !bubble) return;
-
-    // Set the bubble's width and position based on the active item
     bubble.style.width = `${activeElement.offsetWidth}px`;
     bubble.style.left = `${activeElement.offsetLeft}px`;
 }
@@ -616,8 +612,6 @@ function goTo(screenId, element) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     element.classList.add('active');
     window.scrollTo(0, 0);
-
-    // ▼▼▼ Call the bubble update function ▼▼▼
     updateNavBubble(element);
 }
 
@@ -704,7 +698,6 @@ function toggleTheme() {
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     document.getElementById('theme-toggle').classList.toggle('active', isLight);
     document.documentElement.style.setProperty('--card-bg-rgb', isLight ? '255, 255, 255' : '28, 28, 30');
-    // Also update the bubble position in case theme change affects layout
     updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
@@ -776,7 +769,7 @@ function renderHistory() {
             return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
         })
         .filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query))
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+        .sort((a, b) => new Date(b.date) - new Date(a, b));
 
     const listEl = document.getElementById('histList');
     if (txns.length === 0) {
@@ -1143,15 +1136,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderNotes();
     renderPasswords();
     
-    // ▼▼▼ Initialize the navigation bubble position ▼▼▼
     const initialActiveItem = document.querySelector('.nav-item.active');
-    // Use a timeout to ensure layout is fully calculated
     setTimeout(() => {
         updateNavBubble(initialActiveItem);
     }, 50);
 });
 
-// ▼▼▼ Recalculate bubble position on window resize ▼▼▼
 window.addEventListener('resize', () => {
     updateNavBubble(document.querySelector('.nav-item.active'));
 });
