@@ -54,7 +54,8 @@
             font-family: var(--font-family);
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            padding-bottom: 90px;
+            /* Increased padding-bottom to make space for the floating nav */
+            padding-bottom: 120px; 
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -80,23 +81,39 @@
             color: var(--text-primary);
         }
 
+        /* ▼▼▼ UPDATED NAVIGATION BAR STYLES FOR BUBBLE EFFECT ▼▼▼ */
         .bottom-nav {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
-            background-color: rgba(var(--card-bg-rgb, 28, 28, 30), 0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
+            bottom: calc(15px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 450px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
             display: flex;
-            padding-bottom: env(safe-area-inset-bottom);
+            padding: 6px;
             z-index: 1000;
+            /* Added for bubble positioning */
+            position: relative; 
         }
+
+        html.light-theme .bottom-nav {
+             background-color: #f8f8f8;
+             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
         .nav-item {
             flex: 1;
             text-align: center;
-            padding: 12px 0 8px 0;
+            padding: 10px 0 8px 0;
             cursor: pointer;
             color: var(--text-secondary);
-            transition: color 0.2s ease, transform 0.15s ease;
+            transition: color 0.3s ease, transform 0.15s ease;
+            /* Added for proper layering */
+            z-index: 1; 
         }
         .nav-item .nav-icon {
             width: 24px;
@@ -108,11 +125,31 @@
             font-size: 10px; 
             font-weight: 500; 
         }
-        .nav-item.active { color: var(--accent-primary); }
+        .nav-item.active { 
+            color: var(--accent-primary); 
+        }
         .nav-item:active {
             transform: scale(0.92);
-            color: var(--accent-primary);
         }
+
+        /* The moving bubble */
+        #nav-active-bubble {
+            position: absolute;
+            top: 6px;
+            height: calc(100% - 12px);
+            background-color: var(--bg-primary);
+            border-radius: 24px;
+            /* Smooth transition for movement and size changes */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Sits behind the nav items */
+            z-index: 0; 
+        }
+        html.light-theme #nav-active-bubble {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+        }
+        /* ▲▲▲ END OF UPDATED STYLES ▲▲▲ */
+
 
         .btn {
             display: flex; align-items: center; justify-content: center;
@@ -283,7 +320,6 @@
         .txn-amount.red { color: var(--accent-red); }
         .txn-amount.green { color: var(--accent-green); }
         
-        /* ▼▼▼ NEW STYLE FOR DATE HEADERS ▼▼▼ */
         .date-header {
             font-size: 14px;
             font-weight: 600;
@@ -440,6 +476,8 @@
     </div>
 
     <div class="bottom-nav">
+        <div id="nav-active-bubble"></div>
+        
         <div class="nav-item active" onclick="goTo('schedule', this)">
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             <div class="nav-label">Lịch trình</div>
@@ -461,7 +499,7 @@
             <div class="nav-label">Cài đặt</div>
         </div>
     </div>
-</div>
+    </div>
 
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
@@ -523,7 +561,6 @@ const DB = {
     save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
 };
 
-// ▼▼▼ THỜI KHÓA BIỂU ĐÃ ĐƯỢC CẬP NHẬT CHI TIẾT ▼▼▼
 const scheduleData = [
     { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
     { 
@@ -558,6 +595,17 @@ let lastRenderedDay = -1, clockInterval = null;
 // =================================================================
 // 3. CORE APP LOGIC & UI
 // =================================================================
+
+// ▼▼▼ NEW: Function to move the navigation bubble ▼▼▼
+function updateNavBubble(activeElement) {
+    const bubble = document.getElementById('nav-active-bubble');
+    if (!activeElement || !bubble) return;
+
+    // Set the bubble's width and position based on the active item
+    bubble.style.width = `${activeElement.offsetWidth}px`;
+    bubble.style.left = `${activeElement.offsetLeft}px`;
+}
+
 function goTo(screenId, element) {
     if (screenId === 'passwords' && localStorage.getItem('passwordProtectionEnabled') === 'true' && sessionStorage.getItem('isAuthenticated') !== 'true') {
         passcode.prompt(() => goTo(screenId, element));
@@ -568,6 +616,9 @@ function goTo(screenId, element) {
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     element.classList.add('active');
     window.scrollTo(0, 0);
+
+    // ▼▼▼ Call the bubble update function ▼▼▼
+    updateNavBubble(element);
 }
 
 function updateClockAndSchedule() {
@@ -653,6 +704,8 @@ function toggleTheme() {
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     document.getElementById('theme-toggle').classList.toggle('active', isLight);
     document.documentElement.style.setProperty('--card-bg-rgb', isLight ? '255, 255, 255' : '28, 28, 30');
+    // Also update the bubble position in case theme change affects layout
+    updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
@@ -676,7 +729,6 @@ function showToast(message) {
 // =================================================================
 
 // --- Finance ---
-// ▼▼▼ MODIFIED: renderFinance now only shows data for the CURRENT month ▼▼▼
 function renderFinance() {
     const now = new Date();
     const currentMonth = now.getMonth();
@@ -697,13 +749,12 @@ function renderFinance() {
     renderHistory();
 }
 
-// ▼▼▼ NEW: Helper function to format date headers ▼▼▼
 function formatDateHeader(date) {
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     
-    const d = new Date(date); // Create a copy to avoid modifying original
+    const d = new Date(date);
     today.setHours(0, 0, 0, 0);
     yesterday.setHours(0, 0, 0, 0);
     d.setHours(0, 0, 0, 0);
@@ -713,14 +764,12 @@ function formatDateHeader(date) {
     return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
 }
 
-// ▼▼▼ MODIFIED: renderHistory now groups by date and shows notes ▼▼▼
 function renderHistory() {
     const now = new Date();
     const currentMonth = now.getMonth();
     const currentYear = now.getFullYear();
     const query = document.getElementById('search').value.toLowerCase();
     
-    // Filter for current month first
     const txns = DB.get('txns')
         .filter(t => {
             const txDate = new Date(t.date);
@@ -785,10 +834,9 @@ function saveTxn() {
     renderFinance();
 }
 
-// ▼▼▼ NEW: Function to show the previous month's expense summary ▼▼▼
 function showLastMonthSummary() {
     const now = new Date();
-    const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); // Gets last day of previous month
+    const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
     const prevMonth = prevMonthDate.getMonth();
     const prevYear = prevMonthDate.getFullYear();
 
@@ -1094,7 +1142,20 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFinance();
     renderNotes();
     renderPasswords();
+    
+    // ▼▼▼ Initialize the navigation bubble position ▼▼▼
+    const initialActiveItem = document.querySelector('.nav-item.active');
+    // Use a timeout to ensure layout is fully calculated
+    setTimeout(() => {
+        updateNavBubble(initialActiveItem);
+    }, 50);
 });
+
+// ▼▼▼ Recalculate bubble position on window resize ▼▼▼
+window.addEventListener('resize', () => {
+    updateNavBubble(document.querySelector('.nav-item.active'));
+});
+
 </script>
 </body>
 </html>
