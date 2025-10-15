@@ -80,16 +80,14 @@
             color: var(--text-primary);
         }
 
-        /* ▼▼▼ UPDATED NAVIGATION BAR: FIXED & TRANSLUCENT ▼▼▼ */
         .bottom-nav {
-            position: fixed; /* Ensures the bar stays in place on scroll */
+            position: fixed;
             bottom: calc(15px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 32px);
             max-width: 450px;
             
-            /* Added translucency and blur effect */
             background-color: rgba(28, 28, 30, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -100,7 +98,6 @@
             display: flex;
             padding: 6px;
             z-index: 1000;
-            position: relative; 
         }
 
         html.light-theme .bottom-nav {
@@ -148,10 +145,8 @@
             border: 1px solid var(--border-color);
         }
 
-        /* ▼▼▼ UPDATED MUSIC BUBBLE: DRAGGABLE STYLES ▼▼▼ */
         #music-player-bubble {
             position: fixed;
-            /* Start position, will be updated by JS */
             bottom: calc(100px + env(safe-area-inset-bottom));
             right: 15px;
             width: 60px; height: 60px;
@@ -160,9 +155,7 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; z-index: 999;
-            /* Default cursor */
             cursor: pointer;
-            /* Prevents weird scrolling behavior on touch devices */
             touch-action: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -596,6 +589,7 @@ const scheduleData = [
     { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
 ];
 let lastRenderedDay = -1, clockInterval = null;
+const scrollPositions = {}; // <-- BIẾN MỚI ĐỂ LƯU VỊ TRÍ CUỘN
 
 // =================================================================
 // 3. CORE APP LOGIC & UI
@@ -607,16 +601,29 @@ function updateNavBubble(activeElement) {
     bubble.style.left = `${activeElement.offsetLeft}px`;
 }
 
+// ▼▼▼ HÀM goTo ĐÃ ĐƯỢC CẬP NHẬT ▼▼▼
 function goTo(screenId, element) {
     if (screenId === 'passwords' && localStorage.getItem('passwordProtectionEnabled') === 'true' && sessionStorage.getItem('isAuthenticated') !== 'true') {
         passcode.prompt(() => goTo(screenId, element));
         return;
     }
+
+    // 1. LƯU LẠI vị trí cuộn của màn hình cũ
+    const currentScreen = document.querySelector('.screen.active');
+    if (currentScreen) {
+        scrollPositions[currentScreen.id] = window.scrollY;
+    }
+
+    // 2. Chuyển đổi màn hình và thanh điều hướng
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     element.classList.add('active');
-    window.scrollTo(0, 0);
+
+    // 3. KHÔI PHỤC vị trí cuộn của màn hình mới
+    const newPosition = scrollPositions[screenId] || 0;
+    window.scrollTo(0, newPosition);
+    
     updateNavBubble(element);
 }
 
@@ -723,7 +730,7 @@ function showToast(message) {
 }
 
 // =================================================================
-// 4. FEATURE MODULES
+// 4. FEATURE MODULES (các hàm còn lại giữ nguyên)
 // =================================================================
 
 // --- Finance ---
@@ -1049,7 +1056,6 @@ function resetData() {
 function reloadApp() { window.location.reload(); }
 
 // --- Music Player ---
-// ▼▼▼ UPDATED: Added hasDragged logic to differentiate click from drag ▼▼▼
 const musicPlayer = {
     playerReady: false,
     expanded: false,
@@ -1151,7 +1157,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateNavBubble(initialActiveItem);
     }, 50);
 
-    // ▼▼▼ NEW: Initialize draggable music bubble ▼▼▼
     setupDraggableMusicBubble();
 });
 
@@ -1159,11 +1164,10 @@ window.addEventListener('resize', () => {
     updateNavBubble(document.querySelector('.nav-item.active'));
 });
 
-// ▼▼▼ NEW: Function and logic for draggable music bubble ▼▼▼
 function setupDraggableMusicBubble() {
     const musicBubble = document.getElementById('music-player-bubble');
     let isDragging = false;
-    window.hasDragged = false; // Global flag to communicate with onclick
+    window.hasDragged = false;
     let startX, startY, initialLeft, initialTop;
 
     function dragStart(e) {
@@ -1171,7 +1175,7 @@ function setupDraggableMusicBubble() {
         
         isDragging = true;
         window.hasDragged = false;
-        musicBubble.style.transition = 'none'; // Disable transition while dragging
+        musicBubble.style.transition = 'none';
 
         startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
         startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
@@ -1221,28 +1225,24 @@ function setupDraggableMusicBubble() {
     function dragEnd() {
         if (!isDragging) return;
         isDragging = false;
-        musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; // Re-enable transition
+        musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
         musicBubble.style.cursor = 'pointer';
         document.body.style.userSelect = 'auto';
         
-        // After drag, let the click event pass before resetting the flag
         setTimeout(() => {
             window.hasDragged = false;
         }, 50);
     }
     
-    // Add event listeners to the bubble itself
     musicBubble.addEventListener('mousedown', dragStart);
     musicBubble.addEventListener('touchstart', dragStart, { passive: false });
     
-    // Add move/end listeners to the whole document to catch mouse movements outside the bubble
     document.addEventListener('mousemove', drag);
     document.addEventListener('touchmove', drag, { passive: false });
     
     document.addEventListener('mouseup', dragEnd);
     document.addEventListener('touchend', dragEnd);
 
-    // Add the onclick listener here to ensure it works with the drag logic
     musicBubble.addEventListener('click', (e) => musicPlayer.toggleExpand(e));
 }
 
