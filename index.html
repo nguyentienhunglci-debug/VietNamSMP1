@@ -80,17 +80,17 @@
             color: var(--text-primary);
         }
 
-        /* ▼▼▼ UPDATED NAVIGATION BAR STYLES ▼▼▼ */
+        /* ▼▼▼ UPDATED NAVIGATION BAR: FIXED & TRANSLUCENT ▼▼▼ */
         .bottom-nav {
-            position: fixed; /* This makes the bar stay in place on scroll */
+            position: fixed; /* Ensures the bar stays in place on scroll */
             bottom: calc(15px + env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             width: calc(100% - 32px);
             max-width: 450px;
             
-            /* MODIFIED: Added translucency and blur effect */
-            background-color: rgba(28, 28, 30, 0.75); /* Dark background with 75% opacity */
+            /* Added translucency and blur effect */
+            background-color: rgba(28, 28, 30, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             
@@ -104,7 +104,6 @@
         }
 
         html.light-theme .bottom-nav {
-             /* MODIFIED: Translucent background for light theme */
             background-color: rgba(248, 248, 248, 0.75);
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
@@ -148,8 +147,31 @@
             background-color: #ffffff;
             border: 1px solid var(--border-color);
         }
-        /* ▲▲▲ END OF UPDATED STYLES ▲▲▲ */
 
+        /* ▼▼▼ UPDATED MUSIC BUBBLE: DRAGGABLE STYLES ▼▼▼ */
+        #music-player-bubble {
+            position: fixed;
+            /* Start position, will be updated by JS */
+            bottom: calc(100px + env(safe-area-inset-bottom));
+            right: 15px;
+            width: 60px; height: 60px;
+            background-color: var(--card-bg);
+            border-radius: 50%; border: 1px solid var(--border-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden; z-index: 999;
+            /* Default cursor */
+            cursor: pointer;
+            /* Prevents weird scrolling behavior on touch devices */
+            touch-action: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        #music-player-bubble.expanded {
+            width: 90vw; max-width: 380px;
+            height: auto; border-radius: 16px;
+            padding: 16px; cursor: default;
+        }
 
         .btn {
             display: flex; align-items: center; justify-content: center;
@@ -357,23 +379,6 @@
         .keypad-btn:active { background-color: #333; }
         html.light-theme .keypad-btn:active { background-color: #eee; }
         
-        #music-player-bubble {
-            position: fixed;
-            bottom: calc(85px + 15px); right: 15px;
-            width: 60px; height: 60px;
-            background-color: var(--card-bg);
-            border-radius: 50%; border: 1px solid var(--border-color);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; z-index: 999; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-        #music-player-bubble.expanded {
-            width: 90vw; max-width: 380px;
-            height: auto; border-radius: 16px;
-            padding: 16px; cursor: default;
-        }
         .player-close-btn {
             position: absolute;
             top: 8px; right: 8px;
@@ -516,7 +521,7 @@
     </div>
 </div>
 
-<div id="music-player-bubble" onclick="musicPlayer.toggleExpand(event)">
+<div id="music-player-bubble">
     <span class="bubble-icon">🎵</span>
     <button class="player-close-btn" onclick="musicPlayer.close(event)">&times;</button>
     <iframe id="youtube-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media"></iframe>
@@ -769,7 +774,7 @@ function renderHistory() {
             return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
         })
         .filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query))
-        .sort((a, b) => new Date(b.date) - new Date(a, b));
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const listEl = document.getElementById('histList');
     if (txns.length === 0) {
@@ -1044,10 +1049,15 @@ function resetData() {
 function reloadApp() { window.location.reload(); }
 
 // --- Music Player ---
+// ▼▼▼ UPDATED: Added hasDragged logic to differentiate click from drag ▼▼▼
 const musicPlayer = {
     playerReady: false,
     expanded: false,
     toggleExpand(event) {
+        if (window.hasDragged) {
+            window.hasDragged = false;
+            return;
+        }
         if (event.target.classList.contains('player-close-btn')) return;
         this.expanded = !this.expanded;
         const bubble = document.getElementById('music-player-bubble');
@@ -1140,11 +1150,101 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         updateNavBubble(initialActiveItem);
     }, 50);
+
+    // ▼▼▼ NEW: Initialize draggable music bubble ▼▼▼
+    setupDraggableMusicBubble();
 });
 
 window.addEventListener('resize', () => {
     updateNavBubble(document.querySelector('.nav-item.active'));
 });
+
+// ▼▼▼ NEW: Function and logic for draggable music bubble ▼▼▼
+function setupDraggableMusicBubble() {
+    const musicBubble = document.getElementById('music-player-bubble');
+    let isDragging = false;
+    window.hasDragged = false; // Global flag to communicate with onclick
+    let startX, startY, initialLeft, initialTop;
+
+    function dragStart(e) {
+        if (musicBubble.classList.contains('expanded') || e.target.classList.contains('player-close-btn')) return;
+        
+        isDragging = true;
+        window.hasDragged = false;
+        musicBubble.style.transition = 'none'; // Disable transition while dragging
+
+        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+        startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+
+        const rect = musicBubble.getBoundingClientRect();
+        musicBubble.style.right = 'auto';
+        musicBubble.style.bottom = 'auto';
+        musicBubble.style.top = `${rect.top}px`;
+        musicBubble.style.left = `${rect.left}px`;
+        
+        initialTop = musicBubble.offsetTop;
+        initialLeft = musicBubble.offsetLeft;
+        
+        musicBubble.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+    }
+
+    function drag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+        let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
+        let dx = currentX - startX;
+        let dy = currentY - startY;
+
+        if (!window.hasDragged && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+            window.hasDragged = true;
+        }
+
+        let newTop = initialTop + dy;
+        let newLeft = initialLeft + dx;
+        
+        const bubbleWidth = musicBubble.offsetWidth;
+        const bubbleHeight = musicBubble.offsetHeight;
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+
+        newLeft = Math.max(8, Math.min(newLeft, windowWidth - bubbleWidth - 8));
+        newTop = Math.max(8, Math.min(newTop, windowHeight - bubbleHeight - 8));
+
+        musicBubble.style.top = `${newTop}px`;
+        musicBubble.style.left = `${newLeft}px`;
+    }
+
+    function dragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; // Re-enable transition
+        musicBubble.style.cursor = 'pointer';
+        document.body.style.userSelect = 'auto';
+        
+        // After drag, let the click event pass before resetting the flag
+        setTimeout(() => {
+            window.hasDragged = false;
+        }, 50);
+    }
+    
+    // Add event listeners to the bubble itself
+    musicBubble.addEventListener('mousedown', dragStart);
+    musicBubble.addEventListener('touchstart', dragStart, { passive: false });
+    
+    // Add move/end listeners to the whole document to catch mouse movements outside the bubble
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag, { passive: false });
+    
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
+
+    // Add the onclick listener here to ensure it works with the drag logic
+    musicBubble.addEventListener('click', (e) => musicPlayer.toggleExpand(e));
+}
 
 </script>
 </body>
