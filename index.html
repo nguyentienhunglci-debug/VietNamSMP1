@@ -262,11 +262,10 @@
         }
         #kitty-logo.show { opacity: 1; transform: scale(1); }
 
-        .kitty-sticker-container { position: absolute; top: 60px; right: 15px; z-index: 0; display: none; }
-        html.kitty-theme .kitty-sticker-container { display: block; animation: sticker-fade-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both; }
-        .kitty-sticker-container img { width: 80px; height: auto; pointer-events: none; filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1)); animation: floatAnimation 4s ease-in-out infinite; }
-        @keyframes sticker-fade-in { from { opacity: 0; transform: scale(0.5) rotate(-30deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
-        @keyframes floatAnimation { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(5deg); } 100% { transform: translateY(0px); } }
+        /* *** ĐÃ ẨN STICKER Ở GÓC THEO YÊU CẦU *** */
+        .kitty-sticker-container { 
+            display: none; 
+        }
 
         #kitty-float-container {
             position: fixed;
@@ -427,8 +426,6 @@
 <script type="text/javascript">
 'use strict';
 
-// *** ĐÃ CẬP NHẬT: Link ảnh mới ổn định hơn ***
-const SECTION_STICKER_IMAGES = [ 'https://i.pinimg.com/originals/5c/2a/3b/5c2a3b9f6a7d5f6e80b4356a6e1398c2.png' ];
 const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
 
 
@@ -439,7 +436,6 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
     if (isLight) document.documentElement.classList.add('light-theme');
     if (isKitty) {
         document.documentElement.classList.add('kitty-theme');
-        populateSectionStickers();
     }
     document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
     document.getElementById('kitty-theme-toggle')?.classList.toggle('active', isKitty);
@@ -558,7 +554,6 @@ function toggleKittyTheme() {
     setTimeout(() => {
         if (isKitty) {
             html.classList.remove('kitty-theme');
-            clearSectionStickers();
             const prevTheme = localStorage.getItem('theme-before-kitty') || 'dark';
             localStorage.setItem('theme', prevTheme);
             if (prevTheme === 'light') html.classList.add('light-theme');
@@ -572,7 +567,6 @@ function toggleKittyTheme() {
             localStorage.setItem('theme', 'kitty');
             toggle.classList.add('active');
             document.getElementById('theme-toggle').classList.remove('active');
-            populateSectionStickers();
         }
         updateNavBubble(document.querySelector('.nav-item.active'));
     }, 2000);
@@ -586,16 +580,6 @@ function toggleKittyTheme() {
         logo.classList.remove('show');
     }, 3000);
 }
-
-function populateSectionStickers() {
-    document.querySelectorAll('.kitty-sticker-container').forEach(container => {
-        if(container.innerHTML === '') {
-            const randomImageUrl = SECTION_STICKER_IMAGES[Math.floor(Math.random() * SECTION_STICKER_IMAGES.length)];
-            container.innerHTML = `<img src="${randomImageUrl}" alt="Hello Kitty Sticker">`;
-        }
-    });
-}
-function clearSectionStickers() { document.querySelectorAll('.kitty-sticker-container').forEach(container => { container.innerHTML = ''; }); }
 
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
