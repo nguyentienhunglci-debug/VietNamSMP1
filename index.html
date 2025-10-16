@@ -77,6 +77,7 @@
             padding-bottom: 120px; 
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 17px; 
         }
 
         html.kitty-theme body {
@@ -85,6 +86,29 @@
             background-position: center center;
             background-attachment: fixed;
         }
+        
+        .main-container {
+            position: relative; /* <<< THÊM: Để định vị logo bên trong */
+        }
+        
+        #app-logo {
+            position: absolute;   /* <<< THAY ĐỔI: từ fixed thành absolute */
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            font-family: 'Pacifico', cursive;
+            font-size: 24px;
+            color: var(--text-primary);
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            transition: color 0.3s ease;
+            pointer-events: none;
+        }
+        html.kitty-theme #app-logo {
+            color: var(--accent-primary);
+            text-shadow: 1px 1px 3px rgba(92, 60, 84, 0.3);
+        }
+
 
         /* =================================================================
            3. CORE LAYOUT & COMPONENTS
@@ -121,7 +145,7 @@
 
         .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
         .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
-        .nav-item .nav-label { font-size: 11px; font-weight: 500; }
+        .nav-item .nav-label { font-size: 12px; font-weight: 500; }
         .nav-item.active { color: var(--accent-primary); }
         .nav-item:active { transform: scale(0.92); }
 
@@ -216,17 +240,6 @@
         html.kitty-theme .toggle-switch.active { background-color: var(--accent-primary); border-color: var(--accent-primary); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
-        .screen-overlay { display: none; position: fixed; inset: 0; background: var(--bg-primary); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
-        .screen-overlay.show { display: flex; }
-        #passcode-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
-        .passcode-dots-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 24px; }
-        .passcode-dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--border-color); }
-        .passcode-dot.filled { background-color: var(--accent-primary); border-color: var(--accent-primary); }
-        .passcode-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 24px; }
-        .keypad-btn { width: 75px; height: 75px; border-radius: 50%; border: none; background-color: var(--bg-secondary); color: var(--text-primary); font-size: 32px; cursor: pointer; transition: background-color 0.2s; }
-        .keypad-btn:active { background-color: #333; }
-        html.light-theme .keypad-btn:active { background-color: #eee; }
-        
         .player-close-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 20px; z-index: 10; backdrop-filter: blur(5px); }
         #music-player-bubble.expanded .player-close-btn { display: flex; }
         #music-player-bubble iframe { display: none; width: 100%; height: 180px; border: none; border-radius: 10px; margin-top: 12px; }
@@ -243,7 +256,7 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out; 
+            transition: opacity 0.6s ease-in-out; 
             pointer-events: none;
         }
         #kitty-transition-overlay.show {
@@ -258,11 +271,10 @@
             text-shadow: 3px 3px 8px rgba(255, 105, 180, 0.5);
             opacity: 0;
             transform: scale(0.8);
-            transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: opacity 1s ease-in, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         #kitty-logo.show { opacity: 1; transform: scale(1); }
 
-        /* *** ĐÃ ẨN STICKER Ở GÓC THEO YÊU CẦU *** */
         .kitty-sticker-container { 
             display: none; 
         }
@@ -299,15 +311,13 @@
 <body>
 
 <div id="kitty-float-container"></div>
-
-<div id="kitty-transition-overlay">
-    <h1 id="kitty-logo">Hello Kitty</h1>
-</div>
+<div id="kitty-transition-overlay"><h1 id="kitty-logo">Hello Kitty</h1></div>
 
 <div class="main-container">
+    <div id="app-logo">Kuehne kunkun</div>
+
     <div id="schedule" class="screen active">
         <div class="screen-title-bar"><h2>Lịch trình</h2></div>
-        <div class="kitty-sticker-container"></div>
         <div id="schedule-container">
             <div id="clock-time">--:--:--</div>
             <div id="clock-date">---, --/--/----</div>
@@ -319,7 +329,6 @@
 
     <div id="finance" class="screen">
         <div class="screen-title-bar"><h2>Tài chính</h2></div>
-        <div class="kitty-sticker-container"></div>
         <div class="card">
              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 style="margin: 0;">Tổng quan tháng này</h3>
@@ -350,7 +359,6 @@
                 <span>Ghi chú mới</span>
             </button>
         </div>
-        <div class="kitty-sticker-container"></div>
         <div id="notesList"></div>
     </div>
 
@@ -362,13 +370,11 @@
                 <span>Thêm mới</span>
             </button>
         </div>
-        <div class="kitty-sticker-container"></div>
         <div id="passwordsList"></div>
     </div>
 
     <div id="settings" class="screen">
         <div class="screen-title-bar"><h2>Cài đặt</h2></div>
-        <div class="kitty-sticker-container"></div>
         <div class="card">
             <h3>Giao diện & Bảo mật</h3>
             <div class="setting-item">
@@ -378,10 +384,6 @@
             <div class="setting-item">
                 <span>Hello Kitty Mode</span>
                 <div class="toggle-switch" id="kitty-theme-toggle" onclick="toggleKittyTheme()"><div class="toggle-knob"></div></div>
-            </div>
-            <div class="setting-item">
-                <span>Khóa ứng dụng</span>
-                <div class="toggle-switch" id="password-protection-toggle" onclick="togglePasswordProtection()"><div class="toggle-knob"></div></div>
             </div>
         </div>
         <div class="card">
@@ -419,7 +421,6 @@
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="passcode-screen" class="screen-overlay"><div class="passcode-container"><h3 id="passcode-title"></h3><div class="passcode-dots-container" id="passcode-dots"><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div></div><p id="passcode-error" style="color:var(--accent-red);min-height:20px;"></p><div class="passcode-keypad"><button class="keypad-btn" onclick="passcode.keyPress('1')">1</button><button class="keypad-btn" onclick="passcode.keyPress('2')">2</button><button class="keypad-btn" onclick="passcode.keyPress('3')">3</button><button class="keypad-btn" onclick="passcode.keyPress('4')">4</button><button class="keypad-btn" onclick="passcode.keyPress('5')">5</button><button class="keypad-btn" onclick="passcode.keyPress('6')">6</button><button class="keypad-btn" onclick="passcode.keyPress('7')">7</button><button class="keypad-btn" onclick="passcode.keyPress('8')">8</button><button class="keypad-btn" onclick="passcode.keyPress('9')">9</button><div></div><button class="keypad-btn" onclick="passcode.keyPress('0')">0</button><button class="keypad-btn action" onclick="passcode.backspace()">⌫</button></div></div></div>
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 <div id="music-player-bubble"><span class="bubble-icon">🎵</span><button class="player-close-btn" onclick="musicPlayer.close(event)">&times;</button><iframe id="youtube-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media"></iframe></div>
 
@@ -427,7 +428,6 @@
 'use strict';
 
 const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
-
 
 (function init() {
     const savedTheme = localStorage.getItem('theme');
@@ -439,10 +439,6 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
     }
     document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
     document.getElementById('kitty-theme-toggle')?.classList.toggle('active', isKitty);
-    const cardBgColor = isLight ? '255, 255, 255' : '28, 28, 30';
-    document.documentElement.style.setProperty('--card-bg-rgb', cardBgColor);
-    const isPassEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
-    document.getElementById('password-protection-toggle')?.classList.toggle('active', isPassEnabled);
 })();
 
 var tag = document.createElement('script');
@@ -464,10 +460,6 @@ function updateNavBubble(activeElement) {
     bubble.style.left = `${activeElement.offsetLeft}px`;
 }
 function goTo(screenId, element) {
-    if (screenId === 'passwords' && localStorage.getItem('passwordProtectionEnabled') === 'true' && sessionStorage.getItem('isAuthenticated') !== 'true') {
-        passcode.prompt(() => goTo(screenId, element));
-        return;
-    }
     const currentScreen = document.querySelector('.screen.active');
     if (currentScreen) scrollPositions[currentScreen.id] = window.scrollY;
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -536,7 +528,6 @@ function toggleTheme() {
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     document.getElementById('theme-toggle').classList.toggle('active', isLight);
     document.getElementById('kitty-theme-toggle').classList.remove('active');
-    document.documentElement.style.setProperty('--card-bg-rgb', isLight ? '255, 255, 255' : '28, 28, 30');
     updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
@@ -548,8 +539,10 @@ function toggleKittyTheme() {
     const logo = document.getElementById('kitty-logo');
 
     overlay.classList.add('show');
-    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-    setTimeout(() => { logo.classList.add('show'); }, 500);
+    setTimeout(() => { 
+        overlay.style.opacity = '1'; 
+        logo.classList.add('show');
+    }, 10);
 
     setTimeout(() => {
         if (isKitty) {
@@ -569,17 +562,18 @@ function toggleKittyTheme() {
             document.getElementById('theme-toggle').classList.remove('active');
         }
         updateNavBubble(document.querySelector('.nav-item.active'));
-    }, 2000);
+    }, 600); 
 
     setTimeout(() => {
         overlay.style.opacity = '0';
-    }, 2500);
+        logo.classList.remove('show');
+    }, 2000);
 
     setTimeout(() => {
         overlay.classList.remove('show');
-        logo.classList.remove('show');
-    }, 3000);
+    }, 2600);
 }
+
 
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
@@ -612,8 +606,6 @@ function copyToClipboard(text, type) { if (!text) { showToast(`Không có ${type
 function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
 const musicPlayer = { playerReady: false, expanded: false, toggleExpand(event) { if (window.hasDragged) { window.hasDragged = false; return; } if (event.target.classList.contains('player-close-btn')) return; this.expanded = !this.expanded; const bubble = document.getElementById('music-player-bubble'); bubble.classList.toggle('expanded', this.expanded); if (this.expanded && this.playerReady) player.playVideo(); if (!this.expanded && this.playerReady) player.pauseVideo(); }, close(event) { event.stopPropagation(); const bubble = document.getElementById('music-player-bubble'); if (this.playerReady) player.stopVideo(); this.expanded = false; bubble.classList.remove('expanded'); } };
-const passcode = { PASSCODE_LENGTH: 4, currentInput: "", mode: 'verify', onSuccess: null, elements: { screen: document.getElementById('passcode-screen'), title: document.getElementById('passcode-title'), dots: document.getElementById('passcode-dots').children, error: document.getElementById('passcode-error') }, reset() { this.currentInput = ""; this.updateDots(); this.elements.error.textContent = ""; }, updateDots() { Array.from(this.elements.dots).forEach((dot, i) => dot.classList.toggle('filled', i < this.currentInput.length)); }, keyPress(key) { if (this.currentInput.length >= this.PASSCODE_LENGTH) return; this.currentInput += key; this.updateDots(); if (this.currentInput.length === this.PASSCODE_LENGTH) setTimeout(() => this.handleSubmit(), 200); }, backspace() { this.currentInput = this.currentInput.slice(0, -1); this.updateDots(); }, handleSubmit() { this.mode === 'verify' ? this.verify() : this.set(); }, show() { this.elements.screen.classList.add('show'); }, hide() { this.elements.screen.classList.remove('show'); }, prompt(onSuccess) { this.mode = 'verify'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Nhập mật mã'; this.show(); }, startSetup(onSuccess) { this.mode = 'set'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Tạo mật mã mới'; this.show(); }, verify() { if (this.currentInput === localStorage.getItem('masterPassword')) { sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không đúng."; setTimeout(() => this.reset(), 1000); } }, set() { const firstInput = this.currentInput; this.reset(); this.elements.title.textContent = 'Xác nhận mật mã'; this.handleSubmit = () => { if (this.currentInput === firstInput) { localStorage.setItem('masterPassword', this.currentInput); localStorage.setItem('passwordProtectionEnabled', 'true'); sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không khớp."; setTimeout(() => this.startSetup(this.onSuccess), 1500); } }; } };
-function togglePasswordProtection() { const toggleElement = document.getElementById('password-protection-toggle'); if (localStorage.getItem('passwordProtectionEnabled') === 'true') { passcode.prompt(() => { localStorage.setItem('passwordProtectionEnabled', 'false'); sessionStorage.removeItem('isAuthenticated'); toggleElement.classList.remove('active'); showToast('Đã tắt khóa ứng dụng.'); }); } else { passcode.startSetup(() => { toggleElement.classList.add('active'); showToast('Đã bật khóa ứng dụng.'); }); } }
 
 function createFloatingKitties() {
     const container = document.getElementById('kitty-float-container');
