@@ -9,6 +9,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+
 
     <style>
         /* =================================================================
@@ -40,6 +45,23 @@
         }
         
         /* =================================================================
+           MỚI: Cập nhật biến màu cho theme Hello Kitty
+           ================================================================= */
+        html.kitty-theme {
+            --bg-primary: #fff0f5; /* Lavender Blush */
+            --bg-secondary: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.9); /* Tăng độ trong suốt */
+            --text-primary: #5c3c54; /* Dark purple */
+            --text-secondary: #d17fb4; /* Muted pink */
+            --accent-primary: #ff85a2; /* Bright Pink */
+            --accent-red: #f75d72;
+            --accent-green: #61d3a3;
+            --accent-orange: #ffb480;
+            --border-color: #f7d6e0; /* Light pink border */
+            --font-family: 'Patrick Hand', cursive;
+        }
+
+        /* =================================================================
            2. GLOBAL RESETS & BASE STYLES
            ================================================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -49,6 +71,7 @@
             scroll-behavior: smooth;
         }
         html.light-theme { color-scheme: light; }
+        html.kitty-theme { color-scheme: light; }
         
         body {
             font-family: var(--font-family);
@@ -59,26 +82,26 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* MỚI: Thêm hình nền cho theme Hello Kitty */
+        html.kitty-theme body {
+            background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+
+
         /* =================================================================
            3. CORE LAYOUT & COMPONENTS
            ================================================================= */
         
-        .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; }
+        .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
         
-        .screen-title-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 24px; 
-            padding: 0 4px;
-        }
-        .screen-title-bar h2 { 
-            font-size: 32px; 
-            font-weight: 700;
-            color: var(--text-primary);
-        }
+        .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
+        .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
+        html.kitty-theme h3 { font-size: 24px; }
 
         .bottom-nav {
             position: fixed;
@@ -87,11 +110,9 @@
             transform: translateX(-50%);
             width: calc(100% - 32px);
             max-width: 450px;
-            
             background-color: rgba(28, 28, 30, 0.75);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            
             border: 1px solid var(--border-color);
             border-radius: 30px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
@@ -100,231 +121,93 @@
             z-index: 1000;
         }
 
-        html.light-theme .bottom-nav {
-            background-color: rgba(248, 248, 248, 0.75);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
 
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            padding: 10px 0 8px 0;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: color 0.3s ease, transform 0.15s ease;
-            z-index: 1; 
-        }
-        .nav-item .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin: 0 auto 4px auto;
-            stroke-width: 2;
-        }
-        .nav-item .nav-label { 
-            font-size: 10px; 
-            font-weight: 500; 
-        }
-        .nav-item.active { 
-            color: var(--accent-primary); 
-        }
-        .nav-item:active {
-            transform: scale(0.92);
-        }
-
-        #nav-active-bubble {
-            position: absolute;
-            top: 6px;
-            height: calc(100% - 12px);
-            background-color: var(--bg-primary);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0; 
-        }
-        html.light-theme #nav-active-bubble {
-            background-color: #ffffff;
-            border: 1px solid var(--border-color);
-        }
-
-        #music-player-bubble {
-            position: fixed;
-            bottom: calc(100px + env(safe-area-inset-bottom));
-            right: 15px;
-            width: 60px; height: 60px;
-            background-color: var(--card-bg);
-            border-radius: 50%; border: 1px solid var(--border-color);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
-            overflow: hidden; z-index: 999;
-            cursor: pointer;
-            touch-action: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
         
-        #music-player-bubble.expanded {
-            width: 90vw; max-width: 380px;
-            height: auto; border-radius: 16px;
-            padding: 16px; cursor: default;
+        /* MỚI: CSS cho icon ảnh thay vì SVG */
+        .nav-item .nav-icon-img {
+            width: 28px;
+            height: 28px;
+            margin: 0 auto 4px auto;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, filter 0.3s ease;
         }
+        .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
+        
+        .nav-item .nav-label { font-size: 11px; font-weight: 500; }
+        .nav-item.active .nav-label { color: var(--accent-primary); }
+        .nav-item.active .nav-icon-img {
+            opacity: 1;
+            filter: drop-shadow(0 0 4px var(--accent-primary));
+        }
+        .nav-item.active .nav-icon { color: var(--accent-primary); }
 
-        .btn {
-            display: flex; align-items: center; justify-content: center;
-            gap: 8px; padding: 12px 20px;
-            border: none; border-radius: 10px;
-            font-size: 16px; font-weight: 600;
-            cursor: pointer; width: 100%; margin-top: 16px;
-            transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease;
-            background-color: var(--accent-primary);
-            color: white;
-        }
+        .nav-item:active { transform: scale(0.92); }
+
+        #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-primary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
+        html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
+
+        #music-player-bubble { position: fixed; bottom: calc(100px + env(safe-area-inset-bottom)); right: 15px; width: 60px; height: 60px; background-color: var(--card-bg); border-radius: 50%; border: 1px solid var(--border-color); box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; z-index: 999; cursor: pointer; touch-action: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        #music-player-bubble.expanded { width: 90vw; max-width: 380px; height: auto; border-radius: 16px; padding: 16px; cursor: default; }
+
+        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 18px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
         .btn .icon { width: 18px; height: 18px; stroke-width: 2.5; }
-        .btn:active {
-            opacity: 0.8;
-            transform: scale(0.97);
-        }
-
-        .btn-sec { 
-            background-color: var(--bg-secondary); 
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
+        .btn:active { opacity: 0.8; transform: scale(0.97); }
+        html.kitty-theme .btn { color: #5c3c54; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+        .btn-sec { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); }
         .btn-danger { background-color: var(--accent-red); }
         .btn-small { padding: 8px 14px; font-size: 14px; }
+        html.kitty-theme .btn-small { font-size: 16px; }
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px; padding: 20px;
-            margin-bottom: 16px; border: 1px solid var(--border-color);
-        }
+        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
         .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
 
-        .data-card {
-            background-color: var(--card-bg);
-            border-radius: 12px; padding: 16px;
-            margin-bottom: 12px; border: 1px solid var(--border-color);
-            transition: background-color 0.2s ease, transform 0.2s ease;
-        }
-        .data-card:active {
-            background-color: var(--bg-primary);
-            transform: scale(0.98);
-        }
+        .data-card { background-color: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); transition: background-color 0.2s ease, transform 0.2s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .data-card:active { background-color: var(--bg-primary); transform: scale(0.98); }
         .data-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .data-title { font-size: 17px; font-weight: 600; }
-        .data-subtitle { font-size: 13px; color: var(--text-secondary); }
-        .data-content { font-size: 15px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; white-space: pre-wrap; word-wrap: break-word; }
+        .data-title { font-size: 20px; font-weight: 600; }
+        .data-subtitle { font-size: 14px; color: var(--text-secondary); }
+        .data-content { font-size: 16px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; white-space: pre-wrap; word-wrap: break-word; }
         .data-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
-        .data-btn {
-            background-color: var(--bg-secondary); color: var(--text-primary);
-            padding: 8px 16px; border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-size: 14px; font-weight: 500; cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.15s ease;
-        }
+        .data-btn { background-color: var(--bg-secondary); color: var(--text-primary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.2s ease, transform 0.15s ease; font-family: var(--font-family); }
         .data-btn.delete { color: var(--accent-red); }
-        .data-btn:active {
-            opacity: 0.7;
-            transform: scale(0.96);
-        }
+        .data-btn:active { opacity: 0.7; transform: scale(0.96); }
         
-        .modal {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.4s ease-in-out;
-            pointer-events: none;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-        }
-        .modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-content {
-            background-color: var(--bg-secondary);
-            border-radius: 18px 18px 0 0;
-            padding: 24px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid var(--border-color);
-            border-bottom: none;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
-            padding-bottom: calc(24px + env(safe-area-inset-bottom));
-        }
-        .modal.show .modal-content {
-            transform: translateY(0);
-        }
-
-        @media (min-width: 600px) {
-            .modal {
-                align-items: center;
-            }
-            .modal-content {
-                width: 92%;
-                max-width: 440px;
-                border-radius: 18px;
-                border-bottom: 1px solid var(--border-color);
-                transform: translateY(20px) scale(0.95);
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-                opacity: 0;
-            }
-            .modal.show .modal-content {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-        }
-        .modal-title { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+        .modal { display: flex; align-items: flex-end; justify-content: center; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); z-index: 2000; opacity: 0; transition: opacity 0.4s ease-in-out; pointer-events: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .modal.show { opacity: 1; pointer-events: auto; }
+        .modal-content { background-color: var(--bg-secondary); border-radius: 18px 18px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); border-bottom: none; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+        .modal.show .modal-content { transform: translateY(0); }
+        @media (min-width: 600px) { .modal { align-items: center; } .modal-content { width: 92%; max-width: 440px; border-radius: 18px; border-bottom: 1px solid var(--border-color); transform: translateY(20px) scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; opacity: 0; } .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; } }
+        .modal-title { font-size: 26px; font-weight: 600; margin-bottom: 24px; }
         .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
 
-
         .form-group { margin-bottom: 16px; }
-        .form-label { display: block; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; font-weight: 500; }
-        .form-input, .form-select, .form-textarea {
-            background-color: var(--bg-primary); color: var(--text-primary);
-            border: 1px solid var(--border-color); width: 100%;
-            padding: 14px; border-radius: 10px; font-size: 16px;
-            -webkit-appearance: none;
-        }
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none; border-color: var(--accent-primary);
-        }
+        .form-label { display: block; color: var(--text-secondary); font-size: 16px; margin-bottom: 8px; font-weight: 500; }
+        .form-input, .form-select, .form-textarea { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 14px; border-radius: 10px; font-size: 17px; -webkit-appearance: none; font-family: var(--font-family); }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-primary); }
         .form-textarea { min-height: 120px; }
 
-        .copy-toast {
-            position: fixed; bottom: 100px; left: 50%;
-            transform: translateX(-50%); background-color: #2c2c2e;
-            color: #f5f5f7; padding: 12px 24px; border-radius: 25px;
-            z-index: 3000; font-size: 14px; font-weight: 600;
-            opacity: 0; transition: opacity 0.3s, transform 0.3s;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
+        .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s, transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
 
         #schedule-container { text-align: center; padding-top: 10px; }
         #clock-time { font-size: 56px; font-weight: 600; letter-spacing: 1px; }
+        html.kitty-theme #clock-time { font-size: 70px; }
         #clock-date { font-size: 17px; color: var(--text-secondary); margin-top: -5px; margin-bottom: 30px; }
+        html.kitty-theme #clock-date { font-size: 20px; }
         .schedule-section h3 { font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px; }
-        .schedule-item {
-            background-color: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 16px; border-radius: 10px; margin-bottom: 10px;
-            font-size: 16px; font-weight: 500;
-            border-left: 3px solid var(--accent-green);
-            display: flex; justify-content: space-between; align-items: center; text-align: left;
-        }
+        .schedule-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px; margin-bottom: 10px; font-size: 16px; font-weight: 500; border-left: 3px solid var(--accent-green); display: flex; justify-content: space-between; align-items: center; text-align: left; }
+        html.kitty-theme .schedule-item { font-size: 18px; }
         .schedule-item-off { border-left-color: var(--accent-orange); }
         .schedule-item span { color: var(--text-secondary); font-size: 14px; }
         
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .stat-card { background-color: var(--bg-primary); padding: 16px; border-radius: 10px; text-align: left; border: 1px solid var(--border-color); }
         .stat-card.full-width { grid-column: 1 / -1; }
-        .stat-label { color: var(--text-secondary); font-size: 14px; margin-bottom: 6px; }
-        .stat-value { font-size: 24px; font-weight: 600; }
+        .stat-label { color: var(--text-secondary); font-size: 16px; margin-bottom: 6px; }
+        .stat-value { font-size: 26px; font-weight: 600; }
         .stat-value.red { color: var(--accent-red); }
         .stat-value.green { color: var(--accent-green); }
         .finance-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
@@ -335,30 +218,23 @@
         .txn-amount.red { color: var(--accent-red); }
         .txn-amount.green { color: var(--accent-green); }
         
-        .date-header {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            padding: 16px 4px 8px 4px;
-            background-color: var(--bg-primary);
-        }
-        
+        .date-header { font-size: 16px; font-weight: 600; color: var(--text-secondary); padding: 16px 4px 8px 4px; background-color: var(--bg-primary); }
         .password-field-container { margin-top: 12px; }
-        .password-label { font-size: 13px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .password-label { font-size: 14px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
         .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
+        html.kitty-theme .password-value-container { font-family: var(--font-family); }
         .password-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; }
-        .password-btn:active {
-             background-color: var(--bg-primary);
-             transform: scale(0.96);
-        }
+        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; font-family: var(--font-family); }
+        .password-btn:active { background-color: var(--bg-primary); transform: scale(0.96); }
 
         .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 4px; border-bottom: 1px solid var(--border-color); }
+        html.kitty-theme .setting-item span { font-size: 18px; }
         .setting-item:last-child { border-bottom: none; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--bg-primary); border-radius: 15px; position: relative; border: 1px solid var(--border-color); }
         .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
         html.light-theme .toggle-knob { background-color: #f2f2f7; border: 1px solid #ddd; }
         .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
+        html.kitty-theme .toggle-switch.active { background-color: var(--accent-primary); border-color: var(--accent-primary); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
         .screen-overlay { display: none; position: fixed; inset: 0; background: var(--bg-primary); z-index: 5000; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
@@ -372,32 +248,40 @@
         .keypad-btn:active { background-color: #333; }
         html.light-theme .keypad-btn:active { background-color: #eee; }
         
-        .player-close-btn {
-            position: absolute;
-            top: 8px; right: 8px;
-            width: 28px; height: 28px;
-            background: rgba(0,0,0,0.4);
-            color: white; border: none;
-            border-radius: 50%; cursor: pointer;
-            display: none;
-            align-items: center; justify-content: center;
-            font-size: 20px; z-index: 10;
-            backdrop-filter: blur(5px);
-        }
-        #music-player-bubble.expanded .player-close-btn {
-            display: flex;
-        }
+        .player-close-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: rgba(0,0,0,0.4); color: white; border: none; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 20px; z-index: 10; backdrop-filter: blur(5px); }
+        #music-player-bubble.expanded .player-close-btn { display: flex; }
         #music-player-bubble iframe { display: none; width: 100%; height: 180px; border: none; border-radius: 10px; margin-top: 12px; }
         #music-player-bubble.expanded iframe { display: block; }
         #music-player-bubble .bubble-icon { font-size: 24px; display: block; }
         #music-player-bubble.expanded .bubble-icon { display: none; }
+
+        #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        #kitty-transition-overlay.show { display: flex; }
+        #kitty-logo { width: 150px; height: auto; opacity: 0; transform: scale(0.8) rotate(-15deg); transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 25px rgba(255, 133, 162, 0.8)); }
+        #kitty-logo.show { opacity: 1; transform: scale(1) rotate(0deg); }
+        #flying-kitties-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: -1; }
+        .flying-kitty { position: absolute; height: auto; animation: fly-across linear infinite; opacity: 0.7; }
+        @keyframes fly-across { from { transform: translateX(-150px) rotate(-10deg); } to { transform: translateX(100vw) rotate(10deg); } }
+        .kitty-sticker-container { position: absolute; top: 60px; right: 15px; z-index: 0; display: none; }
+        html.kitty-theme .kitty-sticker-container { display: block; animation: sticker-fade-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both; }
+        .kitty-sticker-container img { width: 80px; height: auto; pointer-events: none; filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1)); animation: floatAnimation 4s ease-in-out infinite; }
+        @keyframes sticker-fade-in { from { opacity: 0; transform: scale(0.5) rotate(-30deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
+        @keyframes floatAnimation { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(5deg); } 100% { transform: translateY(0px); } }
+
     </style>
 </head>
 <body>
 
+<div id="kitty-transition-overlay">
+    <img id="kitty-logo" src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c52b.png" alt="Hello Kitty">
+</div>
+<div id="flying-kitties-container"></div>
+
+
 <div class="main-container">
     <div id="schedule" class="screen active">
         <div class="screen-title-bar"><h2>Lịch trình</h2></div>
+        <div class="kitty-sticker-container"></div>
         <div id="schedule-container">
             <div id="clock-time">--:--:--</div>
             <div id="clock-date">---, --/--/----</div>
@@ -409,6 +293,7 @@
 
     <div id="finance" class="screen">
         <div class="screen-title-bar"><h2>Tài chính</h2></div>
+        <div class="kitty-sticker-container"></div>
         <div class="card">
              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 style="margin: 0;">Tổng quan tháng này</h3>
@@ -439,6 +324,7 @@
                 <span>Ghi chú mới</span>
             </button>
         </div>
+        <div class="kitty-sticker-container"></div>
         <div id="notesList"></div>
     </div>
 
@@ -450,16 +336,22 @@
                 <span>Thêm mới</span>
             </button>
         </div>
+        <div class="kitty-sticker-container"></div>
         <div id="passwordsList"></div>
     </div>
 
     <div id="settings" class="screen">
         <div class="screen-title-bar"><h2>Cài đặt</h2></div>
+        <div class="kitty-sticker-container"></div>
         <div class="card">
             <h3>Giao diện & Bảo mật</h3>
             <div class="setting-item">
                 <span>Chế độ sáng</span>
                 <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()"><div class="toggle-knob"></div></div>
+            </div>
+            <div class="setting-item">
+                <span>Hello Kitty Mode</span>
+                <div class="toggle-switch" id="kitty-theme-toggle" onclick="toggleKittyTheme()"><div class="toggle-knob"></div></div>
             </div>
             <div class="setting-item">
                 <span>Khóa ứng dụng</span>
@@ -477,23 +369,23 @@
         <div id="nav-active-bubble"></div>
         
         <div class="nav-item active" onclick="goTo('schedule', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <img src="https://i.pinimg.com/originals/e8/93/a7/e893a79a25b3a619022641a99f116719.png" class="nav-icon-img" alt="Lịch trình">
             <div class="nav-label">Lịch trình</div>
         </div>
         <div class="nav-item" onclick="goTo('finance', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+             <img src="https://i.pinimg.com/originals/30/d9/38/30/d938562d2eb462c72477382f63f336.png" class="nav-icon-img" alt="Tài chính">
             <div class="nav-label">Tài chính</div>
         </div>
         <div class="nav-item" onclick="goTo('notes', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <img src="https://i.pinimg.com/originals/a0/6c/e0/a06ce0633b4952b61a3594833c829143.png" class="nav-icon-img" alt="Ghi chú">
             <div class="nav-label">Ghi chú</div>
         </div>
         <div class="nav-item" onclick="goTo('passwords', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
+            <img src="https://i.pinimg.com/originals/82/39/6b/82396b12a803e1e9759c836e522513f5.png" class="nav-icon-img" alt="Mật khẩu">
             <div class="nav-label">Mật khẩu</div>
         </div>
         <div class="nav-item" onclick="goTo('settings', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <img src="https://i.pinimg.com/originals/71/9e/4a/719e4a305e917d52a21a525d6a2f7be3.png" class="nav-icon-img" alt="Cài đặt">
             <div class="nav-label">Cài đặt</div>
         </div>
     </div>
@@ -503,130 +395,81 @@
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passcode-screen" class="screen-overlay"><div class="passcode-container"><h3 id="passcode-title"></h3><div class="passcode-dots-container" id="passcode-dots"><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div><div class="passcode-dot"></div></div><p id="passcode-error" style="color:var(--accent-red);min-height:20px;"></p><div class="passcode-keypad"><button class="keypad-btn" onclick="passcode.keyPress('1')">1</button><button class="keypad-btn" onclick="passcode.keyPress('2')">2</button><button class="keypad-btn" onclick="passcode.keyPress('3')">3</button><button class="keypad-btn" onclick="passcode.keyPress('4')">4</button><button class="keypad-btn" onclick="passcode.keyPress('5')">5</button><button class="keypad-btn" onclick="passcode.keyPress('6')">6</button><button class="keypad-btn" onclick="passcode.keyPress('7')">7</button><button class="keypad-btn" onclick="passcode.keyPress('8')">8</button><button class="keypad-btn" onclick="passcode.keyPress('9')">9</button><div></div><button class="keypad-btn" onclick="passcode.keyPress('0')">0</button><button class="keypad-btn action" onclick="passcode.backspace()">⌫</button></div></div></div>
-
-<div id="summaryModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title">Thống kê tháng trước</h2>
-        <div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div>
-        <div class="modal-actions">
-            <button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button>
-        </div>
-    </div>
-</div>
-
-<div id="music-player-bubble">
-    <span class="bubble-icon">🎵</span>
-    <button class="player-close-btn" onclick="musicPlayer.close(event)">&times;</button>
-    <iframe id="youtube-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media"></iframe>
-</div>
+<div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
+<div id="music-player-bubble"><span class="bubble-icon">🎵</span><button class="player-close-btn" onclick="musicPlayer.close(event)">&times;</button><iframe id="youtube-player" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0" allow="autoplay; encrypted-media"></iframe></div>
 
 <script type="text/javascript">
 'use strict';
 
-// =================================================================
-// 1. INITIALIZATION & SETUP
-// =================================================================
+const FLYING_KITTY_IMAGES = [ 'https://www.pngkey.com/png/full/4-48813_hello-kitty-png-sticker-hello-kitty-with-balloons.png', 'https://www.pikpng.com/pngl/b/210-2104336_hello-kitty-cupid-clipart.png', 'https://i.pinimg.com/originals/96/3a/24/963a2425e192515b6aced941217e4f3b.png', 'https://www.pngmart.com/files/22/Hello-Kitty-And-Friends-PNG-Photo.png' ];
+const SECTION_STICKER_IMAGES = [ 'https://www.pngmart.com/files/22/Hello-Kitty-PNG-File.png', 'https://i.pinimg.com/originals/e6/41/43/e641432f54a8675317a3a8d9a425332c.png', 'https://www.pngall.com/wp-content/uploads/12/Hello-Kitty-PNG-Images.png', 'https://purepng.com/public/uploads/large/purepng.com-hello-kittyhello-kittyfictional-characterjapanese-bobtail-catwhite-cat-1701528014525dzfyr.png', 'https://www.nicepng.com/png/full/8-85474_hello-kitty-clip-art-hello-kitty-png.png' ];
+
 (function init() {
     const savedTheme = localStorage.getItem('theme');
     const isLight = savedTheme === 'light';
+    const isKitty = savedTheme === 'kitty';
     if (isLight) document.documentElement.classList.add('light-theme');
+    if (isKitty) {
+        document.documentElement.classList.add('kitty-theme');
+        createFlyingKitties();
+        populateSectionStickers();
+        // MỚI: Đổi SVG thành ảnh cho nav bar khi load
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            const svg = item.querySelector('svg');
+            const img = item.querySelector('img');
+            if(svg && img) svg.style.display = 'none';
+            if(img) img.style.display = 'block';
+        });
+    } else {
+        // MỚI: Đảm bảo SVG được hiển thị nếu không phải theme Kitty
+         document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+            const svg = item.querySelector('svg');
+            const img = item.querySelector('img');
+            if(svg && img) img.style.display = 'none';
+            if(svg) svg.style.display = 'block';
+        });
+    }
     document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
+    document.getElementById('kitty-theme-toggle')?.classList.toggle('active', isKitty);
     const cardBgColor = isLight ? '255, 255, 255' : '28, 28, 30';
     document.documentElement.style.setProperty('--card-bg-rgb', cardBgColor);
-
     const isPassEnabled = localStorage.getItem('passwordProtectionEnabled') === 'true';
     document.getElementById('password-protection-toggle')?.classList.toggle('active', isPassEnabled);
 })();
 
-// YouTube Player API
 var tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
 var player;
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('youtube-player', {
-        events: { 'onReady': () => musicPlayer.playerReady = true }
-    });
-}
+function onYouTubeIframeAPIReady() { player = new YT.Player('youtube-player', { events: { 'onReady': () => musicPlayer.playerReady = true } }); }
 
-// =================================================================
-// 2. DATABASE & STATE MANAGEMENT
-// =================================================================
-const DB = {
-    get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
-    save: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
-};
-
-const scheduleData = [
-    { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
-    { 
-        dayName: 'Thứ Hai', 
-        morning: ['HĐTN - H.Nhung', 'GDTC - Tuấn', 'Tin - Ánh', 'Văn - Đ. Hoa', 'C.Nghệ - H.Vân'], 
-        afternoon: ['GDCD - Huệ', 'LS&ĐL(Địa) - H. Nhung', 'HĐTN - Tr. Hương'] 
-    },
-    { 
-        dayName: 'Thứ Ba', 
-        morning: ['T.Anh - Đ.Oanh', 'T.Anh - Đ.Oanh', 'Toán - Đ. Mai', 'Văn - Đ. Hoa', 'LS&ĐL(Địa) - H. Nhung'], 
-        afternoon: [] 
-    },
-    { 
-        dayName: 'Thứ Tư', 
-        morning: ['Toán - Đ. Mai', 'LS&ĐL (Sử) - Giang', 'KHTN(Sinh) - P. Nhưng', 'C.Nghệ - H.Vân'], 
-        afternoon: ['GDĐP - H. Vân', 'GDTC - Tuấn', 'Nghệ thuật (MT) - Thúy'] 
-    },
-    { 
-        dayName: 'Thứ Năm', 
-        morning: ['Văn - Đ. Hoa', 'Toán - Đ. Mai', 'T.Anh - Đ.Oanh', 'HĐTN - Tr.Hương', 'KHTN(Hóa) - P. Nhưng'], 
-        afternoon: [] 
-    },
-    { 
-        dayName: 'Thứ Sáu', 
-        morning: ['KHTN(Lý) - T. Thủy', 'KHTN(Hóa) - P. Nhung', 'Toán - Đ. Mai', 'Nghệ thuật(AN) - T.Nga'], 
-        afternoon: [] 
-    },
-    { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
-];
+const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
+const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['HĐTN - H.Nhung', 'GDTC - Tuấn', 'Tin - Ánh', 'Văn - Đ. Hoa', 'C.Nghệ - H.Vân'], afternoon: ['GDCD - Huệ', 'LS&ĐL(Địa) - H. Nhung', 'HĐTN - Tr. Hương'] }, { dayName: 'Thứ Ba', morning: ['T.Anh - Đ.Oanh', 'T.Anh - Đ.Oanh', 'Toán - Đ. Mai', 'Văn - Đ. Hoa', 'LS&ĐL(Địa) - H. Nhung'], afternoon: [] }, { dayName: 'Thứ Tư', morning: ['Toán - Đ. Mai', 'LS&ĐL (Sử) - Giang', 'KHTN(Sinh) - P. Nhưng', 'C.Nghệ - H.Vân'], afternoon: ['GDĐP - H. Vân', 'GDTC - Tuấn', 'Nghệ thuật (MT) - Thúy'] }, { dayName: 'Thứ Năm', morning: ['Văn - Đ. Hoa', 'Toán - Đ. Mai', 'T.Anh - Đ.Oanh', 'HĐTN - Tr.Hương', 'KHTN(Hóa) - P. Nhưng'], afternoon: [] }, { dayName: 'Thứ Sáu', morning: ['KHTN(Lý) - T. Thủy', 'KHTN(Hóa) - P. Nhung', 'Toán - Đ. Mai', 'Nghệ thuật(AN) - T.Nga'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
 let lastRenderedDay = -1, clockInterval = null;
-const scrollPositions = {}; // <-- BIẾN MỚI ĐỂ LƯU VỊ TRÍ CUỘN
+const scrollPositions = {};
 
-// =================================================================
-// 3. CORE APP LOGIC & UI
-// =================================================================
 function updateNavBubble(activeElement) {
     const bubble = document.getElementById('nav-active-bubble');
     if (!activeElement || !bubble) return;
     bubble.style.width = `${activeElement.offsetWidth}px`;
     bubble.style.left = `${activeElement.offsetLeft}px`;
 }
-
-// ▼▼▼ HÀM goTo ĐÃ ĐƯỢC CẬP NHẬT ▼▼▼
 function goTo(screenId, element) {
     if (screenId === 'passwords' && localStorage.getItem('passwordProtectionEnabled') === 'true' && sessionStorage.getItem('isAuthenticated') !== 'true') {
         passcode.prompt(() => goTo(screenId, element));
         return;
     }
-
-    // 1. LƯU LẠI vị trí cuộn của màn hình cũ
     const currentScreen = document.querySelector('.screen.active');
-    if (currentScreen) {
-        scrollPositions[currentScreen.id] = window.scrollY;
-    }
-
-    // 2. Chuyển đổi màn hình và thanh điều hướng
+    if (currentScreen) scrollPositions[currentScreen.id] = window.scrollY;
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     element.classList.add('active');
-
-    // 3. KHÔI PHỤC vị trí cuộn của màn hình mới
     const newPosition = scrollPositions[screenId] || 0;
     window.scrollTo(0, newPosition);
-    
     updateNavBubble(element);
 }
-
 function updateClockAndSchedule() {
     const now = new Date();
     const dayIndex = now.getDay();
@@ -636,66 +479,42 @@ function updateClockAndSchedule() {
         lastRenderedDay = dayIndex;
     }
 }
-
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    
     const today = scheduleData[dayIndex];
     const todayContainer = document.getElementById('today-schedule');
-
-    let todayHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3>
-            <button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button>
-        </div>
-    `;
-
+    let todayHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3><button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
     if (today.morning.length === 0 && today.afternoon.length === 0) {
         todayHTML += `<div class="schedule-item schedule-item-off">Hôm nay được nghỉ</div>`;
     } else {
         todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-        if (today.morning.length > 0 && today.afternoon.length > 0) {
-            todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
-        }
+        if (today.morning.length > 0 && today.afternoon.length > 0) { todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`; }
         todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
     }
     todayContainer.innerHTML = todayHTML;
-
     const futureContainer = document.getElementById('future-schedule');
-    futureContainer.innerHTML = `<h3>Sắp tới</h3>` +
-        [1, 2, 3, 4, 5].map(offset => {
-            const nextDayIndex = (dayIndex + offset) % 7;
-            const nextDay = scheduleData[nextDayIndex];
-            if (nextDay.dayName === 'Chủ Nhật' || nextDay.dayName === 'Thứ Bảy') return ''; 
-            const hasClasses = nextDay.morning.length + nextDay.afternoon.length > 0;
-            return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}">${nextDay.dayName} <span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
-        }).join('');
-    
+    futureContainer.innerHTML = `<h3>Sắp tới</h3>` + [1, 2, 3, 4, 5].map(offset => {
+        const nextDayIndex = (dayIndex + offset) % 7;
+        const nextDay = scheduleData[nextDayIndex];
+        if (nextDay.dayName === 'Chủ Nhật' || nextDay.dayName === 'Thứ Bảy') return '';
+        const hasClasses = nextDay.morning.length + nextDay.afternoon.length > 0;
+        return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}">${nextDay.dayName} <span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
+    }).join('');
     document.getElementById('tomorrow-details-container').style.display = 'none';
 }
-
 function toggleTomorrowSchedule() {
     const container = document.getElementById('tomorrow-details-container');
     const btn = document.getElementById('toggle-tomorrow-btn');
     const isVisible = container.style.display === 'block';
-
-    if (isVisible) {
-        container.style.display = 'none';
-        btn.textContent = 'Xem ngày mai';
-    } else {
+    if (isVisible) { container.style.display = 'none'; btn.textContent = 'Xem ngày mai'; } else {
         const now = new Date();
         const tomorrowIndex = (now.getDay() + 1) % 7;
         const tomorrow = scheduleData[tomorrowIndex];
-        
         let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
-        if (tomorrow.morning.length === 0 && tomorrow.afternoon.length === 0) {
-            tomorrowHTML += `<div class="schedule-item schedule-item-off">Ngày mai được nghỉ</div>`;
-        } else {
+        if (tomorrow.morning.length === 0 && tomorrow.afternoon.length === 0) { tomorrowHTML += `<div class="schedule-item schedule-item-off">Ngày mai được nghỉ</div>`; } else {
             tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-            if (tomorrow.morning.length > 0 && tomorrow.afternoon.length > 0) {
-                tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`;
-            }
+            if (tomorrow.morning.length > 0 && tomorrow.afternoon.length > 0) { tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Thời khóa biểu chiều</h3>`; }
             tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
         }
         container.innerHTML = tomorrowHTML;
@@ -703,19 +522,83 @@ function toggleTomorrowSchedule() {
         btn.textContent = 'Ẩn chi tiết';
     }
 }
-
-
 function toggleTheme() {
+    if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme(false);
     const isLight = document.documentElement.classList.toggle('light-theme');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     document.getElementById('theme-toggle').classList.toggle('active', isLight);
+    document.getElementById('kitty-theme-toggle').classList.remove('active');
     document.documentElement.style.setProperty('--card-bg-rgb', isLight ? '255, 255, 255' : '28, 28, 30');
     updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
+function toggleKittyTheme(shouldToggle = true) {
+    const html = document.documentElement;
+    const isKitty = html.classList.contains('kitty-theme');
+    const toggle = document.getElementById('kitty-theme-toggle');
+    if (isKitty) {
+        if (!shouldToggle) return;
+        html.classList.remove('kitty-theme');
+        removeFlyingKitties();
+        clearSectionStickers();
+        localStorage.setItem('theme', localStorage.getItem('theme-before-kitty') || 'dark');
+        html.classList.toggle('light-theme', localStorage.getItem('theme') === 'light');
+        document.getElementById('theme-toggle').classList.toggle('active', localStorage.getItem('theme') === 'light');
+        toggle.classList.remove('active');
+    } else {
+        const overlay = document.getElementById('kitty-transition-overlay');
+        const logo = document.getElementById('kitty-logo');
+        overlay.classList.add('show');
+        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        setTimeout(() => { logo.classList.add('show'); }, 500);
+        setTimeout(() => {
+            const currentTheme = html.classList.contains('light-theme') ? 'light' : 'dark';
+            localStorage.setItem('theme-before-kitty', currentTheme);
+            html.classList.remove('light-theme');
+            html.classList.add('kitty-theme');
+            localStorage.setItem('theme', 'kitty');
+            toggle.classList.add('active');
+            document.getElementById('theme-toggle').classList.remove('active');
+            createFlyingKitties();
+            populateSectionStickers();
+            updateNavBubble(document.querySelector('.nav-item.active'));
+            overlay.style.opacity = '0';
+        }, 2800);
+        setTimeout(() => {
+            overlay.classList.remove('show');
+            logo.classList.remove('show');
+        }, 3300);
+    }
+}
+function createFlyingKitties() {
+    const container = document.getElementById('flying-kitties-container');
+    container.innerHTML = '';
+    for (let i = 0; i < 10; i++) {
+        const kitty = document.createElement('img');
+        kitty.className = 'flying-kitty';
+        kitty.src = FLYING_KITTY_IMAGES[Math.floor(Math.random() * FLYING_KITTY_IMAGES.length)];
+        const randomTop = Math.random() * 90;
+        const randomDuration = Math.random() * 8 + 7;
+        const randomDelay = Math.random() * 10;
+        const randomSize = Math.random() * 40 + 40;
+        kitty.style.top = `${randomTop}vh`;
+        kitty.style.animationDuration = `${randomDuration}s`;
+        kitty.style.animationDelay = `${randomDelay}s`;
+        kitty.style.width = `${randomSize}px`;
+        container.appendChild(kitty);
+    }
+}
+function removeFlyingKitties() { document.getElementById('flying-kitties-container').innerHTML = ''; }
+function populateSectionStickers() {
+    document.querySelectorAll('.kitty-sticker-container').forEach(container => {
+        const randomImageUrl = SECTION_STICKER_IMAGES[Math.floor(Math.random() * SECTION_STICKER_IMAGES.length)];
+        container.innerHTML = `<img src="${randomImageUrl}" alt="Hello Kitty Sticker">`;
+    });
+}
+function clearSectionStickers() { document.querySelectorAll('.kitty-sticker-container').forEach(container => { container.innerHTML = ''; }); }
+
 function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
 function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
-
 function showToast(message) {
     document.querySelector('.copy-toast')?.remove();
     const toast = document.createElement('div');
@@ -723,529 +606,35 @@ function showToast(message) {
     toast.className = 'copy-toast';
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
 }
 
-// =================================================================
-// 4. FEATURE MODULES (các hàm còn lại giữ nguyên)
-// =================================================================
-
-// --- Finance ---
-function renderFinance() {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-
-    const allTxns = DB.get('txns');
-    const txns = allTxns.filter(t => {
-        const txDate = new Date(t.date);
-        return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
-    });
-
-    const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
-    const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
-    const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
-    document.getElementById('bal').textContent = format(income - expense);
-    document.getElementById('inc').textContent = format(income);
-    document.getElementById('exp').textContent = format(expense);
-    renderHistory();
-}
-
-function formatDateHeader(date) {
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    
-    const d = new Date(date);
-    today.setHours(0, 0, 0, 0);
-    yesterday.setHours(0, 0, 0, 0);
-    d.setHours(0, 0, 0, 0);
-
-    if (d.getTime() === today.getTime()) return 'Hôm nay';
-    if (d.getTime() === yesterday.getTime()) return 'Hôm qua';
-    return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
-}
-
-function renderHistory() {
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const currentYear = now.getFullYear();
-    const query = document.getElementById('search').value.toLowerCase();
-    
-    const txns = DB.get('txns')
-        .filter(t => {
-            const txDate = new Date(t.date);
-            return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear;
-        })
-        .filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query))
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    const listEl = document.getElementById('histList');
-    if (txns.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`;
-        return;
-    }
-
-    let lastDateStr = '';
-    let html = '';
-    txns.forEach(t => {
-        const txDate = new Date(t.date);
-        const dateStr = txDate.toLocaleDateString('vi-VN');
-        
-        if (dateStr !== lastDateStr) {
-            html += `<div class="date-header">${formatDateHeader(txDate)}</div>`;
-            lastDateStr = dateStr;
-        }
-
-        const isExpense = t.type === 'expense';
-        const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : '';
-
-        html += `
-            <div class="txn-item">
-                <div style="flex: 1; margin-right: 10px;">
-                    <div class="data-title">${t.category}</div>
-                    ${noteHTML}
-                </div>
-                <div class="txn-amount ${isExpense ? 'red' : 'green'}">
-                    ${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫
-                </div>
-            </div>`;
-    });
-    listEl.innerHTML = html;
-}
-
-function openTxn(type) {
-    document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập';
-    document.getElementById('type').value = type;
-    document.getElementById('amt').value = '';
-    document.getElementById('note').value = '';
-    openModal('txnModal');
-}
-function saveTxn() {
-    const amount = parseFloat(document.getElementById('amt').value);
-    if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); }
-    const txns = DB.get('txns');
-    txns.push({
-        id: 'txn_' + Date.now(), date: new Date().toISOString(), amount,
-        category: document.getElementById('cat').value,
-        note: document.getElementById('note').value.trim(),
-        type: document.getElementById('type').value,
-    });
-    DB.save('txns', txns);
-    closeModal('txnModal');
-    renderFinance();
-}
-
-function showLastMonthSummary() {
-    const now = new Date();
-    const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0);
-    const prevMonth = prevMonthDate.getMonth();
-    const prevYear = prevMonthDate.getFullYear();
-
-    const prevMonthExpenses = DB.get('txns').filter(t => {
-        const txDate = new Date(t.date);
-        return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear;
-    });
-
-    const summaryContentEl = document.getElementById('summaryContent');
-    if (prevMonthExpenses.length === 0) {
-        summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`;
-    } else {
-        const byCategory = prevMonthExpenses.reduce((acc, txn) => {
-            acc[txn.category] = (acc[txn.category] || 0) + txn.amount;
-            return acc;
-        }, {});
-
-        const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a);
-        const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0);
-        
-        let summaryHTML = sortedCategories.map(([category, amount]) => `
-            <div class="txn-item">
-                <div><div class="data-title">${category}</div></div>
-                <div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div>
-            </div>`).join('');
-        
-        summaryHTML += `
-            <div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;">
-                <div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div>
-                <div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div>
-            </div>`;
-        
-        summaryContentEl.innerHTML = summaryHTML;
-    }
-    
-    document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`;
-    openModal('summaryModal');
-}
-
-
-// --- Notes ---
-function renderNotes() {
-    const notes = DB.get('notes');
-    const listEl = document.getElementById('notesList');
-    if (notes.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có ghi chú.</p>`;
-        return;
-    }
-    listEl.innerHTML = notes.map(n => `
-        <div class="data-card" onclick="openNote('${n.id}')">
-            <div class="data-header"><span class="data-title">${n.title}</span><span class="data-subtitle">${new Date(n.date).toLocaleDateString('vi-VN')}</span></div>
-            <div class="data-content">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div>
-            <div class="data-actions"><button class="data-btn delete" onclick="event.stopPropagation(); deleteNote('${n.id}');">Xóa</button></div>
-        </div>`).join('');
-}
-function openNote(id = null) {
-    const [titleEl, contentEl, idEl, modalTitleEl] = ['noteTitle', 'noteContent', 'editNoteId', 'noteModalTitle'].map(el => document.getElementById(el));
-    if (id) {
-        const note = DB.get('notes').find(n => n.id === id);
-        modalTitleEl.textContent = "Chỉnh sửa ghi chú";
-        titleEl.value = note.title; contentEl.value = note.content; idEl.value = id;
-    } else {
-        modalTitleEl.textContent = "Tạo ghi chú mới";
-        titleEl.value = ''; contentEl.value = ''; idEl.value = '';
-    }
-    openModal('noteModal');
-}
-function saveNote() {
-    const title = document.getElementById('noteTitle').value.trim();
-    if (!title) { return alert('Vui lòng nhập tiêu đề.'); }
-    const id = document.getElementById('editNoteId').value;
-    let notes = DB.get('notes');
-    const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() };
-    if (id) {
-        const index = notes.findIndex(n => n.id === id);
-        if (index > -1) notes[index] = { ...notes[index], ...newContent };
-    } else {
-        notes.unshift({ id: 'note_' + Date.now(), ...newContent });
-    }
-    DB.save('notes', notes);
-    closeModal('noteModal');
-    renderNotes();
-}
-function deleteNote(id) {
-    if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) {
-        DB.save('notes', DB.get('notes').filter(n => n.id !== id));
-        renderNotes();
-    }
-}
-
-// --- Passwords ---
-function renderPasswords() {
-    const passwords = DB.get('passwords');
-    const listEl = document.getElementById('passwordsList');
-    if (passwords.length === 0) {
-        listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có mật khẩu.</p>`;
-        return;
-    }
-    listEl.innerHTML = passwords.map(p => `
-    <div class="data-card">
-        <div class="data-header"><span class="data-title">${p.service}</span></div>
-        <div class="password-field-container">
-            <div class="password-label">Tên đăng nhập</div>
-            <div class="password-value-container">${p.username || 'N/A'}</div>
-            <div class="password-actions" style="grid-template-columns: 1fr;">
-                <button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button>
-            </div>
-        </div>
-        <div class="password-field-container">
-            <div class="password-label">Mật khẩu</div>
-            <div class="password-value-container" id="pass-val-${p.id}">••••••••</div>
-            <div class="password-actions">
-                <button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button>
-                <button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button>
-            </div>
-        </div>
-        <div class="data-actions">
-            <button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button>
-            <button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button>
-        </div>
-    </div>`).join('');
-}
-
-function openPasswordModal(id = null) {
-    const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el));
-    if (id) {
-        const p = DB.get('passwords').find(item => item.id === id);
-        titleEl.textContent = "Chỉnh sửa mật khẩu";
-        serviceEl.value = p.service; userEl.value = p.username; passEl.value = p.password; idEl.value = id;
-    } else {
-        titleEl.textContent = "Thêm mật khẩu mới";
-        serviceEl.value = ''; userEl.value = ''; passEl.value = ''; idEl.value = '';
-    }
-    openModal('passwordModal');
-}
-function savePassword() {
-    const service = document.getElementById('passwordService').value.trim();
-    const password = document.getElementById('passwordValue').value;
-    if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); }
-    
-    let passwords = DB.get('passwords');
-    const id = document.getElementById('editPasswordId').value;
-    const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password };
-    if (id) {
-        const index = passwords.findIndex(p => p.id === id);
-        if (index > -1) passwords[index] = { ...passwords[index], ...newEntry };
-    } else {
-        passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry });
-    }
-    DB.save('passwords', passwords);
-    closeModal('passwordModal');
-    renderPasswords();
-}
-function deletePassword(id) {
-    if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) {
-        DB.save('passwords', DB.get('passwords').filter(p => p.id !== id));
-        renderPasswords();
-    }
-}
-function togglePasswordVisibility(id, button) {
-    const passField = document.getElementById(`pass-val-${id}`);
-    if (passField.textContent === '••••••••') {
-        const password = DB.get('passwords').find(item => item.id === id)?.password;
-        passField.textContent = password;
-        button.textContent = 'Ẩn';
-    } else {
-        passField.textContent = '••••••••';
-        button.textContent = 'Xem';
-    }
-}
-
-function copyToClipboard(text, type) {
-    if (!text) {
-        showToast(`Không có ${type} để sao chép!`);
-        return;
-    }
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => {
-            showToast(`Đã sao chép ${type}!`);
-        }).catch(err => {
-            showToast(`Lỗi khi sao chép!`);
-        });
-    } else {
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.top = '-9999px';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-            document.execCommand('copy');
-            showToast(`Đã sao chép ${type}!`);
-        } catch (err) {
-            showToast(`Lỗi khi sao chép!`);
-        }
-        document.body.removeChild(textArea);
-    }
-}
-
-
-// --- Settings & General ---
-function resetData() {
-    if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) {
-        localStorage.clear();
-        sessionStorage.clear();
-        alert('Đã xóa toàn bộ dữ liệu.');
-        window.location.reload();
-    }
-}
+// --- Các hàm tính năng còn lại (Finance, Notes, Passwords...) giữ nguyên ---
+function renderFinance() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const allTxns = DB.get('txns'); const txns = allTxns.filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }); const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val); document.getElementById('bal').textContent = format(income - expense); document.getElementById('inc').textContent = format(income); document.getElementById('exp').textContent = format(expense); renderHistory(); }
+function formatDateHeader(date) { const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const d = new Date(date); today.setHours(0, 0, 0, 0); yesterday.setHours(0, 0, 0, 0); d.setHours(0, 0, 0, 0); if (d.getTime() === today.getTime()) return 'Hôm nay'; if (d.getTime() === yesterday.getTime()) return 'Hôm qua'; return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }); }
+function renderHistory() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const query = document.getElementById('search').value.toLowerCase(); const txns = DB.get('txns').filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }).filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date)); const listEl = document.getElementById('histList'); if (txns.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`; return; } let lastDateStr = ''; let html = ''; txns.forEach(t => { const txDate = new Date(t.date); const dateStr = txDate.toLocaleDateString('vi-VN'); if (dateStr !== lastDateStr) { html += `<div class="date-header">${formatDateHeader(txDate)}</div>`; lastDateStr = dateStr; } const isExpense = t.type === 'expense'; const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : ''; html += `<div class="txn-item"><div style="flex: 1; margin-right: 10px;"><div class="data-title">${t.category}</div>${noteHTML}</div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`; }); listEl.innerHTML = html; }
+function openTxn(type) { document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập'; document.getElementById('type').value = type; document.getElementById('amt').value = ''; document.getElementById('note').value = ''; openModal('txnModal'); }
+function saveTxn() { const amount = parseFloat(document.getElementById('amt').value); if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); } const txns = DB.get('txns'); txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category: document.getElementById('cat').value, note: document.getElementById('note').value.trim(), type: document.getElementById('type').value, }); DB.save('txns', txns); closeModal('txnModal'); renderFinance(); }
+function showLastMonthSummary() { const now = new Date(); const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); const prevMonth = prevMonthDate.getMonth(); const prevYear = prevMonthDate.getFullYear(); const prevMonthExpenses = DB.get('txns').filter(t => { const txDate = new Date(t.date); return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear; }); const summaryContentEl = document.getElementById('summaryContent'); if (prevMonthExpenses.length === 0) { summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`; } else { const byCategory = prevMonthExpenses.reduce((acc, txn) => { acc[txn.category] = (acc[txn.category] || 0) + txn.amount; return acc; }, {}); const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a); const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0); let summaryHTML = sortedCategories.map(([category, amount]) => `<div class="txn-item"><div><div class="data-title">${category}</div></div><div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div></div>`).join(''); summaryHTML += `<div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;"><div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div><div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div></div>`; summaryContentEl.innerHTML = summaryHTML; } document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`; openModal('summaryModal'); }
+function renderNotes() { const notes = DB.get('notes'); const listEl = document.getElementById('notesList'); if (notes.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có ghi chú.</p>`; return; } listEl.innerHTML = notes.map(n => `<div class="data-card" onclick="openNote('${n.id}')"><div class="data-header"><span class="data-title">${n.title}</span><span class="data-subtitle">${new Date(n.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div><div class="data-actions"><button class="data-btn delete" onclick="event.stopPropagation(); deleteNote('${n.id}');">Xóa</button></div></div>`).join(''); }
+function openNote(id = null) { const [titleEl, contentEl, idEl, modalTitleEl] = ['noteTitle', 'noteContent', 'editNoteId', 'noteModalTitle'].map(el => document.getElementById(el)); if (id) { const note = DB.get('notes').find(n => n.id === id); modalTitleEl.textContent = "Chỉnh sửa ghi chú"; titleEl.value = note.title; contentEl.value = note.content; idEl.value = id; } else { modalTitleEl.textContent = "Tạo ghi chú mới"; titleEl.value = ''; contentEl.value = ''; idEl.value = ''; } openModal('noteModal'); }
+function saveNote() { const title = document.getElementById('noteTitle').value.trim(); if (!title) { return alert('Vui lòng nhập tiêu đề.'); } const id = document.getElementById('editNoteId').value; let notes = DB.get('notes'); const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() }; if (id) { const index = notes.findIndex(n => n.id === id); if (index > -1) notes[index] = { ...notes[index], ...newContent }; } else { notes.unshift({ id: 'note_' + Date.now(), ...newContent }); } DB.save('notes', notes); closeModal('noteModal'); renderNotes(); }
+function deleteNote(id) { if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) { DB.save('notes', DB.get('notes').filter(n => n.id !== id)); renderNotes(); } }
+function renderPasswords() { const passwords = DB.get('passwords'); const listEl = document.getElementById('passwordsList'); if (passwords.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có mật khẩu.</p>`; return; } listEl.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="password-field-container"><div class="password-label">Tên đăng nhập</div><div class="password-value-container">${p.username || 'N/A'}</div><div class="password-actions" style="grid-template-columns: 1fr;"><button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button></div></div><div class="password-field-container"><div class="password-label">Mật khẩu</div><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join(''); }
+function openPasswordModal(id = null) { const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el)); if (id) { const p = DB.get('passwords').find(item => item.id === id); titleEl.textContent = "Chỉnh sửa mật khẩu"; serviceEl.value = p.service; userEl.value = p.username; passEl.value = p.password; idEl.value = id; } else { titleEl.textContent = "Thêm mật khẩu mới"; serviceEl.value = ''; userEl.value = ''; passEl.value = ''; idEl.value = ''; } openModal('passwordModal'); }
+function savePassword() { const service = document.getElementById('passwordService').value.trim(); const password = document.getElementById('passwordValue').value; if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); } let passwords = DB.get('passwords'); const id = document.getElementById('editPasswordId').value; const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password }; if (id) { const index = passwords.findIndex(p => p.id === id); if (index > -1) passwords[index] = { ...passwords[index], ...newEntry }; } else { passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry }); } DB.save('passwords', passwords); closeModal('passwordModal'); renderPasswords(); }
+function deletePassword(id) { if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) { DB.save('passwords', DB.get('passwords').filter(p => p.id !== id)); renderPasswords(); } }
+function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); if (passField.textContent === '••••••••') { const password = DB.get('passwords').find(item => item.id === id)?.password; passField.textContent = password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; } }
+function copyToClipboard(text, type) { if (!text) { showToast(`Không có ${type} để sao chép!`); return; } if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showToast(`Đã sao chép ${type}!`); }).catch(err => { showToast(`Lỗi khi sao chép!`); }); } else { const textArea = document.createElement('textarea'); textArea.value = text; textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px'; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showToast(`Đã sao chép ${type}!`); } catch (err) { showToast(`Lỗi khi sao chép!`); } document.body.removeChild(textArea); } }
+function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
 function reloadApp() { window.location.reload(); }
+const musicPlayer = { playerReady: false, expanded: false, toggleExpand(event) { if (window.hasDragged) { window.hasDragged = false; return; } if (event.target.classList.contains('player-close-btn')) return; this.expanded = !this.expanded; const bubble = document.getElementById('music-player-bubble'); bubble.classList.toggle('expanded', this.expanded); if (this.expanded && this.playerReady) player.playVideo(); if (!this.expanded && this.playerReady) player.pauseVideo(); }, close(event) { event.stopPropagation(); const bubble = document.getElementById('music-player-bubble'); if (this.playerReady) player.stopVideo(); this.expanded = false; bubble.classList.remove('expanded'); } };
+const passcode = { PASSCODE_LENGTH: 4, currentInput: "", mode: 'verify', onSuccess: null, elements: { screen: document.getElementById('passcode-screen'), title: document.getElementById('passcode-title'), dots: document.getElementById('passcode-dots').children, error: document.getElementById('passcode-error') }, reset() { this.currentInput = ""; this.updateDots(); this.elements.error.textContent = ""; }, updateDots() { Array.from(this.elements.dots).forEach((dot, i) => dot.classList.toggle('filled', i < this.currentInput.length)); }, keyPress(key) { if (this.currentInput.length >= this.PASSCODE_LENGTH) return; this.currentInput += key; this.updateDots(); if (this.currentInput.length === this.PASSCODE_LENGTH) setTimeout(() => this.handleSubmit(), 200); }, backspace() { this.currentInput = this.currentInput.slice(0, -1); this.updateDots(); }, handleSubmit() { this.mode === 'verify' ? this.verify() : this.set(); }, show() { this.elements.screen.classList.add('show'); }, hide() { this.elements.screen.classList.remove('show'); }, prompt(onSuccess) { this.mode = 'verify'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Nhập mật mã'; this.show(); }, startSetup(onSuccess) { this.mode = 'set'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Tạo mật mã mới'; this.show(); }, verify() { if (this.currentInput === localStorage.getItem('masterPassword')) { sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không đúng."; setTimeout(() => this.reset(), 1000); } }, set() { const firstInput = this.currentInput; this.reset(); this.elements.title.textContent = 'Xác nhận mật mã'; this.handleSubmit = () => { if (this.currentInput === firstInput) { localStorage.setItem('masterPassword', this.currentInput); localStorage.setItem('passwordProtectionEnabled', 'true'); sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không khớp."; setTimeout(() => this.startSetup(this.onSuccess), 1500); } }; } };
+function togglePasswordProtection() { const toggleElement = document.getElementById('password-protection-toggle'); if (localStorage.getItem('passwordProtectionEnabled') === 'true') { passcode.prompt(() => { localStorage.setItem('passwordProtectionEnabled', 'false'); sessionStorage.removeItem('isAuthenticated'); toggleElement.classList.remove('active'); showToast('Đã tắt khóa ứng dụng.'); }); } else { passcode.startSetup(() => { toggleElement.classList.add('active'); showToast('Đã bật khóa ứng dụng.'); }); } }
 
-// --- Music Player ---
-const musicPlayer = {
-    playerReady: false,
-    expanded: false,
-    toggleExpand(event) {
-        if (window.hasDragged) {
-            window.hasDragged = false;
-            return;
-        }
-        if (event.target.classList.contains('player-close-btn')) return;
-        this.expanded = !this.expanded;
-        const bubble = document.getElementById('music-player-bubble');
-        bubble.classList.toggle('expanded', this.expanded);
-        if (this.expanded && this.playerReady) player.playVideo();
-        if (!this.expanded && this.playerReady) player.pauseVideo();
-    },
-    close(event) {
-        event.stopPropagation();
-        const bubble = document.getElementById('music-player-bubble');
-        if (this.playerReady) player.stopVideo();
-        this.expanded = false;
-        bubble.classList.remove('expanded');
-    }
-};
-
-// --- Passcode Protection ---
-const passcode = {
-    PASSCODE_LENGTH: 4, currentInput: "", mode: 'verify', onSuccess: null,
-    elements: { screen: document.getElementById('passcode-screen'), title: document.getElementById('passcode-title'), dots: document.getElementById('passcode-dots').children, error: document.getElementById('passcode-error') },
-    reset() { this.currentInput = ""; this.updateDots(); this.elements.error.textContent = ""; },
-    updateDots() { Array.from(this.elements.dots).forEach((dot, i) => dot.classList.toggle('filled', i < this.currentInput.length)); },
-    keyPress(key) {
-        if (this.currentInput.length >= this.PASSCODE_LENGTH) return;
-        this.currentInput += key; this.updateDots();
-        if (this.currentInput.length === this.PASSCODE_LENGTH) setTimeout(() => this.handleSubmit(), 200);
-    },
-    backspace() { this.currentInput = this.currentInput.slice(0, -1); this.updateDots(); },
-    handleSubmit() { this.mode === 'verify' ? this.verify() : this.set(); },
-    show() { this.elements.screen.classList.add('show'); },
-    hide() { this.elements.screen.classList.remove('show'); },
-    prompt(onSuccess) { this.mode = 'verify'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Nhập mật mã'; this.show(); },
-    startSetup(onSuccess) { this.mode = 'set'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Tạo mật mã mới'; this.show(); },
-    verify() {
-        if (this.currentInput === localStorage.getItem('masterPassword')) {
-            sessionStorage.setItem('isAuthenticated', 'true');
-            this.hide(); if (this.onSuccess) this.onSuccess();
-        } else {
-            this.elements.error.textContent = "Mật mã không đúng.";
-            setTimeout(() => this.reset(), 1000);
-        }
-    },
-    set() {
-        const firstInput = this.currentInput; this.reset();
-        this.elements.title.textContent = 'Xác nhận mật mã';
-        this.handleSubmit = () => {
-            if (this.currentInput === firstInput) {
-                localStorage.setItem('masterPassword', this.currentInput);
-                localStorage.setItem('passwordProtectionEnabled', 'true');
-                sessionStorage.setItem('isAuthenticated', 'true');
-                this.hide(); if (this.onSuccess) this.onSuccess();
-            } else {
-                this.elements.error.textContent = "Mật mã không khớp.";
-                setTimeout(() => this.startSetup(this.onSuccess), 1500);
-            }
-        };
-    }
-};
-
-function togglePasswordProtection() {
-    const toggleElement = document.getElementById('password-protection-toggle');
-    if (localStorage.getItem('passwordProtectionEnabled') === 'true') {
-        passcode.prompt(() => {
-            localStorage.setItem('passwordProtectionEnabled', 'false');
-            sessionStorage.removeItem('isAuthenticated');
-            toggleElement.classList.remove('active');
-            showToast('Đã tắt khóa ứng dụng.');
-        });
-    } else {
-        passcode.startSetup(() => {
-            toggleElement.classList.add('active');
-            showToast('Đã bật khóa ứng dụng.');
-        });
-    }
-}
-
-// =================================================================
-// 5. APP BOOTSTRAP
-// =================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    if (!clockInterval) {
-        updateClockAndSchedule();
-        clockInterval = setInterval(updateClockAndSchedule, 1000);
-    }
-    renderFinance();
-    renderNotes();
-    renderPasswords();
-    
-    const initialActiveItem = document.querySelector('.nav-item.active');
-    setTimeout(() => {
-        updateNavBubble(initialActiveItem);
-    }, 50);
-
-    setupDraggableMusicBubble();
-});
-
-window.addEventListener('resize', () => {
-    updateNavBubble(document.querySelector('.nav-item.active'));
-});
-
-function setupDraggableMusicBubble() {
-    const musicBubble = document.getElementById('music-player-bubble');
-    let isDragging = false;
-    window.hasDragged = false;
-    let startX, startY, initialLeft, initialTop;
-
-    function dragStart(e) {
-        if (musicBubble.classList.contains('expanded') || e.target.classList.contains('player-close-btn')) return;
-        
-        isDragging = true;
-        window.hasDragged = false;
-        musicBubble.style.transition = 'none';
-
-        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-        startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-        const rect = musicBubble.getBoundingClientRect();
-        musicBubble.style.right = 'auto';
-        musicBubble.style.bottom = 'auto';
-        musicBubble.style.top = `${rect.top}px`;
-        musicBubble.style.left = `${rect.left}px`;
-        
-        initialTop = musicBubble.offsetTop;
-        initialLeft = musicBubble.offsetLeft;
-        
-        musicBubble.style.cursor = 'grabbing';
-        document.body.style.userSelect = 'none';
-    }
-
-    function drag(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-        let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-
-        let dx = currentX - startX;
-        let dy = currentY - startY;
-
-        if (!window.hasDragged && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
-            window.hasDragged = true;
-        }
-
-        let newTop = initialTop + dy;
-        let newLeft = initialLeft + dx;
-        
-        const bubbleWidth = musicBubble.offsetWidth;
-        const bubbleHeight = musicBubble.offsetHeight;
-        const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight;
-
-        newLeft = Math.max(8, Math.min(newLeft, windowWidth - bubbleWidth - 8));
-        newTop = Math.max(8, Math.min(newTop, windowHeight - bubbleHeight - 8));
-
-        musicBubble.style.top = `${newTop}px`;
-        musicBubble.style.left = `${newLeft}px`;
-    }
-
-    function dragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-        musicBubble.style.cursor = 'pointer';
-        document.body.style.userSelect = 'auto';
-        
-        setTimeout(() => {
-            window.hasDragged = false;
-        }, 50);
-    }
-    
-    musicBubble.addEventListener('mousedown', dragStart);
-    musicBubble.addEventListener('touchstart', dragStart, { passive: false });
-    
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag, { passive: false });
-    
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
-
-    musicBubble.addEventListener('click', (e) => musicPlayer.toggleExpand(e));
-}
-
+document.addEventListener('DOMContentLoaded', () => { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderFinance(); renderNotes(); renderPasswords(); const initialActiveItem = document.querySelector('.nav-item.active'); setTimeout(() => { updateNavBubble(initialActiveItem); }, 50); setupDraggableMusicBubble(); });
+window.addEventListener('resize', () => { updateNavBubble(document.querySelector('.nav-item.active')); });
+function setupDraggableMusicBubble() { const musicBubble = document.getElementById('music-player-bubble'); let isDragging = false; window.hasDragged = false; let startX, startY, initialLeft, initialTop; function dragStart(e) { if (musicBubble.classList.contains('expanded') || e.target.classList.contains('player-close-btn')) return; isDragging = true; window.hasDragged = false; musicBubble.style.transition = 'none'; startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX; startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; const rect = musicBubble.getBoundingClientRect(); musicBubble.style.right = 'auto'; musicBubble.style.bottom = 'auto'; musicBubble.style.top = `${rect.top}px`; musicBubble.style.left = `${rect.left}px`; initialTop = musicBubble.offsetTop; initialLeft = musicBubble.offsetLeft; musicBubble.style.cursor = 'grabbing'; document.body.style.userSelect = 'none'; } function drag(e) { if (!isDragging) return; e.preventDefault(); let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; let dx = currentX - startX; let dy = currentY - startY; if (!window.hasDragged && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) { window.hasDragged = true; } let newTop = initialTop + dy; let newLeft = initialLeft + dx; const bubbleWidth = musicBubble.offsetWidth; const bubbleHeight = musicBubble.offsetHeight; const windowWidth = window.innerWidth; const windowHeight = window.innerHeight; newLeft = Math.max(8, Math.min(newLeft, windowWidth - bubbleWidth - 8)); newTop = Math.max(8, Math.min(newTop, windowHeight - bubbleHeight - 8)); musicBubble.style.top = `${newTop}px`; musicBubble.style.left = `${newLeft}px`; } function dragEnd() { if (!isDragging) return; isDragging = false; musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; musicBubble.style.cursor = 'pointer'; document.body.style.userSelect = 'auto'; setTimeout(() => { window.hasDragged = false; }, 50); } musicBubble.addEventListener('mousedown', dragStart); musicBubble.addEventListener('touchstart', dragStart, { passive: false }); document.addEventListener('mousemove', drag); document.addEventListener('touchmove', drag, { passive: false }); document.addEventListener('mouseup', dragEnd); document.addEventListener('touchend', dragEnd); musicBubble.addEventListener('click', (e) => musicPlayer.toggleExpand(e)); }
 </script>
 </body>
 </html>
