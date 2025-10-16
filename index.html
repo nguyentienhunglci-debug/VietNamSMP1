@@ -12,7 +12,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Pacifico&display=swap" rel="stylesheet">
 
 
     <style>
@@ -44,13 +44,10 @@
             --border-color: #e5e5ea;
         }
         
-        /* =================================================================
-           MỚI: Cập nhật biến màu cho theme Hello Kitty
-           ================================================================= */
         html.kitty-theme {
             --bg-primary: #fff0f5; /* Lavender Blush */
             --bg-secondary: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.9); /* Tăng độ trong suốt */
+            --card-bg: rgba(255, 255, 255, 0.9); 
             --text-primary: #5c3c54; /* Dark purple */
             --text-secondary: #d17fb4; /* Muted pink */
             --accent-primary: #ff85a2; /* Bright Pink */
@@ -82,14 +79,12 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* MỚI: Thêm hình nền cho theme Hello Kitty */
         html.kitty-theme body {
             background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
         }
-
 
         /* =================================================================
            3. CORE LAYOUT & COMPONENTS
@@ -125,25 +120,9 @@
         html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
 
         .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
-        
-        /* MỚI: CSS cho icon ảnh thay vì SVG */
-        .nav-item .nav-icon-img {
-            width: 28px;
-            height: 28px;
-            margin: 0 auto 4px auto;
-            opacity: 0.7;
-            transition: opacity 0.3s ease, filter 0.3s ease;
-        }
         .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
-        
         .nav-item .nav-label { font-size: 11px; font-weight: 500; }
-        .nav-item.active .nav-label { color: var(--accent-primary); }
-        .nav-item.active .nav-icon-img {
-            opacity: 1;
-            filter: drop-shadow(0 0 4px var(--accent-primary));
-        }
-        .nav-item.active .nav-icon { color: var(--accent-primary); }
-
+        .nav-item.active { color: var(--accent-primary); }
         .nav-item:active { transform: scale(0.92); }
 
         #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-primary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
@@ -257,11 +236,19 @@
 
         #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease-in-out; }
         #kitty-transition-overlay.show { display: flex; }
-        #kitty-logo { width: 150px; height: auto; opacity: 0; transform: scale(0.8) rotate(-15deg); transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 0 25px rgba(255, 133, 162, 0.8)); }
-        #kitty-logo.show { opacity: 1; transform: scale(1) rotate(0deg); }
-        #flying-kitties-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: -1; }
-        .flying-kitty { position: absolute; height: auto; animation: fly-across linear infinite; opacity: 0.7; }
-        @keyframes fly-across { from { transform: translateX(-150px) rotate(-10deg); } to { transform: translateX(100vw) rotate(10deg); } }
+        
+        /* CSS cho chữ "Hello Kitty" trong hiệu ứng chuyển cảnh */
+        #kitty-logo {
+            font-family: 'Pacifico', cursive;
+            font-size: 6vw; /* Kích thước chữ linh hoạt */
+            color: #ff85a2;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #kitty-logo.show { opacity: 1; transform: scale(1); }
+
         .kitty-sticker-container { position: absolute; top: 60px; right: 15px; z-index: 0; display: none; }
         html.kitty-theme .kitty-sticker-container { display: block; animation: sticker-fade-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s both; }
         .kitty-sticker-container img { width: 80px; height: auto; pointer-events: none; filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.1)); animation: floatAnimation 4s ease-in-out infinite; }
@@ -273,10 +260,8 @@
 <body>
 
 <div id="kitty-transition-overlay">
-    <img id="kitty-logo" src="https://assets.stickpng.com/images/580b57fcd9996e24bc43c52b.png" alt="Hello Kitty">
+    <h1 id="kitty-logo">Hello Kitty</h1>
 </div>
-<div id="flying-kitties-container"></div>
-
 
 <div class="main-container">
     <div id="schedule" class="screen active">
@@ -367,25 +352,24 @@
 
     <div class="bottom-nav">
         <div id="nav-active-bubble"></div>
-        
         <div class="nav-item active" onclick="goTo('schedule', this)">
-            <img src="https://i.pinimg.com/originals/e8/93/a7/e893a79a25b3a619022641a99f116719.png" class="nav-icon-img" alt="Lịch trình">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             <div class="nav-label">Lịch trình</div>
         </div>
         <div class="nav-item" onclick="goTo('finance', this)">
-             <img src="https://i.pinimg.com/originals/30/d9/38/30/d938562d2eb462c72477382f63f336.png" class="nav-icon-img" alt="Tài chính">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             <div class="nav-label">Tài chính</div>
         </div>
         <div class="nav-item" onclick="goTo('notes', this)">
-            <img src="https://i.pinimg.com/originals/a0/6c/e0/a06ce0633b4952b61a3594833c829143.png" class="nav-icon-img" alt="Ghi chú">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             <div class="nav-label">Ghi chú</div>
         </div>
         <div class="nav-item" onclick="goTo('passwords', this)">
-            <img src="https://i.pinimg.com/originals/82/39/6b/82396b12a803e1e9759c836e522513f5.png" class="nav-icon-img" alt="Mật khẩu">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
             <div class="nav-label">Mật khẩu</div>
         </div>
         <div class="nav-item" onclick="goTo('settings', this)">
-            <img src="https://i.pinimg.com/originals/71/9e/4a/719e4a305e917d52a21a525d6a2f7be3.png" class="nav-icon-img" alt="Cài đặt">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             <div class="nav-label">Cài đặt</div>
         </div>
     </div>
@@ -401,8 +385,8 @@
 <script type="text/javascript">
 'use strict';
 
-const FLYING_KITTY_IMAGES = [ 'https://www.pngkey.com/png/full/4-48813_hello-kitty-png-sticker-hello-kitty-with-balloons.png', 'https://www.pikpng.com/pngl/b/210-2104336_hello-kitty-cupid-clipart.png', 'https://i.pinimg.com/originals/96/3a/24/963a2425e192515b6aced941217e4f3b.png', 'https://www.pngmart.com/files/22/Hello-Kitty-And-Friends-PNG-Photo.png' ];
-const SECTION_STICKER_IMAGES = [ 'https://www.pngmart.com/files/22/Hello-Kitty-PNG-File.png', 'https://i.pinimg.com/originals/e6/41/43/e641432f54a8675317a3a8d9a425332c.png', 'https://www.pngall.com/wp-content/uploads/12/Hello-Kitty-PNG-Images.png', 'https://purepng.com/public/uploads/large/purepng.com-hello-kittyhello-kittyfictional-characterjapanese-bobtail-catwhite-cat-1701528014525dzfyr.png', 'https://www.nicepng.com/png/full/8-85474_hello-kitty-clip-art-hello-kitty-png.png' ];
+// Thay thế mảng hình ảnh bằng một hình duy nhất
+const SECTION_STICKER_IMAGES = [ 'https://i.pinimg.com/originals/5c/2a/3b/5c2a3b9f6a7d5f6e80b4356a6e1398c2.png' ];
 
 (function init() {
     const savedTheme = localStorage.getItem('theme');
@@ -411,23 +395,7 @@ const SECTION_STICKER_IMAGES = [ 'https://www.pngmart.com/files/22/Hello-Kitty-P
     if (isLight) document.documentElement.classList.add('light-theme');
     if (isKitty) {
         document.documentElement.classList.add('kitty-theme');
-        createFlyingKitties();
         populateSectionStickers();
-        // MỚI: Đổi SVG thành ảnh cho nav bar khi load
-        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-            const svg = item.querySelector('svg');
-            const img = item.querySelector('img');
-            if(svg && img) svg.style.display = 'none';
-            if(img) img.style.display = 'block';
-        });
-    } else {
-        // MỚI: Đảm bảo SVG được hiển thị nếu không phải theme Kitty
-         document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
-            const svg = item.querySelector('svg');
-            const img = item.querySelector('img');
-            if(svg && img) img.style.display = 'none';
-            if(svg) svg.style.display = 'block';
-        });
     }
     document.getElementById('theme-toggle')?.classList.toggle('active', isLight);
     document.getElementById('kitty-theme-toggle')?.classList.toggle('active', isKitty);
@@ -523,7 +491,7 @@ function toggleTomorrowSchedule() {
     }
 }
 function toggleTheme() {
-    if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme(false);
+    if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme();
     const isLight = document.documentElement.classList.toggle('light-theme');
     localStorage.setItem('theme', isLight ? 'light' : 'dark');
     document.getElementById('theme-toggle').classList.toggle('active', isLight);
@@ -532,26 +500,32 @@ function toggleTheme() {
     updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
-function toggleKittyTheme(shouldToggle = true) {
+// *** HÀM ĐÃ ĐƯỢC CẬP NHẬT ĐỂ MƯỢT HƠN ***
+function toggleKittyTheme() {
     const html = document.documentElement;
     const isKitty = html.classList.contains('kitty-theme');
     const toggle = document.getElementById('kitty-theme-toggle');
-    if (isKitty) {
-        if (!shouldToggle) return;
-        html.classList.remove('kitty-theme');
-        removeFlyingKitties();
-        clearSectionStickers();
-        localStorage.setItem('theme', localStorage.getItem('theme-before-kitty') || 'dark');
-        html.classList.toggle('light-theme', localStorage.getItem('theme') === 'light');
-        document.getElementById('theme-toggle').classList.toggle('active', localStorage.getItem('theme') === 'light');
-        toggle.classList.remove('active');
-    } else {
-        const overlay = document.getElementById('kitty-transition-overlay');
-        const logo = document.getElementById('kitty-logo');
-        overlay.classList.add('show');
-        setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-        setTimeout(() => { logo.classList.add('show'); }, 500);
-        setTimeout(() => {
+    const overlay = document.getElementById('kitty-transition-overlay');
+    const logo = document.getElementById('kitty-logo');
+
+    // Hiện màn hình đen
+    overlay.classList.add('show');
+    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+
+    // Hiện logo
+    setTimeout(() => { logo.classList.add('show'); }, 500);
+
+    // Sau khi logo hiện xong, thực hiện đổi theme
+    setTimeout(() => {
+        if (isKitty) {
+            html.classList.remove('kitty-theme');
+            clearSectionStickers();
+            const prevTheme = localStorage.getItem('theme-before-kitty') || 'dark';
+            localStorage.setItem('theme', prevTheme);
+            if (prevTheme === 'light') html.classList.add('light-theme');
+            document.getElementById('theme-toggle').classList.toggle('active', prevTheme === 'light');
+            toggle.classList.remove('active');
+        } else {
             const currentTheme = html.classList.contains('light-theme') ? 'light' : 'dark';
             localStorage.setItem('theme-before-kitty', currentTheme);
             html.classList.remove('light-theme');
@@ -559,40 +533,30 @@ function toggleKittyTheme(shouldToggle = true) {
             localStorage.setItem('theme', 'kitty');
             toggle.classList.add('active');
             document.getElementById('theme-toggle').classList.remove('active');
-            createFlyingKitties();
             populateSectionStickers();
-            updateNavBubble(document.querySelector('.nav-item.active'));
-            overlay.style.opacity = '0';
-        }, 2800);
-        setTimeout(() => {
-            overlay.classList.remove('show');
-            logo.classList.remove('show');
-        }, 3300);
-    }
+        }
+        // Cập nhật lại thanh điều hướng sau khi đổi theme
+        updateNavBubble(document.querySelector('.nav-item.active'));
+    }, 2000);
+
+    // Bắt đầu ẩn màn hình đen
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+    }, 2500);
+
+    // Dọn dẹp sau khi hiệu ứng kết thúc
+    setTimeout(() => {
+        overlay.classList.remove('show');
+        logo.classList.remove('show');
+    }, 3000); // 2500ms + 500ms (thời gian transition)
 }
-function createFlyingKitties() {
-    const container = document.getElementById('flying-kitties-container');
-    container.innerHTML = '';
-    for (let i = 0; i < 10; i++) {
-        const kitty = document.createElement('img');
-        kitty.className = 'flying-kitty';
-        kitty.src = FLYING_KITTY_IMAGES[Math.floor(Math.random() * FLYING_KITTY_IMAGES.length)];
-        const randomTop = Math.random() * 90;
-        const randomDuration = Math.random() * 8 + 7;
-        const randomDelay = Math.random() * 10;
-        const randomSize = Math.random() * 40 + 40;
-        kitty.style.top = `${randomTop}vh`;
-        kitty.style.animationDuration = `${randomDuration}s`;
-        kitty.style.animationDelay = `${randomDelay}s`;
-        kitty.style.width = `${randomSize}px`;
-        container.appendChild(kitty);
-    }
-}
-function removeFlyingKitties() { document.getElementById('flying-kitties-container').innerHTML = ''; }
+
 function populateSectionStickers() {
     document.querySelectorAll('.kitty-sticker-container').forEach(container => {
-        const randomImageUrl = SECTION_STICKER_IMAGES[Math.floor(Math.random() * SECTION_STICKER_IMAGES.length)];
-        container.innerHTML = `<img src="${randomImageUrl}" alt="Hello Kitty Sticker">`;
+        if(container.innerHTML === '') { // Chỉ thêm nếu chưa có
+            const randomImageUrl = SECTION_STICKER_IMAGES[Math.floor(Math.random() * SECTION_STICKER_IMAGES.length)];
+            container.innerHTML = `<img src="${randomImageUrl}" alt="Hello Kitty Sticker">`;
+        }
     });
 }
 function clearSectionStickers() { document.querySelectorAll('.kitty-sticker-container').forEach(container => { container.innerHTML = ''; }); }
@@ -609,7 +573,6 @@ function showToast(message) {
     setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
 }
 
-// --- Các hàm tính năng còn lại (Finance, Notes, Passwords...) giữ nguyên ---
 function renderFinance() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const allTxns = DB.get('txns'); const txns = allTxns.filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }); const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val); document.getElementById('bal').textContent = format(income - expense); document.getElementById('inc').textContent = format(income); document.getElementById('exp').textContent = format(expense); renderHistory(); }
 function formatDateHeader(date) { const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const d = new Date(date); today.setHours(0, 0, 0, 0); yesterday.setHours(0, 0, 0, 0); d.setHours(0, 0, 0, 0); if (d.getTime() === today.getTime()) return 'Hôm nay'; if (d.getTime() === yesterday.getTime()) return 'Hôm qua'; return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }); }
 function renderHistory() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const query = document.getElementById('search').value.toLowerCase(); const txns = DB.get('txns').filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }).filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date)); const listEl = document.getElementById('histList'); if (txns.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`; return; } let lastDateStr = ''; let html = ''; txns.forEach(t => { const txDate = new Date(t.date); const dateStr = txDate.toLocaleDateString('vi-VN'); if (dateStr !== lastDateStr) { html += `<div class="date-header">${formatDateHeader(txDate)}</div>`; lastDateStr = dateStr; } const isExpense = t.type === 'expense'; const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : ''; html += `<div class="txn-item"><div style="flex: 1; margin-right: 10px;"><div class="data-title">${t.category}</div>${noteHTML}</div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`; }); listEl.innerHTML = html; }
