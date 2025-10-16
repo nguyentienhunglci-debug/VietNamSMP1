@@ -234,15 +234,28 @@
         #music-player-bubble .bubble-icon { font-size: 24px; display: block; }
         #music-player-bubble.expanded .bubble-icon { display: none; }
 
-        #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s ease-in-out; }
-        #kitty-transition-overlay.show { display: flex; }
+        #kitty-transition-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: #111;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out; 
+            pointer-events: none;
+        }
+        #kitty-transition-overlay.show {
+            display: flex;
+            pointer-events: auto;
+        }
         
-        /* CSS cho chữ "Hello Kitty" trong hiệu ứng chuyển cảnh */
         #kitty-logo {
             font-family: 'Pacifico', cursive;
-            font-size: 6vw; /* Kích thước chữ linh hoạt */
+            font-size: 15vw;
             color: #ff85a2;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            text-shadow: 3px 3px 8px rgba(255, 105, 180, 0.5);
             opacity: 0;
             transform: scale(0.8);
             transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -255,9 +268,38 @@
         @keyframes sticker-fade-in { from { opacity: 0; transform: scale(0.5) rotate(-30deg); } to { opacity: 1; transform: scale(1) rotate(0deg); } }
         @keyframes floatAnimation { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px) rotate(5deg); } 100% { transform: translateY(0px); } }
 
+        #kitty-float-container {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            display: none;
+        }
+        html.kitty-theme #kitty-float-container {
+            display: block;
+        }
+        .floating-kitty {
+            position: absolute;
+            left: -100px;
+            opacity: 0.7;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+            animation-name: floatAcross;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes floatAcross {
+            0% { transform: translateX(0) translateY(0vh) rotate(0deg); left: -100px; }
+            50% { transform: translateX(50vw) translateY(-5vh) rotate(180deg); }
+            100% { transform: translateX(100vw) translateY(5vh) rotate(360deg); left: 100vw; }
+        }
+
     </style>
 </head>
 <body>
+
+<div id="kitty-float-container"></div>
 
 <div id="kitty-transition-overlay">
     <h1 id="kitty-logo">Hello Kitty</h1>
@@ -385,8 +427,10 @@
 <script type="text/javascript">
 'use strict';
 
-// Thay thế mảng hình ảnh bằng một hình duy nhất
+// *** ĐÃ CẬP NHẬT: Link ảnh mới ổn định hơn ***
 const SECTION_STICKER_IMAGES = [ 'https://i.pinimg.com/originals/5c/2a/3b/5c2a3b9f6a7d5f6e80b4356a6e1398c2.png' ];
+const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
+
 
 (function init() {
     const savedTheme = localStorage.getItem('theme');
@@ -500,7 +544,6 @@ function toggleTheme() {
     updateNavBubble(document.querySelector('.nav-item.active'));
 }
 
-// *** HÀM ĐÃ ĐƯỢC CẬP NHẬT ĐỂ MƯỢT HƠN ***
 function toggleKittyTheme() {
     const html = document.documentElement;
     const isKitty = html.classList.contains('kitty-theme');
@@ -508,14 +551,10 @@ function toggleKittyTheme() {
     const overlay = document.getElementById('kitty-transition-overlay');
     const logo = document.getElementById('kitty-logo');
 
-    // Hiện màn hình đen
     overlay.classList.add('show');
     setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-
-    // Hiện logo
     setTimeout(() => { logo.classList.add('show'); }, 500);
 
-    // Sau khi logo hiện xong, thực hiện đổi theme
     setTimeout(() => {
         if (isKitty) {
             html.classList.remove('kitty-theme');
@@ -535,25 +574,22 @@ function toggleKittyTheme() {
             document.getElementById('theme-toggle').classList.remove('active');
             populateSectionStickers();
         }
-        // Cập nhật lại thanh điều hướng sau khi đổi theme
         updateNavBubble(document.querySelector('.nav-item.active'));
     }, 2000);
 
-    // Bắt đầu ẩn màn hình đen
     setTimeout(() => {
         overlay.style.opacity = '0';
     }, 2500);
 
-    // Dọn dẹp sau khi hiệu ứng kết thúc
     setTimeout(() => {
         overlay.classList.remove('show');
         logo.classList.remove('show');
-    }, 3000); // 2500ms + 500ms (thời gian transition)
+    }, 3000);
 }
 
 function populateSectionStickers() {
     document.querySelectorAll('.kitty-sticker-container').forEach(container => {
-        if(container.innerHTML === '') { // Chỉ thêm nếu chưa có
+        if(container.innerHTML === '') {
             const randomImageUrl = SECTION_STICKER_IMAGES[Math.floor(Math.random() * SECTION_STICKER_IMAGES.length)];
             container.innerHTML = `<img src="${randomImageUrl}" alt="Hello Kitty Sticker">`;
         }
@@ -595,7 +631,38 @@ const musicPlayer = { playerReady: false, expanded: false, toggleExpand(event) {
 const passcode = { PASSCODE_LENGTH: 4, currentInput: "", mode: 'verify', onSuccess: null, elements: { screen: document.getElementById('passcode-screen'), title: document.getElementById('passcode-title'), dots: document.getElementById('passcode-dots').children, error: document.getElementById('passcode-error') }, reset() { this.currentInput = ""; this.updateDots(); this.elements.error.textContent = ""; }, updateDots() { Array.from(this.elements.dots).forEach((dot, i) => dot.classList.toggle('filled', i < this.currentInput.length)); }, keyPress(key) { if (this.currentInput.length >= this.PASSCODE_LENGTH) return; this.currentInput += key; this.updateDots(); if (this.currentInput.length === this.PASSCODE_LENGTH) setTimeout(() => this.handleSubmit(), 200); }, backspace() { this.currentInput = this.currentInput.slice(0, -1); this.updateDots(); }, handleSubmit() { this.mode === 'verify' ? this.verify() : this.set(); }, show() { this.elements.screen.classList.add('show'); }, hide() { this.elements.screen.classList.remove('show'); }, prompt(onSuccess) { this.mode = 'verify'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Nhập mật mã'; this.show(); }, startSetup(onSuccess) { this.mode = 'set'; this.onSuccess = onSuccess; this.reset(); this.elements.title.textContent = 'Tạo mật mã mới'; this.show(); }, verify() { if (this.currentInput === localStorage.getItem('masterPassword')) { sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không đúng."; setTimeout(() => this.reset(), 1000); } }, set() { const firstInput = this.currentInput; this.reset(); this.elements.title.textContent = 'Xác nhận mật mã'; this.handleSubmit = () => { if (this.currentInput === firstInput) { localStorage.setItem('masterPassword', this.currentInput); localStorage.setItem('passwordProtectionEnabled', 'true'); sessionStorage.setItem('isAuthenticated', 'true'); this.hide(); if (this.onSuccess) this.onSuccess(); } else { this.elements.error.textContent = "Mật mã không khớp."; setTimeout(() => this.startSetup(this.onSuccess), 1500); } }; } };
 function togglePasswordProtection() { const toggleElement = document.getElementById('password-protection-toggle'); if (localStorage.getItem('passwordProtectionEnabled') === 'true') { passcode.prompt(() => { localStorage.setItem('passwordProtectionEnabled', 'false'); sessionStorage.removeItem('isAuthenticated'); toggleElement.classList.remove('active'); showToast('Đã tắt khóa ứng dụng.'); }); } else { passcode.startSetup(() => { toggleElement.classList.add('active'); showToast('Đã bật khóa ứng dụng.'); }); } }
 
-document.addEventListener('DOMContentLoaded', () => { if (!clockInterval) { updateClockAndSchedule(); clockInterval = setInterval(updateClockAndSchedule, 1000); } renderFinance(); renderNotes(); renderPasswords(); const initialActiveItem = document.querySelector('.nav-item.active'); setTimeout(() => { updateNavBubble(initialActiveItem); }, 50); setupDraggableMusicBubble(); });
+function createFloatingKitties() {
+    const container = document.getElementById('kitty-float-container');
+    if (!container || container.children.length > 0) return;
+    const NUM_KITTIES = 15;
+    
+    for (let i = 0; i < NUM_KITTIES; i++) {
+        const kitty = document.createElement('img');
+        kitty.src = FLOATING_KITTY_ICON;
+        kitty.className = 'floating-kitty';
+        kitty.style.width = `${Math.random() * 40 + 20}px`;
+        kitty.style.top = `${Math.random() * 100}%`;
+        kitty.style.animationDuration = `${Math.random() * 10 + 8}s`;
+        kitty.style.animationDelay = `${Math.random() * 10}s`;
+        container.appendChild(kitty);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => { 
+    if (!clockInterval) { 
+        updateClockAndSchedule(); 
+        clockInterval = setInterval(updateClockAndSchedule, 1000); 
+    } 
+    renderFinance(); 
+    renderNotes(); 
+    renderPasswords(); 
+    createFloatingKitties();
+    const initialActiveItem = document.querySelector('.nav-item.active'); 
+    setTimeout(() => { 
+        updateNavBubble(initialActiveItem); 
+    }, 50); 
+    setupDraggableMusicBubble(); 
+});
 window.addEventListener('resize', () => { updateNavBubble(document.querySelector('.nav-item.active')); });
 function setupDraggableMusicBubble() { const musicBubble = document.getElementById('music-player-bubble'); let isDragging = false; window.hasDragged = false; let startX, startY, initialLeft, initialTop; function dragStart(e) { if (musicBubble.classList.contains('expanded') || e.target.classList.contains('player-close-btn')) return; isDragging = true; window.hasDragged = false; musicBubble.style.transition = 'none'; startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX; startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY; const rect = musicBubble.getBoundingClientRect(); musicBubble.style.right = 'auto'; musicBubble.style.bottom = 'auto'; musicBubble.style.top = `${rect.top}px`; musicBubble.style.left = `${rect.left}px`; initialTop = musicBubble.offsetTop; initialLeft = musicBubble.offsetLeft; musicBubble.style.cursor = 'grabbing'; document.body.style.userSelect = 'none'; } function drag(e) { if (!isDragging) return; e.preventDefault(); let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; let dx = currentX - startX; let dy = currentY - startY; if (!window.hasDragged && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) { window.hasDragged = true; } let newTop = initialTop + dy; let newLeft = initialLeft + dx; const bubbleWidth = musicBubble.offsetWidth; const bubbleHeight = musicBubble.offsetHeight; const windowWidth = window.innerWidth; const windowHeight = window.innerHeight; newLeft = Math.max(8, Math.min(newLeft, windowWidth - bubbleWidth - 8)); newTop = Math.max(8, Math.min(newTop, windowHeight - bubbleHeight - 8)); musicBubble.style.top = `${newTop}px`; musicBubble.style.left = `${newLeft}px`; } function dragEnd() { if (!isDragging) return; isDragging = false; musicBubble.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'; musicBubble.style.cursor = 'pointer'; document.body.style.userSelect = 'auto'; setTimeout(() => { window.hasDragged = false; }, 50); } musicBubble.addEventListener('mousedown', dragStart); musicBubble.addEventListener('touchstart', dragStart, { passive: false }); document.addEventListener('mousemove', drag); document.addEventListener('touchmove', drag, { passive: false }); document.addEventListener('mouseup', dragEnd); document.addEventListener('touchend', dragEnd); musicBubble.addEventListener('click', (e) => musicPlayer.toggleExpand(e)); }
 </script>
