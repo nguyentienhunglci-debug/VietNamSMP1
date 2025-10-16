@@ -26,6 +26,7 @@
             --text-primary: #f5f5f7;
             --text-secondary: #8e8e93;
             --accent-primary: #0a84ff;
+            --accent-primary-rgb: 10, 132, 255;
             --accent-red: #ff453a;
             --accent-green: #30d158;
             --accent-orange: #ff9f0a;
@@ -41,6 +42,7 @@
             --text-primary: #000000;
             --text-secondary: #636366;
             --accent-primary: #007aff;
+            --accent-primary-rgb: 0, 122, 255;
             --border-color: #e5e5ea;
         }
         
@@ -51,6 +53,7 @@
             --text-primary: #5c3c54; /* Dark purple */
             --text-secondary: #d17fb4; /* Muted pink */
             --accent-primary: #ff85a2; /* Bright Pink */
+            --accent-primary-rgb: 255, 133, 162;
             --accent-red: #f75d72;
             --accent-green: #61d3a3;
             --accent-orange: #ffb480;
@@ -318,6 +321,123 @@
             100% { transform: translateX(100vw) translateY(5vh) rotate(360deg); left: 100vw; }
         }
 
+        /* Styles for Music Bubble */
+        #music-bubble-container {
+            position: fixed;
+            bottom: calc(100px + env(safe-area-inset-bottom));
+            right: 16px;
+            width: 320px;
+            height: 180px;
+            border-radius: 12px;
+            background-color: var(--bg-secondary);
+            /* *** THAY ĐỔI: Thêm viền phát sáng và shadow *** */
+            box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 2px rgba(var(--accent-primary-rgb), 0.5);
+            overflow: hidden;
+            resize: both;
+            min-width: 60px;
+            min-height: 60px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            /* *** THAY ĐỔI: Transition cho tất cả thuộc tính *** */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: grab;
+            user-select: none;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        #music-bubble-container.minimized {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        #music-bubble-container.hidden {
+            display: none;
+        }
+
+        #music-bubble-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        #music-bubble-container.minimized #music-bubble-iframe {
+            width: 150%;
+            height: 150%;
+            margin-left: -25%;
+            margin-top: -25%;
+            pointer-events: none;
+        }
+
+        .music-bubble-controls {
+            position: absolute;
+            top: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
+            right: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
+            display: flex;
+            gap: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
+            z-index: 100;
+        }
+        
+        /* *** THAY ĐỔI: Nút điều khiển to và rõ ràng hơn *** */
+        .music-bubble-controls button {
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            line-height: 1;
+            padding: 0;
+            font-family: var(--font-family);
+        }
+
+        .music-bubble-controls button:hover {
+            background-color: rgba(0,0,0,0.7);
+        }
+        .music-bubble-controls button:active {
+            transform: scale(0.9);
+        }
+
+        #music-bubble-container.minimized .music-bubble-controls {
+            display: none;
+        }
+
+        #music-bubble-toggle-btn {
+            position: fixed;
+            bottom: calc(100px + env(safe-area-inset-bottom));
+            right: 16px;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #music-bubble-toggle-btn:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -430,6 +550,18 @@
         </div>
     </div>
 </div>
+
+<div id="music-bubble-container" class="hidden">
+    <div class="music-bubble-controls">
+        <button onclick="toggleMinimizeMusicBubble()">-</button>
+        <button onclick="toggleMusicBubble()">&times;</button>
+    </div>
+    <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<button id="music-bubble-toggle-btn" onclick="toggleMusicBubble()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14M3 6v14a2 2 0 002 2h4.5a2 2 0 002-2V6.414A2 2 0 0010.414 5H5a2 2 0 00-2 2z"></path></svg>
+</button>
 
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
@@ -630,6 +762,148 @@ function createFloatingKitties() {
     }
 }
 
+// Music Bubble Functions
+let player; // YouTube IFrame Player API object
+let isMusicBubbleMinimized = false;
+let isMusicBubbleHidden = true;
+
+const musicBubbleContainer = document.getElementById('music-bubble-container');
+const musicBubbleToggleBtn = document.getElementById('music-bubble-toggle-btn');
+const musicBubbleIframe = document.getElementById('music-bubble-iframe');
+
+function toggleMusicBubble() {
+    isMusicBubbleHidden = !isMusicBubbleHidden;
+    musicBubbleContainer.classList.toggle('hidden', isMusicBubbleHidden);
+    musicBubbleToggleBtn.style.display = isMusicBubbleHidden ? 'flex' : 'none';
+
+    if (!isMusicBubbleHidden) {
+        musicBubbleContainer.classList.remove('minimized');
+        isMusicBubbleMinimized = false;
+        if (player && player.getPlayerState() !== 1) { // 1 means playing
+             player.playVideo();
+        }
+    } else {
+        if (player) {
+            player.playVideo();
+        }
+    }
+}
+
+function toggleMinimizeMusicBubble() {
+    isMusicBubbleMinimized = !isMusicBubbleMinimized;
+    musicBubbleContainer.classList.toggle('minimized', isMusicBubbleMinimized);
+    musicBubbleContainer.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
+    if (isMusicBubbleMinimized) {
+        if (player) player.playVideo();
+    } else {
+        if (player) player.playVideo();
+    }
+}
+
+function makeDraggable(element) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let isDragging = false;
+
+    if (element) {
+        element.onmousedown = dragMouseDown;
+        element.ontouchstart = dragTouchDown;
+    }
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        if (isMusicBubbleMinimized) {
+            toggleMinimizeMusicBubble();
+            return;
+        }
+        e.preventDefault();
+        isDragging = true;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        element.style.cursor = 'grabbing';
+    }
+
+    function dragTouchDown(e) {
+        e = e || window.event;
+        if (isMusicBubbleMinimized) {
+            toggleMinimizeMusicBubble();
+            return;
+        }
+        // e.preventDefault(); // Commented out to allow scrolling on touch devices when not dragging
+        isDragging = true;
+        pos3 = e.touches[0].clientX;
+        pos4 = e.touches[0].clientY;
+        document.ontouchend = closeDragElement;
+        document.ontouchmove = elementDragTouch;
+        element.style.cursor = 'grabbing';
+    }
+
+    function elementDrag(e) {
+        if (!isDragging) return;
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+        const bodyRect = document.body.getBoundingClientRect();
+        const elemRect = element.getBoundingClientRect();
+        if (elemRect.left < 0) element.style.left = '0px';
+        if (elemRect.top < 0) element.style.top = '0px';
+        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
+        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
+    }
+
+    function elementDragTouch(e) {
+        if (!isDragging) return;
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.touches[0].clientX;
+        pos2 = pos4 - e.touches[0].clientY;
+        pos3 = e.touches[0].clientX;
+        pos4 = e.touches[0].clientY;
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+        const bodyRect = document.body.getBoundingClientRect();
+        const elemRect = element.getBoundingClientRect();
+        if (elemRect.left < 0) element.style.left = '0px';
+        if (elemRect.top < 0) element.style.top = '0px';
+        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
+        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
+    }
+
+    function closeDragElement() {
+        isDragging = false;
+        document.onmouseup = null;
+        document.onmousemove = null;
+        document.ontouchend = null;
+        document.ontouchmove = null;
+        element.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
+    }
+}
+
+// Load YouTube IFrame Player API asynchronously
+function onYouTubeIframeAPIReady() {
+    player = new YT.Player('music-bubble-iframe', {
+        events: {
+            'onReady': onPlayerReady
+        }
+    });
+}
+
+function onPlayerReady(event) {
+    event.target.playVideo();
+}
+
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+const firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
 document.addEventListener('DOMContentLoaded', () => { 
     if (!clockInterval) { 
         updateClockAndSchedule(); 
@@ -643,6 +917,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { 
         updateNavBubble(initialActiveItem); 
     }, 50); 
+    makeDraggable(musicBubbleContainer);
 });
 window.addEventListener('resize', () => { updateNavBubble(document.querySelector('.nav-item.active')); });
 
