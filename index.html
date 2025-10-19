@@ -590,7 +590,77 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
 })();
 
 const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
-const scheduleData = [ { dayName: 'Chủ Nhật', morning: [], afternoon: [] }, { dayName: 'Thứ Hai', morning: ['HĐTN - H.Nhung', 'GDTC - Tuấn', 'Tin - Ánh', 'Văn - Đ. Hoa', 'C.Nghệ - H.Vân'], afternoon: ['GDCD - Huệ', 'LS&ĐL(Địa) - H. Nhung', 'HĐTN - Tr. Hương'] }, { dayName: 'Thứ Ba', morning: ['T.Anh - Đ.Oanh', 'T.Anh - Đ.Oanh', 'Toán - Đ. Mai', 'Văn - Đ. Hoa', 'LS&ĐL(Địa) - H. Nhung'], afternoon: [] }, { dayName: 'Thứ Tư', morning: ['Toán - Đ. Mai', 'LS&ĐL (Sử) - Giang', 'KHTN(Sinh) - P. Nhưng', 'C.Nghệ - H.Vân'], afternoon: ['GDĐP - H. Vân', 'GDTC - Tuấn', 'Nghệ thuật (MT) - Thúy'] }, { dayName: 'Thứ Năm', morning: ['Văn - Đ. Hoa', 'Toán - Đ. Mai', 'T.Anh - Đ.Oanh', 'HĐTN - Tr.Hương', 'KHTN(Hóa) - P. Nhưng'], afternoon: [] }, { dayName: 'Thứ Sáu', morning: ['KHTN(Lý) - T. Thủy', 'KHTN(Hóa) - P. Nhung', 'Toán - Đ. Mai', 'Nghệ thuật(AN) - T.Nga'], afternoon: [] }, { dayName: 'Thứ Bảy', morning: [], afternoon: [] } ];
+
+// ===============================================
+// PHẦN THỜI KHÓA BIỂU ĐÃ ĐƯỢC CẬP NHẬT
+// ===============================================
+const scheduleData = [
+    { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
+    { 
+        dayName: 'Thứ Hai', 
+        morning: [
+            'HĐTN - H.Nhung', 
+            'HĐTN - H.Nhung', 
+            'Tin - Ánh', 
+            'GDTC - Tuần', 
+            'C.Nghệ - H. Vân'
+        ], 
+        afternoon: [] // Chiều thứ 2 nghỉ
+    },
+    { 
+        dayName: 'Thứ Ba', 
+        morning: [
+            'T.Anh - Đ.Oanh', 
+            'T.Anh - Đ.Oanh', 
+            'Toán - Đ. Mai', 
+            'Văn - Đ. Hoa', 
+            'LS&ĐL(Sử) - Giang'
+        ], 
+        afternoon: [] // Chiều thứ 3 nghỉ
+    },
+    { 
+        dayName: 'Thứ Tư', 
+        morning: [
+            'Toán - Đ. Mai', 
+            'LS&ĐL(Sử) - Giang', 
+            'Văn - Đ. Hoa', 
+            'C.Nghệ - H. Vân', 
+            'KHTN(Sinh) - P. Nhung'
+        ], 
+        afternoon: [
+            'GDĐP - H. Vân', 
+            'GDTC - Tuần'
+        ] 
+    },
+    { 
+        dayName: 'Thứ Năm', 
+        morning: [
+            'Văn - Đ. Hoa', 
+            'Toán - Đ. Mai', 
+            'T.Anh - Đ.Oanh', 
+            'KHTN(Hóa) - P. Nhung'
+        ], 
+        afternoon: [
+            'GDCD - Huệ', 
+            'LS&ĐL (Địa) - H. Nhung', 
+            'HĐTN - Tr. Hương'
+        ] 
+    },
+    { 
+        dayName: 'Thứ Sáu', 
+        morning: [
+            'KHTN(Lý) - T. Thủy', 
+            'KHTN(Hóa) - P. Nhung', 
+            'Toán - Đ. Mai', 
+            'Văn - Đ. Hoa', 
+            'Nghệ thuật(AN) - T.Nga'
+        ], 
+        afternoon: [] // Chiều thứ 6 nghỉ
+    },
+    { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
+];
+// ===============================================
+
 let lastRenderedDay = -1, clockInterval = null;
 const scrollPositions = {};
 
@@ -626,12 +696,21 @@ function renderFullSchedule(now) {
     const today = scheduleData[dayIndex];
     const todayContainer = document.getElementById('today-schedule');
     let todayHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3><button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
-    if (today.morning.length === 0 && today.afternoon.length === 0) {
+    
+    const hasTodayClasses = today.morning.length > 0 || today.afternoon.length > 0;
+
+    if (!hasTodayClasses) {
         todayHTML += `<div class="schedule-item schedule-item-off"><div>Hôm nay được nghỉ</div><span>Nghỉ</span></div>`;
     } else {
-        todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-        if (today.morning.length > 0 && today.afternoon.length > 0) { todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`; }
-        todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+        if (today.morning.length > 0) {
+             // Không cần tiêu đề "Buổi sáng" vì lịch mặc định bắt đầu bằng sáng
+             todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+        }
+
+        if (today.afternoon.length > 0) {
+             todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
+             todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+        }
     }
     todayContainer.innerHTML = todayHTML;
     
@@ -654,10 +733,19 @@ function toggleTomorrowSchedule() {
         const tomorrowIndex = (now.getDay() + 1) % 7;
         const tomorrow = scheduleData[tomorrowIndex];
         let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
-        if (tomorrow.morning.length === 0 && tomorrow.afternoon.length === 0) { tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`; } else {
-            tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
-            if (tomorrow.morning.length > 0 && tomorrow.afternoon.length > 0) { tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`; }
-            tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+        
+        const hasTomorrowClasses = tomorrow.morning.length > 0 || tomorrow.afternoon.length > 0;
+
+        if (!hasTomorrowClasses) { 
+            tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`; 
+        } else {
+            if (tomorrow.morning.length > 0) {
+                 tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+            }
+            if (tomorrow.afternoon.length > 0) { 
+                tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`; 
+                tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+            }
         }
         container.innerHTML = tomorrowHTML;
         container.style.display = 'block';
