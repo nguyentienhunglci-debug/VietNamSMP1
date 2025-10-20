@@ -330,7 +330,6 @@
             height: 180px;
             border-radius: 12px;
             background-color: var(--bg-secondary);
-            /* *** THAY ĐỔI: Thêm viền phát sáng và shadow *** */
             box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 2px rgba(var(--accent-primary-rgb), 0.5);
             overflow: hidden;
             resize: both;
@@ -339,7 +338,6 @@
             z-index: 999;
             display: flex;
             flex-direction: column;
-            /* *** THAY ĐỔI: Transition cho tất cả thuộc tính *** */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: grab;
             user-select: none;
@@ -358,6 +356,12 @@
             display: none;
         }
 
+        #music-bubble-iframe-container {
+            width: 100%;
+            height: 100%;
+            flex-grow: 1;
+        }
+        
         #music-bubble-iframe {
             width: 100%;
             height: 100%;
@@ -375,14 +379,13 @@
 
         .music-bubble-controls {
             position: absolute;
-            top: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
-            right: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
+            top: 8px; 
+            right: 8px;
             display: flex;
-            gap: 8px; /* *** THAY ĐỔI: Tăng khoảng cách *** */
+            gap: 8px; 
             z-index: 100;
         }
         
-        /* *** THAY ĐỔI: Nút điều khiển to và rõ ràng hơn *** */
         .music-bubble-controls button {
             background-color: rgba(0,0,0,0.4);
             backdrop-filter: blur(5px);
@@ -438,6 +441,177 @@
         #music-bubble-toggle-btn:active {
             transform: scale(0.95);
         }
+        
+        /* =================================================================
+           4. SLEEP MODE STYLES
+           ================================================================= */
+        #sleep-mode-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: #000000;
+            z-index: 5000;
+            display: none; /* Ẩn ban đầu */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            padding-top: 15vh; /* Đẩy nội dung xuống 1 chút */
+            overflow: hidden; /* *** THAY ĐỔI: Thêm để chứa các ngôi sao *** */
+        }
+        
+        #sleep-mode-clock {
+            position: absolute;
+            top: 5vh; /* Đặt đồng hồ ở trên cùng */
+            font-size: 64px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        
+        #sleep-mode-video-container {
+            width: 90vw;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
+            background-color: #111;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        #sleep-mode-video-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 0 10px;
+            max-width: 800px;
+            overflow-y: auto;
+        }
+        
+        .sleep-video-btn {
+            background-color: #2c2c2e;
+            color: #f5f5f7;
+            border: 1px solid #38383a;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            font-family: var(--font-family);
+        }
+        .sleep-video-btn:active {
+            background-color: #38383a;
+            transform: scale(0.96);
+        }
+        
+        #sleep-mode-exit-btn {
+            position: absolute;
+            top: calc(15px + env(safe-area-inset-top));
+            right: calc(15px + env(safe-area-inset-right));
+            background-color: rgba(44, 44, 46, 0.7);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            line-height: 36px;
+            text-align: center;
+        }
+        
+        /* --- BẮT ĐẦU: Hiệu ứng ngôi sao li ti --- */
+        @keyframes animateStars {
+            from {
+                transform: translateY(0);
+            }
+            to {
+                transform: translateY(-100vh); /* Di chuyển lên 100% chiều cao màn hình */
+            }
+        }
+
+        /* Lớp chứa các ngôi sao (cần 2 bản sao để lặp lại liền mạch) */
+        .stars-layer {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 200vh; /* Gấp đôi chiều cao để lặp */
+            animation: animateStars linear infinite;
+            background-repeat: repeat;
+            z-index: 1; /* Nằm dưới nội dung nhưng trên nền */
+        }
+        
+        /* Tạo các ngôi sao bằng radial-gradient */
+        #stars-small {
+            animation-duration: 100s; /* Chậm nhất */
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, white, white),
+                radial-gradient(1px 1px at 40px 70px, white, white),
+                radial-gradient(1px 1px at 90px 40px, white, white),
+                radial-gradient(1px 1px at 130px 80px, white, white),
+                radial-gradient(1px 1px at 160px 120px, white, white),
+                radial-gradient(1px 1px at 200px 150px, white, white),
+                radial-gradient(1px 1px at 250px 100px, white, white),
+                radial-gradient(1px 1px at 300px 50px, white, white),
+                radial-gradient(1px 1px at 340px 110px, white, white),
+                radial-gradient(1px 1px at 400px 90px, white, white),
+                radial-gradient(1px 1px at 420px 140px, white, white),
+                radial-gradient(1px 1px at 480px 20px, white, white),
+                radial-gradient(1px 1px at 550px 130px, white, white),
+                radial-gradient(1px 1px at 600px 70px, white, white),
+                radial-gradient(1px 1px at 630px 10px, white, white),
+                radial-gradient(1px 1px at 680px 80px, white, white),
+                radial-gradient(1px 1px at 720px 140px, white, white),
+                radial-gradient(1px 1px at 790px 60px, white, white),
+                radial-gradient(1px 1px at 850px 110px, white, white),
+                radial-gradient(1px 1px at 900px 30px, white, white);
+            background-size: 900px 150px; /* Kích thước của pattern */
+        }
+        
+        #stars-medium {
+            animation-duration: 60s; /* Tốc độ trung bình */
+            background-image: 
+                radial-gradient(2px 2px at 50px 80px, white, white),
+                radial-gradient(2px 2px at 120px 160px, white, white),
+                radial-gradient(2px 2px at 200px 40px, white, white),
+                radial-gradient(2px 2px at 280px 130px, white, white),
+                radial-gradient(2px 2px at 350px 90px, white, white),
+                radial-gradient(2px 2px at 420px 20px, white, white),
+                radial-gradient(2px 2px at 500px 110px, white, white),
+                radial-gradient(2px 2px at 580px 150px, white, white),
+                radial-gradient(2px 2px at 650px 80px, white, white),
+                radial-gradient(2px 2px at 730px 40px, white, white),
+                radial-gradient(2px 2px at 800px 130px, white, white);
+            background-size: 850px 170px;
+        }
+
+        #stars-large {
+            animation-duration: 30s; /* Nhanh nhất (tạo cảm giác gần) */
+            background-image: 
+                radial-gradient(3px 3px at 30px 100px, white, white),
+                radial-gradient(3px 3px at 150px 20px, white, white),
+                radial-gradient(3px 3px at 280px 150px, white, white),
+                radial-gradient(3px 3px at 400px 70px, white, white),
+                radial-gradient(3px 3px at 550px 120px, white, white),
+                radial-gradient(3px 3px at 650px 50px, white, white),
+                radial-gradient(3px 3px at 780px 140px, white, white);
+            background-size: 800px 150px;
+            opacity: 0.8;
+        }
+        
+        /* Đảm bảo nội dung còn lại (đồng hồ, video) nổi lên trên */
+        #sleep-mode-clock, #sleep-mode-exit-btn, #sleep-mode-video-container, #sleep-mode-video-list {
+            position: relative;
+            z-index: 10;
+        }
+        /* --- KẾT THÚC: Hiệu ứng ngôi sao li ti --- */
+        
     </style>
 </head>
 <body>
@@ -554,9 +728,14 @@
 <div id="music-bubble-container" class="hidden">
     <div class="music-bubble-controls">
         <button onclick="toggleMinimizeMusicBubble()">-</button>
+        <button onclick="enterSleepMode()">
+            <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m0 0v-4m0 4l-5-5"></path></svg>
+        </button>
         <button onclick="toggleMusicBubble()">&times;</button>
     </div>
-    <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="music-bubble-iframe-container">
+        <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
 </div>
 
 <button id="music-bubble-toggle-btn" onclick="toggleMusicBubble()">
@@ -567,6 +746,20 @@
 <div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
+
+<div id="sleep-mode-overlay">
+    <div id="stars-small" class="stars-layer"></div>
+    <div id="stars-medium" class="stars-layer"></div>
+    <div id="stars-large" class="stars-layer"></div>
+
+    <div id="sleep-mode-clock">--:--:--</div>
+    <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
+    <div id="sleep-mode-video-container">
+        </div>
+    <div id="sleep-mode-video-list">
+        </div>
+</div>
+
 
 <script type="text/javascript">
 'use strict';
@@ -984,12 +1177,111 @@ function onYouTubeIframeAPIReady() {
 
 function onPlayerReady(event) {
     event.target.playVideo();
+    renderVideoList(); 
 }
 
 const tag = document.createElement('script');
 tag.src = "https://www.youtube.com/iframe_api";
 const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+// =================================================================
+// *** PHẦN MỚI: CHẾ ĐỘ NGỦ (SLEEP MODE) ***
+// =================================================================
+
+// *** THAY ĐỔI: Cập nhật danh sách video ***
+const sleepVideos = [
+    { id: 'jfKfPfyJRdk', title: 'Lofi Hip Hop ☕' },
+    { id: 'sxE6fkjnxmY', title: 'Tiếng mưa 🌧️' },
+    { id: '2dSgVXqZ4xk', title: 'Jazz thư giãn 🎷' },
+    { id: 't1mP3DBwwzg', title: 'Nhạc không gian 🪐' },
+    { id: 'oQqmDSmsL04', title: 'Sóng biển 🌊' }
+];
+
+let sleepClockInterval = null; // Biến để giữ interval của đồng hồ ngủ
+
+/**
+ * Hiển thị danh sách video trong chế độ ngủ
+ */
+function renderVideoList() {
+    const listContainer = document.getElementById('sleep-mode-video-list');
+    listContainer.innerHTML = ''; // Xóa danh sách cũ
+    sleepVideos.forEach(video => {
+        const btn = document.createElement('button');
+        btn.className = 'sleep-video-btn';
+        btn.textContent = video.title;
+        btn.onclick = () => changeSleepVideo(video.id);
+        listContainer.appendChild(btn);
+    });
+}
+
+/**
+ * Thay đổi video đang phát trong chế độ ngủ
+ * @param {string} videoId - ID của video YouTube
+ */
+function changeSleepVideo(videoId) {
+    if (player && typeof player.loadVideoById === 'function') {
+        player.loadVideoById(videoId);
+    } else {
+        console.error("Trình phát YouTube chưa sẵn sàng.");
+    }
+}
+
+/**
+ * Kích hoạt chế độ ngủ
+ */
+function enterSleepMode() {
+    // Ẩn giao diện chính
+    document.querySelector('.main-container').style.display = 'none';
+    document.querySelector('.bottom-nav').style.display = 'none';
+    document.getElementById('music-bubble-container').classList.add('hidden');
+    document.getElementById('music-bubble-toggle-btn').style.display = 'none';
+    
+    // Di chuyển iframe vào màn hình ngủ
+    const iframe = document.getElementById('music-bubble-iframe');
+    document.getElementById('sleep-mode-video-container').appendChild(iframe);
+    
+    // Hiển thị màn hình ngủ
+    document.getElementById('sleep-mode-overlay').style.display = 'flex';
+    
+    // Đảm bảo video đang phát
+    if (player) player.playVideo();
+    
+    // Cập nhật đồng hồ cho chế độ ngủ
+    if (sleepClockInterval) clearInterval(sleepClockInterval);
+    const updateSleepClock = () => {
+        document.getElementById('sleep-mode-clock').textContent = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+    };
+    updateSleepClock(); // Cập nhật ngay
+    sleepClockInterval = setInterval(updateSleepClock, 1000); // Cập nhật mỗi giây
+    
+    isMusicBubbleHidden = true; // Cập nhật trạng thái
+}
+
+/**
+ * Thoát khỏi chế độ ngủ
+ */
+function exitSleepMode() {
+    // Ẩn màn hình ngủ
+    document.getElementById('sleep-mode-overlay').style.display = 'none';
+
+    // Di chuyển iframe trở lại bubble
+    const iframe = document.getElementById('music-bubble-iframe');
+    document.getElementById('music-bubble-iframe-container').appendChild(iframe);
+
+    // Hiển thị lại giao diện chính
+    document.querySelector('.main-container').style.display = 'block';
+    document.querySelector('.bottom-nav').style.display = 'flex';
+    document.getElementById('music-bubble-toggle-btn').style.display = 'flex';
+
+    // Dừng đồng hồ ngủ
+    if (sleepClockInterval) clearInterval(sleepClockInterval);
+    sleepClockInterval = null;
+    
+    // Tạm dừng video khi thoát
+    if (player) player.pauseVideo();
+}
 
 
 document.addEventListener('DOMContentLoaded', () => { 
