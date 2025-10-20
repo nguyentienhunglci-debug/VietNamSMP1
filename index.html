@@ -456,7 +456,7 @@
             justify-content: center;
             padding: 20px;
             padding-top: 15vh; /* Đẩy nội dung xuống 1 chút */
-            overflow: hidden; /* *** THAY ĐỔI: Thêm để chứa các ngôi sao *** */
+            overflow: hidden; 
         }
         
         #sleep-mode-clock {
@@ -466,6 +466,7 @@
             font-weight: 700;
             color: #ffffff;
             letter-spacing: 1px;
+            z-index: 10; /* *** THAY ĐỔI: Đảm bảo đồng hồ ở trên *** */
         }
         
         #sleep-mode-video-container {
@@ -476,6 +477,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 10; /* *** THAY ĐỔI: Đảm bảo video ở trên *** */
         }
         
         #sleep-mode-video-list {
@@ -487,6 +489,7 @@
             padding: 0 10px;
             max-width: 800px;
             overflow-y: auto;
+            z-index: 10; /* *** THAY ĐỔI: Đảm bảo nút ở trên *** */
         }
         
         .sleep-video-btn {
@@ -523,94 +526,10 @@
             cursor: pointer;
             line-height: 36px;
             text-align: center;
+            z-index: 10; /* *** THAY ĐỔI: Đảm bảo nút X ở trên *** */
         }
         
-        /* --- BẮT ĐẦU: Hiệu ứng ngôi sao li ti --- */
-        @keyframes animateStars {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-100vh); /* Di chuyển lên 100% chiều cao màn hình */
-            }
-        }
-
-        /* Lớp chứa các ngôi sao (cần 2 bản sao để lặp lại liền mạch) */
-        .stars-layer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 200vh; /* Gấp đôi chiều cao để lặp */
-            animation: animateStars linear infinite;
-            background-repeat: repeat;
-            z-index: 1; /* Nằm dưới nội dung nhưng trên nền */
-        }
-        
-        /* Tạo các ngôi sao bằng radial-gradient */
-        #stars-small {
-            animation-duration: 100s; /* Chậm nhất */
-            background-image: 
-                radial-gradient(1px 1px at 20px 30px, white, white),
-                radial-gradient(1px 1px at 40px 70px, white, white),
-                radial-gradient(1px 1px at 90px 40px, white, white),
-                radial-gradient(1px 1px at 130px 80px, white, white),
-                radial-gradient(1px 1px at 160px 120px, white, white),
-                radial-gradient(1px 1px at 200px 150px, white, white),
-                radial-gradient(1px 1px at 250px 100px, white, white),
-                radial-gradient(1px 1px at 300px 50px, white, white),
-                radial-gradient(1px 1px at 340px 110px, white, white),
-                radial-gradient(1px 1px at 400px 90px, white, white),
-                radial-gradient(1px 1px at 420px 140px, white, white),
-                radial-gradient(1px 1px at 480px 20px, white, white),
-                radial-gradient(1px 1px at 550px 130px, white, white),
-                radial-gradient(1px 1px at 600px 70px, white, white),
-                radial-gradient(1px 1px at 630px 10px, white, white),
-                radial-gradient(1px 1px at 680px 80px, white, white),
-                radial-gradient(1px 1px at 720px 140px, white, white),
-                radial-gradient(1px 1px at 790px 60px, white, white),
-                radial-gradient(1px 1px at 850px 110px, white, white),
-                radial-gradient(1px 1px at 900px 30px, white, white);
-            background-size: 900px 150px; /* Kích thước của pattern */
-        }
-        
-        #stars-medium {
-            animation-duration: 60s; /* Tốc độ trung bình */
-            background-image: 
-                radial-gradient(2px 2px at 50px 80px, white, white),
-                radial-gradient(2px 2px at 120px 160px, white, white),
-                radial-gradient(2px 2px at 200px 40px, white, white),
-                radial-gradient(2px 2px at 280px 130px, white, white),
-                radial-gradient(2px 2px at 350px 90px, white, white),
-                radial-gradient(2px 2px at 420px 20px, white, white),
-                radial-gradient(2px 2px at 500px 110px, white, white),
-                radial-gradient(2px 2px at 580px 150px, white, white),
-                radial-gradient(2px 2px at 650px 80px, white, white),
-                radial-gradient(2px 2px at 730px 40px, white, white),
-                radial-gradient(2px 2px at 800px 130px, white, white);
-            background-size: 850px 170px;
-        }
-
-        #stars-large {
-            animation-duration: 30s; /* Nhanh nhất (tạo cảm giác gần) */
-            background-image: 
-                radial-gradient(3px 3px at 30px 100px, white, white),
-                radial-gradient(3px 3px at 150px 20px, white, white),
-                radial-gradient(3px 3px at 280px 150px, white, white),
-                radial-gradient(3px 3px at 400px 70px, white, white),
-                radial-gradient(3px 3px at 550px 120px, white, white),
-                radial-gradient(3px 3px at 650px 50px, white, white),
-                radial-gradient(3px 3px at 780px 140px, white, white);
-            background-size: 800px 150px;
-            opacity: 0.8;
-        }
-        
-        /* Đảm bảo nội dung còn lại (đồng hồ, video) nổi lên trên */
-        #sleep-mode-clock, #sleep-mode-exit-btn, #sleep-mode-video-container, #sleep-mode-video-list {
-            position: relative;
-            z-index: 10;
-        }
-        /* --- KẾT THÚC: Hiệu ứng ngôi sao li ti --- */
+        /* --- THAY ĐỔI: Đã xóa toàn bộ hiệu ứng ngôi sao li ti --- */
         
     </style>
 </head>
@@ -748,10 +667,6 @@
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 
 <div id="sleep-mode-overlay">
-    <div id="stars-small" class="stars-layer"></div>
-    <div id="stars-medium" class="stars-layer"></div>
-    <div id="stars-large" class="stars-layer"></div>
-
     <div id="sleep-mode-clock">--:--:--</div>
     <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
     <div id="sleep-mode-video-container">
@@ -767,19 +682,31 @@
 const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
 
 
+// *** THAY ĐỔI: Đã sửa lại hàm init() để lưu theme ***
 (function init() {
-    // Xóa cài đặt theme cũ để đảm bảo khởi động sạch
-    localStorage.removeItem('theme');
-    localStorage.removeItem('theme-before-kitty');
-    document.documentElement.className = ''; // Xóa mọi class theme cũ
+    const savedTheme = localStorage.getItem('theme');
+    document.documentElement.className = ''; // Xóa mọi class cũ
 
-    // === THAY ĐỔI: Đặt chế độ sáng làm mặc định ===
-    document.documentElement.classList.add('light-theme');
-    localStorage.setItem('theme', 'light');
-
-    // Cập nhật trạng thái cho các nút toggle
-    document.getElementById('theme-toggle')?.classList.add('active'); // Bật nút Sáng
-    document.getElementById('kitty-theme-toggle')?.classList.remove('active'); // Tắt nút Kitty
+    if (savedTheme === 'kitty') {
+        document.documentElement.classList.add('kitty-theme');
+        // Phải đợi DOM load xong mới gán class 'active' cho nút
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('kitty-theme-toggle')?.classList.add('active');
+            document.getElementById('theme-toggle')?.classList.remove('active');
+        });
+    } else if (savedTheme === 'light') {
+        document.documentElement.classList.add('light-theme');
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('theme-toggle')?.classList.add('active');
+            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
+        });
+    } else {
+        // Mặc định là 'dark' (không cần class)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('theme-toggle')?.classList.remove('active');
+            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
+        });
+    }
 })();
 
 const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
@@ -1190,7 +1117,6 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 // *** PHẦN MỚI: CHẾ ĐỘ NGỦ (SLEEP MODE) ***
 // =================================================================
 
-// *** THAY ĐỔI: Cập nhật danh sách video ***
 const sleepVideos = [
     { id: 'jfKfPfyJRdk', title: 'Lofi Hip Hop ☕' },
     { id: 'sxE6fkjnxmY', title: 'Tiếng mưa 🌧️' },
