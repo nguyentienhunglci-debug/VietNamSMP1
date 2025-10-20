@@ -443,30 +443,43 @@
         }
         
         /* =================================================================
-           4. SLEEP MODE STYLES
+           4. SLEEP MODE STYLES (ĐÃ CẬP NHẬT)
            ================================================================= */
         #sleep-mode-overlay {
             position: fixed;
             inset: 0;
             background-color: #000000;
             z-index: 5000;
-            display: none; /* Ẩn ban đầu */
+            display: none; 
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* *** THAY ĐỔI: Canh giữa nội dung *** */
             padding: 20px;
-            padding-top: 15vh; /* Đẩy nội dung xuống 1 chút */
+            padding-top: env(safe-area-inset-top); /* *** THAY ĐỔI: Đẩy nội dung xuống nếu có tai thỏ *** */
+            padding-bottom: env(safe-area-inset-bottom);
             overflow: hidden; 
         }
         
+        /* *** THAY ĐỔI: Thêm 1 thẻ bọc đồng hồ và ngày tháng *** */
+        #sleep-mode-header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ffffff;
+            z-index: 10;
+        }
+
         #sleep-mode-clock {
-            position: absolute;
-            top: 5vh; /* Đặt đồng hồ ở trên cùng */
             font-size: 64px;
             font-weight: 700;
-            color: #ffffff;
             letter-spacing: 1px;
-            z-index: 10; /* *** THAY ĐỔI: Đảm bảo đồng hồ ở trên *** */
+        }
+        
+        /* *** THAY ĐỔI: Thêm CSS cho ngày tháng *** */
+        #sleep-mode-date {
+            font-size: 18px;
+            font-weight: 500;
+            color: #f5f5f7;
+            margin-top: 5px;
         }
         
         #sleep-mode-video-container {
@@ -477,7 +490,7 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            z-index: 10; /* *** THAY ĐỔI: Đảm bảo video ở trên *** */
+            z-index: 10;
         }
         
         #sleep-mode-video-list {
@@ -489,7 +502,7 @@
             padding: 0 10px;
             max-width: 800px;
             overflow-y: auto;
-            z-index: 10; /* *** THAY ĐỔI: Đảm bảo nút ở trên *** */
+            z-index: 10;
         }
         
         .sleep-video-btn {
@@ -526,10 +539,8 @@
             cursor: pointer;
             line-height: 36px;
             text-align: center;
-            z-index: 10; /* *** THAY ĐỔI: Đảm bảo nút X ở trên *** */
+            z-index: 20; /* *** THAY ĐỔI: Tăng z-index để nổi lên trên *** */
         }
-        
-        /* --- THAY ĐỔI: Đã xóa toàn bộ hiệu ứng ngôi sao li ti --- */
         
     </style>
 </head>
@@ -667,8 +678,14 @@
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 
 <div id="sleep-mode-overlay">
-    <div id="sleep-mode-clock">--:--:--</div>
+    
     <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
+    
+    <div id="sleep-mode-header">
+        <div id="sleep-mode-clock">--:--:--</div>
+        <div id="sleep-mode-date">---, --/--/----</div>
+    </div>
+
     <div id="sleep-mode-video-container">
         </div>
     <div id="sleep-mode-video-list">
@@ -804,6 +821,7 @@ function goTo(screenId, element) {
 function updateClockAndSchedule() {
     const now = new Date();
     const dayIndex = now.getDay();
+    // *** THAY ĐỔI: Đảm bảo đồng hồ chính luôn có giây ***
     document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
     if (dayIndex !== lastRenderedDay) {
         renderFullSchedule(now);
@@ -1176,9 +1194,21 @@ function enterSleepMode() {
     
     // Cập nhật đồng hồ cho chế độ ngủ
     if (sleepClockInterval) clearInterval(sleepClockInterval);
+    
+    // *** THAY ĐỔI: Cập nhật hàm đồng hồ để có cả giây và ngày tháng ***
     const updateSleepClock = () => {
-        document.getElementById('sleep-mode-clock').textContent = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        const now = new Date();
+        const timeEl = document.getElementById('sleep-mode-clock');
+        const dateEl = document.getElementById('sleep-mode-date');
+        
+        if (timeEl) {
+            timeEl.textContent = now.toLocaleTimeString('vi-VN'); // Có giây
+        }
+        if (dateEl) {
+            dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
     };
+    
     updateSleepClock(); // Cập nhật ngay
     sleepClockInterval = setInterval(updateSleepClock, 1000); // Cập nhật mỗi giây
     
@@ -1205,6 +1235,10 @@ function exitSleepMode() {
     if (sleepClockInterval) clearInterval(sleepClockInterval);
     sleepClockInterval = null;
     
+    // Xóa văn bản ngày tháng cũ
+    const dateEl = document.getElementById('sleep-mode-date');
+    if (dateEl) dateEl.textContent = '---, --/--/----';
+
     // Tạm dừng video khi thoát
     if (player) player.pauseVideo();
 }
