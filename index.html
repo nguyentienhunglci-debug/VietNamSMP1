@@ -17,8 +17,8 @@
 
     <style>
         /* =================================================================
-           1. DESIGN SYSTEM & VARIABLES
-           ================================================================= */
+            1. DESIGN SYSTEM & VARIABLES
+            ================================================================= */
         :root {
             --bg-primary: #111111;
             --bg-secondary: #1c1c1e;
@@ -62,8 +62,8 @@
         }
 
         /* =================================================================
-           2. GLOBAL RESETS & BASE STYLES
-           ================================================================= */
+            2. GLOBAL RESETS & BASE STYLES
+            ================================================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         html {  
@@ -90,8 +90,8 @@
         }
 
         /* =================================================================
-           3. CORE LAYOUT & COMPONENTS
-           ================================================================= */
+            3. CORE LAYOUT & COMPONENTS
+            ================================================================= */
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
@@ -443,8 +443,8 @@
         }
         
         /* =================================================================
-           4. SLEEP MODE STYLES (ĐÃ CẬP NHẬT)
-           ================================================================= */
+            4. SLEEP MODE STYLES (ĐÃ CẬP NHẬT)
+            ================================================================= */
         #sleep-mode-overlay {
             position: fixed;
             inset: 0;
@@ -568,9 +568,9 @@
         <div class="screen-title-bar"><h2>Tài chính</h2></div>
         <div class="card">
              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h3 style="margin: 0;">Tổng quan tháng này</h3>
-                <button class="btn btn-small btn-sec" style="margin: 0;" onclick="showLastMonthSummary()">Tháng trước</button>
-            </div>
+                 <h3 style="margin: 0;">Tổng quan tháng này</h3>
+                 <button class="btn btn-small btn-sec" style="margin: 0;" onclick="showLastMonthSummary()">Tháng trước</button>
+             </div>
             <div class="stat-grid">
                 <div class="stat-card full-width"><div class="stat-label">Tổng số dư</div><div class="stat-value" id="bal">0₫</div></div>
                 <div class="stat-card"><div class="stat-label">Đã chi</div><div class="stat-value red" id="exp">0₫</div></div>
@@ -698,15 +698,12 @@
 
 const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
 
-
-// *** THAY ĐỔI: Đã sửa lại hàm init() để lưu theme ***
 (function init() {
     const savedTheme = localStorage.getItem('theme');
-    document.documentElement.className = ''; // Xóa mọi class cũ
+    document.documentElement.className = ''; 
 
     if (savedTheme === 'kitty') {
         document.documentElement.classList.add('kitty-theme');
-        // Phải đợi DOM load xong mới gán class 'active' cho nút
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('kitty-theme-toggle')?.classList.add('active');
             document.getElementById('theme-toggle')?.classList.remove('active');
@@ -718,7 +715,6 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
             document.getElementById('kitty-theme-toggle')?.classList.remove('active');
         });
     } else {
-        // Mặc định là 'dark' (không cần class)
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('theme-toggle')?.classList.remove('active');
             document.getElementById('kitty-theme-toggle')?.classList.remove('active');
@@ -729,72 +725,79 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
 const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
 
 // ===============================================
-// PHẦN THỜI KHÓA BIỂU ĐÃ ĐƯỢC CẬP NHẬT
+// <<< PHẦN 1: CẬP NHẬT DỮ LIỆU THỜI KHÓA BIỂU >>>
+// Các mảng morning/afternoon giờ luôn có 5 phần tử. Tiết trống được đánh dấu bằng chuỗi rỗng ''.
 // ===============================================
 const scheduleData = [
-    { dayName: 'Chủ Nhật', morning: [], afternoon: [] },
-    { 
-        dayName: 'Thứ Hai', 
+    { dayName: 'Chủ Nhật', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] },
+    {
+        dayName: 'Thứ Hai',
         morning: [
-            'HĐTN - H.Nhung', 
-            'HĐTN - H.Nhung', 
-            'Tin - Ánh', 
-            'GDTC - Tuần', 
+            'HĐTN - H.Nhung',
+            'HĐTN - H.Nhung',
+            'Tin - Ánh',
+            'GDTC - Tuần',
             'C.Nghệ - H. Vân'
-        ], 
-        afternoon: [] // Chiều thứ 2 nghỉ
+        ],
+        afternoon: ['', '', '', '', '']
     },
-    { 
-        dayName: 'Thứ Ba', 
+    {
+        dayName: 'Thứ Ba',
         morning: [
-            'T.Anh - Đ.Oanh', 
-            'T.Anh - Đ.Oanh', 
-            'Toán - Đ. Mai', 
-            'Văn - Đ. Hoa', 
+            'T.Anh - Đ.Oanh',
+            'T.Anh - Đ.Oanh',
+            'Toán - Đ. Mai',
+            'Văn - Đ. Hoa',
             'LS&ĐL(Sử) - Giang'
-        ], 
-        afternoon: [] // Chiều thứ 3 nghỉ
+        ],
+        afternoon: ['', '', '', '', '']
     },
-    { 
-        dayName: 'Thứ Tư', 
+    {
+        dayName: 'Thứ Tư',
         morning: [
-            'Toán - Đ. Mai', 
-            'LS&ĐL(Sử) - Giang', 
-            'Văn - Đ. Hoa', 
-            'C.Nghệ - H. Vân', 
+            'Toán - Đ. Mai',
+            'LS&ĐL(Sử) - Giang',
+            'Văn - Đ. Hoa',
+            'C.Nghệ - H. Vân',
             'KHTN(Sinh) - P. Nhung'
-        ], 
+        ],
         afternoon: [
-            'GDĐP - H. Vân', 
-            'GDTC - Tuần'
-        ] 
+            'GDĐP - H. Vân',
+            'GDTC - Tuần',
+            '',
+            '',
+            ''
+        ]
     },
-    { 
-        dayName: 'Thứ Năm', 
+    {
+        dayName: 'Thứ Năm',
         morning: [
-            'Văn - Đ. Hoa', 
-            'Toán - Đ. Mai', 
-            'T.Anh - Đ.Oanh', 
-            'KHTN(Hóa) - P. Nhung'
-        ], 
+            'Văn - Đ. Hoa',
+            'Toán - Đ. Mai',
+            'T.Anh - Đ.Oanh',
+            'KHTN(Hóa) - P. Nhung',
+            ''
+        ],
         afternoon: [
-            'GDCD - Huệ', 
-            'LS&ĐL (Địa) - H. Nhung', 
-            'HĐTN - Tr. Hương'
-        ] 
+            'GDCD - Huệ',
+            'LS&ĐL (Địa) - H. Nhung',
+            'HĐTN - Tr. Hương',
+            '',
+            ''
+        ]
     },
-    { 
-        dayName: 'Thứ Sáu', 
+    {
+        dayName: 'Thứ Sáu',
         morning: [
-            'KHTN(Lý) - T. Thủy', 
-            'KHTN(Hóa) - P. Nhung', 
-            'Toán - Đ. Mai', 
-            'Văn - Đ. Hoa', 
+            'KHTN(Lý) - T. Thủy',
+            'KHTN(Hóa) - P. Nhung',
+            'Toán - Đ. Mai',
+            'Văn - Đ. Hoa',
             'Nghệ thuật(AN) - T.Nga'
-        ], 
-        afternoon: [] // Chiều thứ 6 nghỉ
+        ],
+        afternoon: ['', '', '', '', '']
     },
-    { dayName: 'Thứ Bảy', morning: [], afternoon: [] }
+    { dayName: 'Thứ Bảy', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] }
 ];
 // ===============================================
 
@@ -821,33 +824,50 @@ function goTo(screenId, element) {
 function updateClockAndSchedule() {
     const now = new Date();
     const dayIndex = now.getDay();
-    // *** THAY ĐỔI: Đảm bảo đồng hồ chính luôn có giây ***
     document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
     if (dayIndex !== lastRenderedDay) {
         renderFullSchedule(now);
         lastRenderedDay = dayIndex;
     }
 }
+
+// ====================================================================
+// <<< PHẦN 2: CẬP NHẬT HÀM HIỂN THỊ THỜI KHÓA BIỂU >>>
+// Hàm này được viết lại để hiển thị đủ 5 tiết/buổi và chữ "Nghỉ".
+// ====================================================================
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const today = scheduleData[dayIndex];
     const todayContainer = document.getElementById('today-schedule');
+    
     let todayHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3><button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
     
-    const hasTodayClasses = today.morning.length > 0 || today.afternoon.length > 0;
+    const isDayOff = today.morning.every(s => !s) && today.afternoon.every(s => !s);
 
-    if (!hasTodayClasses) {
+    if (isDayOff) {
         todayHTML += `<div class="schedule-item schedule-item-off"><div>Hôm nay được nghỉ</div><span>Nghỉ</span></div>`;
     } else {
-        if (today.morning.length > 0) {
-             // Không cần tiêu đề "Buổi sáng" vì lịch mặc định bắt đầu bằng sáng
-             todayHTML += today.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+        // Buổi sáng
+        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
+        for (let i = 0; i < 5; i++) {
+            const subject = today.morning[i];
+            if (subject) {
+                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
+            } else {
+                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
+            }
         }
 
-        if (today.afternoon.length > 0) {
-             todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
-             todayHTML += today.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+        // Buổi chiều
+        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
+        for (let i = 0; i < 5; i++) {
+            const subject = today.afternoon[i];
+            if (subject) {
+                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
+            } else {
+                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
+            }
         }
     }
     todayContainer.innerHTML = todayHTML;
@@ -856,40 +876,62 @@ function renderFullSchedule(now) {
     futureContainer.innerHTML = `<h3>Sắp tới</h3>` + [1, 2, 3, 4, 5, 6].map(offset => {
         const nextDayIndex = (dayIndex + offset) % 7;
         const nextDay = scheduleData[nextDayIndex];
-        const hasClasses = nextDay.morning.length + nextDay.afternoon.length > 0;
+        const hasClasses = nextDay.morning.some(s => s) || nextDay.afternoon.some(s => s);
         return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}"><div>${nextDay.dayName}</div><span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
     }).join('');
     
     document.getElementById('tomorrow-details-container').style.display = 'none';
 }
+
 function toggleTomorrowSchedule() {
     const container = document.getElementById('tomorrow-details-container');
     const btn = document.getElementById('toggle-tomorrow-btn');
     const isVisible = container.style.display === 'block';
-    if (isVisible) { container.style.display = 'none'; btn.textContent = 'Xem ngày mai'; } else {
+    
+    if (isVisible) {
+        container.style.display = 'none';
+        btn.textContent = 'Xem ngày mai';
+    } else {
         const now = new Date();
         const tomorrowIndex = (now.getDay() + 1) % 7;
         const tomorrow = scheduleData[tomorrowIndex];
         let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
         
-        const hasTomorrowClasses = tomorrow.morning.length > 0 || tomorrow.afternoon.length > 0;
+        const isDayOff = tomorrow.morning.every(s => !s) && tomorrow.afternoon.every(s => !s);
 
-        if (!hasTomorrowClasses) { 
-            tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`; 
+        if (isDayOff) {
+            tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`;
         } else {
-            if (tomorrow.morning.length > 0) {
-                 tomorrowHTML += tomorrow.morning.map(s => `<div class="schedule-item"><div>${s}</div><span>Sáng</span></div>`).join('');
+            // Buổi sáng
+            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
+            for (let i = 0; i < 5; i++) {
+                const subject = tomorrow.morning[i];
+                if (subject) {
+                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
+                } else {
+                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
+                }
             }
-            if (tomorrow.afternoon.length > 0) { 
-                tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`; 
-                tomorrowHTML += tomorrow.afternoon.map(s => `<div class="schedule-item"><div>${s}</div><span>Chiều</span></div>`).join('');
+
+            // Buổi chiều
+            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
+            for (let i = 0; i < 5; i++) {
+                const subject = tomorrow.afternoon[i];
+                if (subject) {
+                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
+                } else {
+                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
+                }
             }
         }
+        
         container.innerHTML = tomorrowHTML;
         container.style.display = 'block';
         btn.textContent = 'Ẩn chi tiết';
     }
 }
+// ====================================================================
+
 function toggleTheme() {
     if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme();
     const isLight = document.documentElement.classList.toggle('light-theme');
@@ -1056,7 +1098,6 @@ function makeDraggable(element) {
             toggleMinimizeMusicBubble();
             return;
         }
-        // e.preventDefault(); // Commented out to allow scrolling on touch devices when not dragging
         isDragging = true;
         pos3 = e.touches[0].clientX;
         pos4 = e.touches[0].clientY;
@@ -1143,14 +1184,11 @@ const sleepVideos = [
     { id: 'oQqmDSmsL04', title: 'Sóng biển 🌊' }
 ];
 
-let sleepClockInterval = null; // Biến để giữ interval của đồng hồ ngủ
+let sleepClockInterval = null;
 
-/**
- * Hiển thị danh sách video trong chế độ ngủ
- */
 function renderVideoList() {
     const listContainer = document.getElementById('sleep-mode-video-list');
-    listContainer.innerHTML = ''; // Xóa danh sách cũ
+    listContainer.innerHTML = '';
     sleepVideos.forEach(video => {
         const btn = document.createElement('button');
         btn.className = 'sleep-video-btn';
@@ -1160,10 +1198,6 @@ function renderVideoList() {
     });
 }
 
-/**
- * Thay đổi video đang phát trong chế độ ngủ
- * @param {string} videoId - ID của video YouTube
- */
 function changeSleepVideo(videoId) {
     if (player && typeof player.loadVideoById === 'function') {
         player.loadVideoById(videoId);
@@ -1172,74 +1206,56 @@ function changeSleepVideo(videoId) {
     }
 }
 
-/**
- * Kích hoạt chế độ ngủ
- */
 function enterSleepMode() {
-    // Ẩn giao diện chính
     document.querySelector('.main-container').style.display = 'none';
     document.querySelector('.bottom-nav').style.display = 'none';
     document.getElementById('music-bubble-container').classList.add('hidden');
     document.getElementById('music-bubble-toggle-btn').style.display = 'none';
     
-    // Di chuyển iframe vào màn hình ngủ
     const iframe = document.getElementById('music-bubble-iframe');
     document.getElementById('sleep-mode-video-container').appendChild(iframe);
     
-    // Hiển thị màn hình ngủ
     document.getElementById('sleep-mode-overlay').style.display = 'flex';
     
-    // Đảm bảo video đang phát
     if (player) player.playVideo();
     
-    // Cập nhật đồng hồ cho chế độ ngủ
     if (sleepClockInterval) clearInterval(sleepClockInterval);
     
-    // *** THAY ĐỔI: Cập nhật hàm đồng hồ để có cả giây và ngày tháng ***
     const updateSleepClock = () => {
         const now = new Date();
         const timeEl = document.getElementById('sleep-mode-clock');
         const dateEl = document.getElementById('sleep-mode-date');
         
         if (timeEl) {
-            timeEl.textContent = now.toLocaleTimeString('vi-VN'); // Có giây
+            timeEl.textContent = now.toLocaleTimeString('vi-VN');
         }
         if (dateEl) {
             dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         }
     };
     
-    updateSleepClock(); // Cập nhật ngay
-    sleepClockInterval = setInterval(updateSleepClock, 1000); // Cập nhật mỗi giây
+    updateSleepClock();
+    sleepClockInterval = setInterval(updateSleepClock, 1000);
     
-    isMusicBubbleHidden = true; // Cập nhật trạng thái
+    isMusicBubbleHidden = true;
 }
 
-/**
- * Thoát khỏi chế độ ngủ
- */
 function exitSleepMode() {
-    // Ẩn màn hình ngủ
     document.getElementById('sleep-mode-overlay').style.display = 'none';
 
-    // Di chuyển iframe trở lại bubble
     const iframe = document.getElementById('music-bubble-iframe');
     document.getElementById('music-bubble-iframe-container').appendChild(iframe);
 
-    // Hiển thị lại giao diện chính
     document.querySelector('.main-container').style.display = 'block';
     document.querySelector('.bottom-nav').style.display = 'flex';
     document.getElementById('music-bubble-toggle-btn').style.display = 'flex';
 
-    // Dừng đồng hồ ngủ
     if (sleepClockInterval) clearInterval(sleepClockInterval);
     sleepClockInterval = null;
     
-    // Xóa văn bản ngày tháng cũ
     const dateEl = document.getElementById('sleep-mode-date');
     if (dateEl) dateEl.textContent = '---, --/--/----';
 
-    // Tạm dừng video khi thoát
     if (player) player.pauseVideo();
 }
 
