@@ -3,255 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Facebook Lite Clone</title>
+    <title>XingChat - Kết nối không giới hạn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- RESET & BASE --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'Roboto', Helvetica, Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 0; padding: 0;
-            color: #050505;
-            overflow-x: hidden;
-        }
-
-        /* --- MÀU SẮC CHUẨN FACEBOOK --- */
         :root {
-            --primary: #1877f2;
-            --bg-gray: #f0f2f5;
-            --text-main: #050505;
-            --text-sub: #65676b;
-            --divider: #ced0d4;
-            --white: #ffffff;
-            --
-        hover: #e4e6eb;
-            --messenger-blue: #0084ff;
+            --primary: #0084ff; /* Màu xanh XingChat */
+            --dark-bg: #000000;
+            --dark-card: #121212;
+            --dark-input: #242526;
+            --text-white: #e4e6eb;
+            --text-gray: #b0b3b8;
         }
 
-        /* --- AUTH SCREEN (GIỮ NGUYÊN NHƯNG CHỈNH LẠI CHÚT) --- */
-        #auth-screen, #action-screen {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            margin: 0; padding: 0;
+            overflow-x: hidden;
+            padding-bottom: 70px; /* Chừa chỗ cho menu dưới */
+        }
+
+        /* --- AUTH SCREEN --- */
+        #auth-screen {
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; background: #f0f2f5; padding: 20px;
+            min-height: 100vh; background: var(--dark-bg); z-index: 9999; position: fixed; top: 0; width: 100%;
         }
         .auth-card {
-            background: white; padding: 2rem; border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center;
+            background: var(--dark-card); padding: 30px; border-radius: 15px;
+            width: 90%; max-width: 400px; text-align: center;
         }
-        .auth-card h1 { color: var(--primary); font-size: 40px; margin-bottom: 10px; font-weight: bold; }
-        .input-box { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; outline: none; }
-        .input-box:focus { border-color: var(--primary); box-shadow: 0 0 0 2px #e7f3ff; }
-        .btn-blue { background: var(--primary); color: white; width: 100%; padding: 12px; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        .btn-green { background: #42b72a; color: white; width: auto; padding: 12px 20px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .link { color: var(--primary); cursor: pointer; font-size: 14px; margin-top: 10px; display: block; }
-        .error { color: red; font-size: 13px; margin: 5px 0; text-align: left; display: none; }
+        .auth-card h1 { 
+            color: var(--primary); font-size: 45px; margin-bottom: 10px; font-weight: 800; letter-spacing: -1px;
+        }
+        .input-dark {
+            width: 100%; padding: 14px; margin-bottom: 12px; background: var(--dark-input);
+            border: 1px solid #333; border-radius: 8px; color: white; font-size: 16px; outline: none; box-sizing: border-box;
+        }
+        .btn-primary {
+            background: var(--primary); color: white; width: 100%; padding: 14px;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px;
+        }
+        .btn-google {
+            background: white; color: black; width: 100%; padding: 14px;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .link { color: var(--primary); cursor: pointer; margin-top: 15px; display: inline-block; font-size: 14px; }
 
-        /* --- APP GIAO DIỆN CHÍNH --- */
-        #main-app { display: none; padding-bottom: 70px; max-width: 100%; margin: 0 auto; background: var(--bg-gray); min-height: 100vh; }
+        /* --- HEADER --- */
+        .top-header {
+            padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: var(--dark-bg); z-index: 100; border-bottom: 1px solid #222;
+        }
+        .logo-text { font-size: 28px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
+
+        /* --- FEED STYLES --- */
+        .post-card {
+            background: var(--dark-card); margin-bottom: 10px; padding: 15px;
+        }
+        .post-header { display: flex; align-items: center; margin-bottom: 10px; }
+        .user-ava { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; background: #333; }
+        .user-name { font-weight: bold; font-size: 16px; }
+        .post-time { font-size: 12px; color: var(--text-gray); }
+        .post-content { font-size: 15px; line-height: 1.5; margin-bottom: 10px; word-wrap: break-word; }
         
-        /* HEADER TRÊN CÙNG */
-        .top-nav {
-            background: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        .action-row {
+            display: flex; border-top: 1px solid #333; padding-top: 10px; margin-top: 10px;
         }
-        .app-logo { color: var(--primary); font-size: 28px; font-weight: 900; letter-spacing: -0.5px; }
-        .top-icons i { font-size: 20px; background: #e4e6eb; width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-
-        /* THANH ĐIỀU HƯỚNG DƯỚI CÙNG (BOTTOM NAV) */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; z-index: 999;
+        .action-btn {
+            flex: 1; text-align: center; color: var(--text-gray); font-weight: 600; cursor: pointer; padding: 5px; border-radius: 5px;
         }
-        .nav-item { font-size: 24px; color: var(--text-sub); cursor: pointer; position: relative; width: 33%; text-align: center; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active::after { display: none; } /* Bỏ gạch chân cũ */
-        .badge { background: red; color: white; font-size: 10px; padding: 2px 5px; border-radius: 10px; position: absolute; top: -2px; right: 30%; }
-
-        /* --- NEWSFEED --- */
-        .create-post-box { background: white; padding: 15px; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; }
-        .avatar-small { width: 40px; height: 40px; background: #ddd; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; color: #555; overflow: hidden; }
-        .fake-input { background: #f0f2f5; flex: 1; padding: 10px 15px; border-radius: 20px; color: #65676b; cursor: pointer; border: 1px solid #ddd; }
-        
-        .feed-card { background: white; margin-bottom: 10px; padding-top: 10px; }
-        .card-header { display: flex; padding: 0 15px; margin-bottom: 10px; align-items: center; }
-        .card-info { margin-left: 10px; flex: 1; }
-        .card-name { font-weight: 600; color: var(--text-main); font-size: 15px; }
-        .card-time { font-size: 12px; color: var(--text-sub); }
-        .card-content { padding: 0 15px 10px; font-size: 15px; line-height: 1.4; }
-        .card-stats { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 13px; color: var(--text-sub); }
-        .card-actions { display: flex; justify-content: space-around; padding: 5px 0; border-bottom: 1px solid #ddd; }
-        .action-btn { flex: 1; text-align: center; padding: 8px; color: var(--text-sub); font-weight: 600; cursor: pointer; border-radius: 5px; font-size: 14px; }
-        .action-btn:active { background: #f2f2f2; }
+        .action-btn:active { background: #333; }
         .action-btn i { margin-right: 5px; }
-        .liked { color: var(--primary) !important; }
 
-        /* --- MESSENGER & SEARCH --- */
-        .search-container { padding: 10px 15px; background: white; position: sticky; top: 0; z-index: 90; }
-        .search-box { position: relative; background: #f0f2f5; border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; }
-        .search-box i { color: var(--text-sub); margin-right: 8px; }
-        .search-box input { border: none; background: transparent; outline: none; flex: 1; font-size: 15px; }
-        
-        .search-result { background: white; padding: 0 15px; }
-        .result-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; cursor: pointer; }
-        .status-dot { width: 10px; height: 10px; background: #31a24c; border-radius: 50%; border: 2px solid white; position: absolute; bottom: 0; right: 0; }
-        
-        /* CHAT WINDOW */
-        .chat-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 2000;
-            display: none; flex-direction: column;
+        /* COMMENT SECTION */
+        .comment-section {
+            background: #1a1a1a; padding: 10px; border-radius: 8px; margin-top: 10px; display: none;
         }
-        .chat-header {
-            padding: 10px 15px; border-bottom: 1px solid #ddd; display: flex; align-items: center;
-            background: white; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        .cmt-item { margin-bottom: 8px; font-size: 14px; }
+        .cmt-item b { color: var(--text-white); }
+        .cmt-input-row { display: flex; gap: 10px; margin-top: 10px; }
+        .cmt-input {
+            flex: 1; background: #333; border: none; padding: 8px 12px; border-radius: 15px; color: white; outline: none;
         }
-        .chat-body { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 5px; background: white; }
-        .chat-footer { padding: 10px; display: flex; align-items: center; border-top: 1px solid #ddd; background: white; }
-        
-        .msg-bubble { max-width: 70%; padding: 8px 12px; border-radius: 18px; font-size: 15px; word-wrap: break-word; position: relative; }
-        .msg-bubble.me { background: var(--messenger-blue); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
-        .msg-bubble.them { background: #f0f2f5; color: black; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .msg-img { max-width: 100%; border-radius: 12px; margin-top: 5px; }
 
-        .chat-input { flex: 1; background: #f0f2f5; border: none; padding: 10px 15px; border-radius: 20px; outline: none; margin: 0 10px; }
-        .icon-btn { font-size: 20px; color: var(--primary); background: none; border: none; cursor: pointer; padding: 5px; }
+        /* --- PROFILE TAB --- */
+        .profile-header {
+            background: var(--dark-card); padding: 20px; text-align: center; margin-bottom: 10px;
+        }
+        .profile-ava-big {
+            width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary);
+            margin: 0 auto 10px; background: #333; object-fit: cover;
+        }
+        .profile-stats {
+            display: flex; justify-content: center; gap: 30px; margin: 15px 0;
+        }
+        .stat-box { text-align: center; }
+        .stat-num { font-weight: bold; font-size: 18px; display: block; }
+        .stat-label { font-size: 13px; color: var(--text-gray); }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+            background: var(--dark-card); border-top: 1px solid #333;
+            display: flex; justify-content: space-around; align-items: center; z-index: 999;
+        }
+        .nav-item { text-align: center; color: var(--text-gray); cursor: pointer; font-size: 24px; position: relative; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active::after {
+            content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+            width: 5px; height: 5px; background: var(--primary); border-radius: 50%;
+        }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .red-text { color: #ff4d4d; font-size: 13px; margin-top: 5px; display: none; }
         
-        /* GROUP & CREATE CHAT */
-        .group-create-area { padding: 10px; display: none; background: #e7f3ff; }
-        .tag { display: inline-block; background: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-right: 5px; color: var(--primary); }
+        /* SEARCH & CHAT CSS GIỮ NGUYÊN NHƯ BẢN CŨ... (đã tích hợp vào main) */
+        .search-box { background: var(--dark-input); padding: 10px; border-radius: 20px; display: flex; align-items: center; margin: 10px 15px; }
+        .search-box input { background: transparent; border: none; color: white; flex: 1; outline: none; margin-left: 10px; }
+        .chat-item { display: flex; padding: 10px 15px; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
     <div class="auth-card">
-        <h1>XingFace</h1>
+        <h1>XingChat</h1>
         
         <div id="login-form">
-            <input type="email" id="login-email" class="input-box" placeholder="Email hoặc số điện thoại">
-            <input type="password" id="login-pass" class="input-box" placeholder="Mật khẩu">
-            <div id="login-error" class="error"></div>
-            <button class="btn-blue" onclick="handleLogin()">Đăng nhập</button>
-            <span class="link" onclick="toggleAuth('forgot')">Quên mật khẩu?</span>
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-            <button class="btn-green" onclick="toggleAuth('register')">Tạo tài khoản mới</button>
+            <input type="email" id="l-email" class="input-dark" placeholder="Email">
+            <input type="password" id="l-pass" class="input-dark" placeholder="Mật khẩu">
+            <div id="l-err" class="red-text"></div>
+            
+            <button class="btn-primary" onclick="emailLogin()">Đăng nhập</button>
+            <button class="btn-google" onclick="googleLogin()">
+                <i class="fab fa-google"></i> Tiếp tục với Google
+            </button>
+            
+            <span class="link" onclick="toggleView('reg')">Chưa có tài khoản? Đăng ký ngay</span>
         </div>
 
-        <div id="register-form" style="display: none;">
-            <h3>Đăng ký</h3>
-            <input type="email" id="reg-email" class="input-box" placeholder="Email xác thực">
-            <input type="password" id="reg-pass" class="input-box" placeholder="Mật khẩu mới">
-            <input type="text" id="reg-id" class="input-box" placeholder="ID định danh (vd: hung123)" maxlength="20">
-            <div id="reg-error" class="error"></div>
-            <button class="btn-green" style="width:100%;" onclick="handleRegister()">Đăng ký</button>
-            <span class="link" onclick="toggleAuth('login')">Đã có tài khoản?</span>
-        </div>
-
-        <div id="forgot-form" style="display: none;">
-            <h3>Tìm tài khoản</h3>
-            <input type="email" id="forgot-email" class="input-box" placeholder="Email của bạn">
-            <div id="forgot-msg" class="error" style="color:green;"></div>
-            <button class="btn-blue" onclick="handleSendResetEmail()">Tìm kiếm</button>
-            <span class="link" onclick="toggleAuth('login')">Hủy</span>
+        <div id="reg-form" class="hidden">
+            <input type="text" id="r-id" class="input-dark" placeholder="Tạo ID (vd: tuan123)" maxlength="15">
+            <input type="email" id="r-email" class="input-dark" placeholder="Email">
+            <input type="password" id="r-pass" class="input-dark" placeholder="Mật khẩu">
+            <div id="r-err" class="red-text"></div>
+            
+            <button class="btn-primary" onclick="emailRegister()">Đăng ký</button>
+            <span class="link" onclick="toggleView('login')">Quay lại đăng nhập</span>
         </div>
     </div>
 </div>
 
-<div id="action-screen" style="display: none;">
-    <div class="auth-card">
-        <h2 id="action-title">Đang xử lý...</h2>
-        <div id="reset-view" style="display:none;">
-             <input type="password" id="new-pass" class="input-box" placeholder="Mật khẩu mới">
-             <button class="btn-blue" onclick="confirmReset()">Lưu mật khẩu</button>
+<div id="main-app" class="hidden">
+    <div class="top-header">
+        <div class="logo-text">XingChat</div>
         </div>
-        <button id="home-btn" class="btn-blue" style="display:none;" onclick="window.location.href='/'">Về trang chủ</button>
-    </div>
-</div>
-
-<div id="main-app">
-    <div class="top-nav">
-        <div class="app-logo">XingFace</div>
-        <div class="top-icons">
-            <i class="fas fa-search"></i>
-            <div style="width:10px;"></div>
-            <i class="fab fa-facebook-messenger" onclick="switchTab('chat')"></i>
-        </div>
-    </div>
 
     <div id="tab-feed">
-        <div class="create-post-box">
-            <div class="avatar-small" id="my-avatar">You</div>
-            <div class="fake-input" onclick="openPostModal()">Bạn đang nghĩ gì?</div>
-            <div style="color:#45bd62; font-size:20px; margin-left:10px;"><i class="fas fa-images"></i></div>
+        <div style="padding: 15px; background: var(--dark-card); margin-bottom: 10px;">
+            <div style="display: flex; gap: 10px;">
+                <img id="my-ava-small" class="user-ava" src="">
+                <input type="text" id="post-inp" style="flex:1; background:var(--dark-input); border:none; border-radius:20px; padding:0 15px; color:white; outline:none;" placeholder="Bạn đang nghĩ gì?">
+            </div>
+            <div style="text-align: right; margin-top: 10px;">
+                <button onclick="postStatus()" style="background:var(--primary); color:white; border:none; padding: 6px 20px; border-radius: 6px; font-weight:bold;">Đăng</button>
+            </div>
         </div>
-        
-        <div id="post-input-area" style="display:none; padding:15px; background:white; border-bottom:1px solid #ddd;">
-             <textarea id="post-content" rows="3" class="input-box" placeholder="Viết gì đó..."></textarea>
-             <button class="btn-blue" onclick="createPost()">Đăng bài</button>
-             <button class="link" onclick="document.getElementById('post-input-area').style.display='none'">Hủy</button>
-        </div>
-
         <div id="feed-list"></div>
     </div>
 
-    <div id="tab-chat" style="display: none;">
-        <div class="search-container">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" id="friend-search" placeholder="Tìm kiếm" oninput="onSearchInput(this.value)">
-            </div>
-            <div id="search-feedback" style="font-size:12px; color:red; margin-top:5px; display:none;">Không tìm thấy ID này.</div>
-            <div id="search-result-area" class="search-result"></div>
+    <div id="tab-chat" class="hidden">
+        <div class="search-box">
+            <i class="fas fa-search" style="color: gray;"></i>
+            <input type="text" placeholder="Tìm kiếm ID bạn bè..." oninput="searchUser(this.value)">
         </div>
-
-        <div style="padding:10px 15px; font-weight:bold; color:#65676b;">Đoạn chat</div>
-        <div id="friend-list"></div>
+        <div id="search-results" style="padding: 0 15px;"></div>
+        <div style="padding: 10px 15px; font-weight: bold; color: gray;">Tin nhắn</div>
+        <div id="chat-list"></div>
     </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchTab('feed')">
-            <i class="fas fa-home"></i>
-        </div>
-        <div class="nav-item" onclick="switchTab('chat')">
-            <i class="fab fa-facebook-messenger"></i>
+    <div id="tab-profile" class="hidden">
+        <div class="profile-header">
+            <img id="p-ava" class="profile-ava-big" src="">
+            <h2 id="p-name" style="margin: 0;">Loading...</h2>
+            <div id="p-email" style="color: gray; font-size: 14px; margin-top: 5px;"></div>
+            
+            <div class="profile-stats">
+                <div class="stat-box">
+                    <span class="stat-num" id="stat-friends">0</span>
+                    <span class="stat-label">Bạn bè</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num" id="stat-posts">0</span>
+                    <span class="stat-label">Bài viết</span>
+                </div>
             </div>
-        <div class="nav-item" onclick="alert('Profile đang phát triển')">
-            <i class="fas fa-user-circle"></i>
+            
+            <button onclick="logout()" style="background: #3a3b3c; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600;">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+            </button>
         </div>
+        <div style="padding: 10px 15px; font-weight: bold; color: gray;">Bài viết của tôi</div>
+        <div id="my-posts-list"></div>
     </div>
 </div>
 
-<div id="chat-window" class="chat-screen">
-    <div class="chat-header">
-        <i class="fas fa-arrow-left" style="font-size:22px; color:var(--primary); margin-right:15px; cursor:pointer;" onclick="closeChat()"></i>
-        <div class="avatar-small" style="margin-right:10px;">User</div>
-        <div style="flex:1;">
-            <div id="chat-with-name" style="font-weight:bold; font-size:16px;">Name</div>
-            <div style="font-size:12px; color:#65676b;">Đang hoạt động</div>
-        </div>
-        <i class="fas fa-info-circle" style="font-size:22px; color:var(--primary);"></i>
+<div id="bottom-nav" class="bottom-nav hidden">
+    <div class="nav-item active" onclick="switchTab('feed')"><i class="fas fa-home"></i></div>
+    <div class="nav-item" onclick="switchTab('chat')"><i class="fas fa-comment-dots"></i></div>
+    <div class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i></div>
+</div>
+
+<div id="chat-window" style="position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:2000; display:none; flex-direction:column;">
+    <div style="padding:15px; border-bottom:1px solid #333; display:flex; align-items:center;">
+        <i class="fas fa-arrow-left" onclick="closeChat()" style="font-size:22px; margin-right:15px;"></i>
+        <b id="cw-name" style="font-size:18px;">User</b>
     </div>
-
-    <div id="messages-box" class="chat-body"></div>
-
-    <div class="chat-footer">
-        <i class="fas fa-plus-circle icon-btn"></i>
-        <label for="img-input">
-            <i class="fas fa-image icon-btn" style="margin-left:10px;"></i>
-        </label>
-        <input type="file" id="img-input" accept="image/*" style="display:none;" onchange="handleImageUpload(this)">
-        
-        <input type="text" id="msg-input" class="chat-input" placeholder="Aa">
-        <i class="fas fa-paper-plane icon-btn" onclick="sendMessage()"></i>
+    <div id="cw-msgs" style="flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px;"></div>
+    <div style="padding:10px; display:flex; border-top:1px solid #333;">
+        <input id="cw-inp" type="text" placeholder="Nhắn tin..." style="flex:1; background:#333; border:none; padding:10px; border-radius:20px; color:white; outline:none;">
+        <button onclick="sendMsg()" style="background:none; border:none; color:var(--primary); font-size:20px; margin-left:10px;"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, sendPasswordResetEmail, applyActionCode, confirmPasswordReset } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp, setDoc, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp, setDoc, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+    // CẤU HÌNH FIREBASE MỚI
     const firebaseConfig = {
       apiKey: "AIzaSyDINi8lDjGXvvN4_nB9hNRcoMVBQowp0xk",
       authDomain: "web-chatonline.firebaseapp.com",
@@ -265,256 +248,312 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
+    
+    let me = null;
+    let activeChatID = null;
 
-    let currentUser = null;
-    let currentCustomId = "";
-    let activeChatFriendId = null;
+    // --- 1. AUTH SYSTEM ---
+    window.toggleView = (v) => {
+        document.getElementById('l-err').style.display='none';
+        document.getElementById('r-err').style.display='none';
+        if(v==='reg') { document.getElementById('login-form').classList.add('hidden'); document.getElementById('reg-form').classList.remove('hidden'); }
+        else { document.getElementById('login-form').classList.remove('hidden'); document.getElementById('reg-form').classList.add('hidden'); }
+    }
 
-    // --- HELPERS ---
-    const getEl = (id) => document.getElementById(id);
-    const hide = (id) => getEl(id).style.display = 'none';
-    const show = (id, type='block') => getEl(id).style.display = type;
-    const showErr = (id, msg) => { const e = getEl(id); e.innerText = msg; e.style.display = 'block'; };
-
-    // --- AUTH ---
-    window.toggleAuth = (mode) => {
-        hide('login-form'); hide('register-form'); hide('forgot-form');
-        ['login-error','reg-error'].forEach(id=>hide(id));
-        if(mode==='register') show('register-form');
-        else if(mode==='forgot') show('forgot-form');
-        else show('login-form');
-    };
-
-    window.handleLogin = async () => {
-        const e = getEl('login-email').value; const p = getEl('login-pass').value;
+    // Đăng nhập Google
+    window.googleLogin = async () => {
+        const provider = new GoogleAuthProvider();
         try {
-            const c = await signInWithEmailAndPassword(auth, e, p);
-            if(!c.user.emailVerified) { await signOut(auth); showErr('login-error', "Vui lòng xác thực email trước!"); }
-        } catch(err) { showErr('login-error', "Thông tin đăng nhập không đúng."); }
-    };
-
-    window.handleRegister = async () => {
-        const e = getEl('reg-email').value; const p = getEl('reg-pass').value; const id = getEl('reg-id').value.toLowerCase().trim();
-        if(!/^[a-z0-9]{1,20}$/.test(id)) return showErr('reg-error', "ID sai định dạng (chỉ chữ thường, số, max 20).");
-        try {
-            if((await getDoc(doc(db,"usernames",id))).exists()) return showErr('reg-error', "ID đã tồn tại.");
-            const u = (await createUserWithEmailAndPassword(auth, e, p)).user;
-            await setDoc(doc(db,"users",u.uid), { email:e, customId:id, friends:[], createdAt: serverTimestamp() });
-            await setDoc(doc(db,"usernames",id), { uid:u.uid });
-            await sendEmailVerification(u); await signOut(auth);
-            alert("Đăng ký thành công! Hãy kiểm tra email."); toggleAuth('login');
-        } catch(err) { showErr('reg-error', err.message); }
-    };
-
-    // --- MAIN LOGIC ---
-    onAuthStateChanged(auth, async (u) => {
-        // Handle URL links
-        const params = new URLSearchParams(window.location.search);
-        if(params.get('mode')) {
-            hide('auth-screen'); show('action-screen', 'flex');
-            const code = params.get('oobCode');
-            if(params.get('mode')==='verifyEmail') {
-                await applyActionCode(auth, code); getEl('action-title').innerText="Xác thực thành công!"; show('home-btn');
-            } else if(params.get('mode')==='resetPassword') {
-                getEl('action-title').innerText="Đặt lại mật khẩu"; show('reset-view');
-                window.confirmReset = async () => { await confirmPasswordReset(auth, code, getEl('new-pass').value); alert("Xong!"); window.location.href='/'; };
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+            
+            // Tự tạo ID từ email nếu chưa có (lấy phần trước @)
+            const idRef = doc(db, "users", user.uid);
+            const snap = await getDoc(idRef);
+            
+            if(!snap.exists()) {
+                // User mới -> Lưu vào DB
+                const newID = user.email.split('@')[0].replace(/[^a-z0-9]/g, ""); // Clean ID
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    id: newID,
+                    friends: [],
+                    createdAt: serverTimestamp()
+                });
+                await setDoc(doc(db, "ids", newID), { uid: user.uid });
             }
-            return;
+        } catch (error) {
+            alert("Lỗi Google Login: " + error.message + "\n(Nhớ bật Google Auth trong Firebase Console!)");
         }
+    };
 
-        if(u && u.emailVerified) {
-            currentUser = u;
-            const d = await getDoc(doc(db,"users",u.uid));
-            if(d.exists()) {
-                currentCustomId = d.data().customId;
-                getEl('my-avatar').innerText = currentCustomId[0].toUpperCase();
-                hide('auth-screen'); show('main-app');
-                loadFeed(); loadFriends();
+    window.emailRegister = async () => {
+        const id = document.getElementById('r-id').value.trim().toLowerCase();
+        const email = document.getElementById('r-email').value;
+        const pass = document.getElementById('r-pass').value;
+        const err = document.getElementById('r-err');
+
+        if(!/^[a-z0-9]{1,15}$/.test(id)) { err.innerText = "ID chỉ chữ thường và số, tối đa 15 ký tự!"; err.style.display='block'; return; }
+        
+        try {
+            const check = await getDoc(doc(db, "ids", id));
+            if(check.exists()) { err.innerText = "ID này đã tồn tại!"; err.style.display='block'; return; }
+
+            const res = await createUserWithEmailAndPassword(auth, email, pass);
+            await setDoc(doc(db, "users", res.user.uid), { email, id, friends: [], createdAt: serverTimestamp() });
+            await setDoc(doc(db, "ids", id), { uid: res.user.uid });
+        } catch(e) { err.innerText = e.message; err.style.display='block'; }
+    };
+
+    window.emailLogin = async () => {
+        try {
+            await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-pass').value);
+        } catch(e) { 
+            const err = document.getElementById('l-err');
+            err.innerText = "Sai tài khoản hoặc mật khẩu!"; err.style.display='block';
+        }
+    };
+
+    window.logout = () => signOut(auth);
+
+    onAuthStateChanged(auth, async (user) => {
+        if(user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            if(snap.exists()) {
+                me = { uid: user.uid, ...snap.data() };
+                document.getElementById('auth-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('bottom-nav').classList.remove('hidden');
+                
+                // Load dữ liệu cá nhân
+                document.getElementById('my-ava-small').src = `https://ui-avatars.com/api/?name=${me.id}&background=random&color=fff`;
+                loadFeed();
+                loadProfile();
+                loadChatList();
             }
         } else {
-            hide('main-app'); show('auth-screen', 'flex');
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('main-app').classList.add('hidden');
+            document.getElementById('bottom-nav').classList.add('hidden');
         }
     });
 
-    // --- NAVIGATION ---
+    // --- 2. TABS & NAVIGATION ---
     window.switchTab = (tab) => {
-        document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
-        if(tab==='feed') {
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        ['tab-feed', 'tab-chat', 'tab-profile'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+        if(tab === 'feed') {
             document.querySelectorAll('.nav-item')[0].classList.add('active');
-            show('tab-feed'); hide('tab-chat');
-        } else {
+            document.getElementById('tab-feed').classList.remove('hidden');
+        } else if(tab === 'chat') {
             document.querySelectorAll('.nav-item')[1].classList.add('active');
-            hide('tab-feed'); show('tab-chat');
+            document.getElementById('tab-chat').classList.remove('hidden');
+        } else {
+            document.querySelectorAll('.nav-item')[2].classList.add('active');
+            document.getElementById('tab-profile').classList.remove('hidden');
+            loadProfile(); // Refresh profile data
         }
     };
 
-    // --- FEED ---
-    window.openPostModal = () => show('post-input-area');
-    window.createPost = async () => {
-        const c = getEl('post-content').value; if(!c.trim()) return;
-        await addDoc(collection(db,"posts"), {
-            uid: currentUser.uid, author: currentCustomId, content: c, 
-            likes: [], comments: 0, createdAt: serverTimestamp()
+    // --- 3. FEED & COMMENT & SHARE ---
+    window.postStatus = async () => {
+        const txt = document.getElementById('post-inp').value;
+        if(!txt.trim()) return;
+        await addDoc(collection(db, "posts"), {
+            uid: me.uid, author: me.id, content: txt, likes: [], comments: [], createdAt: serverTimestamp()
         });
-        getEl('post-content').value = ""; hide('post-input-area');
+        document.getElementById('post-inp').value = "";
     };
 
     function loadFeed() {
-        onSnapshot(query(collection(db,"posts"), orderBy("createdAt","desc")), snap => {
-            const list = getEl('feed-list'); list.innerHTML = "";
+        onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), snap => {
+            const list = document.getElementById('feed-list');
+            list.innerHTML = "";
             snap.forEach(d => {
                 const p = d.data();
-                const isLiked = p.likes && p.likes.includes(currentUser.uid);
-                const el = document.createElement('div'); el.className = "feed-card";
-                el.innerHTML = `
-                    <div class="card-header">
-                        <div class="avatar-small">${p.author[0].toUpperCase()}</div>
-                        <div class="card-info">
-                            <div class="card-name">${p.author}</div>
-                            <div class="card-time">${p.createdAt?.toDate().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}) || 'Vừa xong'} <i class="fas fa-globe-americas"></i></div>
+                const pid = d.id;
+                const isLiked = p.likes && p.likes.includes(me.uid);
+                
+                const div = document.createElement('div');
+                div.className = "post-card";
+                div.innerHTML = `
+                    <div class="post-header">
+                        <img src="https://ui-avatars.com/api/?name=${p.author}&background=random" class="user-ava">
+                        <div>
+                            <div class="user-name">${p.author}</div>
+                            <div class="post-time">${p.createdAt ? new Date(p.createdAt.toDate()).toLocaleTimeString() : '...'}</div>
                         </div>
-                        <i class="fas fa-ellipsis-h"></i>
                     </div>
-                    <div class="card-content">${p.content}</div>
-                    <div class="card-stats">
-                        <span><i class="fas fa-thumbs-up" style="color:var(--primary)"></i> ${p.likes?.length||0}</span>
-                        <span>${p.comments} bình luận</span>
+                    <div class="post-content">${p.content}</div>
+                    <div style="font-size:13px; color:gray;">
+                        <i class="fas fa-thumbs-up" style="color:var(--primary)"></i> ${p.likes ? p.likes.length : 0} 
+                        <span style="float:right;">${p.comments ? p.comments.length : 0} bình luận</span>
                     </div>
-                    <div class="card-actions">
-                        <div class="action-btn ${isLiked?'liked':''}" onclick="toggleLike('${d.id}', ${isLiked})">
-                            <i class="far fa-thumbs-up"></i> Thích
+                    <div class="action-row">
+                        <div class="action-btn" style="${isLiked ? 'color:var(--primary)' : ''}" onclick="toggleLike('${pid}')">
+                            <i class="fas fa-thumbs-up"></i> Thích
                         </div>
-                        <div class="action-btn"><i class="far fa-comment-alt"></i> Bình luận</div>
-                        <div class="action-btn"><i class="fas fa-share"></i> Chia sẻ</div>
+                        <div class="action-btn" onclick="toggleComment('${pid}')">
+                            <i class="fas fa-comment-alt"></i> Bình luận
+                        </div>
+                        <div class="action-btn" onclick="sharePost('${p.content}')">
+                            <i class="fas fa-share"></i> Chia sẻ
+                        </div>
+                    </div>
+                    
+                    <div id="cmt-sect-${pid}" class="comment-section">
+                        <div id="cmt-list-${pid}">
+                            ${p.comments ? p.comments.map(c => `<div class="cmt-item"><b>${c.by}:</b> ${c.txt}</div>`).join('') : ''}
+                        </div>
+                        <div class="cmt-input-row">
+                            <input type="text" id="inp-cmt-${pid}" class="cmt-input" placeholder="Viết bình luận...">
+                            <button onclick="sendComment('${pid}')" style="background:none; border:none; color:var(--primary); font-weight:bold;">Gửi</button>
+                        </div>
                     </div>
                 `;
+                list.appendChild(div);
+            });
+        });
+    }
+
+    // Like Logic (Giữ nguyên)
+    window.toggleLike = async (pid) => {
+        const ref = doc(db, "posts", pid);
+        const p = (await getDoc(ref)).data();
+        let likes = p.likes || [];
+        if(likes.includes(me.uid)) likes = likes.filter(id => id !== me.uid);
+        else likes.push(me.uid);
+        await updateDoc(ref, { likes });
+    };
+
+    // Comment Logic (Smooth Scroll & Post)
+    window.toggleComment = (pid) => {
+        const sect = document.getElementById(`cmt-sect-${pid}`);
+        const input = document.getElementById(`inp-cmt-${pid}`);
+        
+        // Hiện comment box
+        if(sect.style.display === 'block') {
+            sect.style.display = 'none';
+        } else {
+            sect.style.display = 'block';
+            // Smooth Scroll xuống ô nhập
+            sect.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            input.focus();
+        }
+    };
+
+    window.sendComment = async (pid) => {
+        const inp = document.getElementById(`inp-cmt-${pid}`);
+        const txt = inp.value.trim();
+        if(!txt) return;
+
+        await updateDoc(doc(db, "posts", pid), {
+            comments: arrayUnion({ by: me.id, txt: txt, time: Date.now() })
+        });
+        inp.value = "";
+    };
+
+    // Share Logic (Web Share API)
+    window.sharePost = (content) => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'XingChat Post',
+                text: content,
+                url: window.location.href,
+            })
+            .then(() => console.log('Chia sẻ thành công'))
+            .catch((error) => console.log('Lỗi chia sẻ', error));
+        } else {
+            // Fallback cho PC
+            navigator.clipboard.writeText(content + " - via XingChat");
+            alert("Đã copy nội dung bài viết!");
+        }
+    };
+
+    // --- 4. PROFILE LOGIC (MỚI) ---
+    window.loadProfile = async () => {
+        // Render thông tin
+        document.getElementById('p-ava').src = `https://ui-avatars.com/api/?name=${me.id}&background=random&size=200`;
+        document.getElementById('p-name').innerText = "@" + me.id;
+        document.getElementById('p-email').innerText = me.email;
+        document.getElementById('stat-friends').innerText = me.friends ? me.friends.length : 0;
+
+        // Lấy bài viết CỦA TÔI
+        const q = query(collection(db, "posts"), where("uid", "==", me.uid), orderBy("createdAt", "desc"));
+        onSnapshot(q, (snap) => {
+            document.getElementById('stat-posts').innerText = snap.size;
+            const list = document.getElementById('my-posts-list');
+            list.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                const el = document.createElement('div');
+                el.className = 'post-card';
+                el.innerHTML = `<div class="post-content">${p.content}</div><div style="font-size:12px; color:gray;">${new Date(p.createdAt?.toDate()).toLocaleDateString()}</div>`;
                 list.appendChild(el);
             });
         });
-    }
-
-    window.toggleLike = async (pid, isLiked) => {
-        const ref = doc(db,"posts",pid);
-        if(isLiked) await updateDoc(ref, { likes: arrayRemove(currentUser.uid) });
-        else await updateDoc(ref, { likes: arrayUnion(currentUser.uid) });
     };
 
-    // --- MESSENGER: SEARCH & ADD FRIEND ---
-    let searchTimeout;
-    window.onSearchInput = (val) => {
-        clearTimeout(searchTimeout); hide('search-feedback'); getEl('search-result-area').innerHTML="";
-        if(!val.trim()) return;
-        // Debounce search
-        searchTimeout = setTimeout(async () => {
-            const qId = val.toLowerCase().trim();
-            if(qId === currentCustomId) return;
-            const docRef = await getDoc(doc(db,"usernames", qId));
-            
-            if(docRef.exists()) {
-                const uid = docRef.data().uid;
-                const div = document.createElement('div'); div.className = 'result-item';
-                div.innerHTML = `<div class="avatar-small" style="margin-right:10px;">${qId[0].toUpperCase()}</div><b>${qId}</b> <i class="fas fa-user-plus" style="margin-left:auto; color:var(--primary);"></i>`;
-                div.onclick = () => addFriend(uid, qId);
-                getEl('search-result-area').appendChild(div);
-            } else {
-                show('search-feedback');
-            }
-        }, 500); // 0.5s delay
+    // --- 5. CHAT SYSTEM (Giữ nguyên logic cũ nhưng tích hợp search ID) ---
+    window.searchUser = async (val) => {
+        const box = document.getElementById('search-results'); box.innerHTML="";
+        if(!val) return;
+        const d = await getDoc(doc(db, "ids", val.trim().toLowerCase()));
+        if(d.exists() && d.data().uid !== me.uid) {
+            box.innerHTML = `<div class="chat-item" onclick="addFriend('${d.data().uid}')" style="background:#333; border-radius:10px; margin-top:5px;">
+                <b style="color:var(--primary)">@${val}</b> <span style="margin-left:auto; font-size:12px;">Kết bạn</span>
+            </div>`;
+        }
+    };
+    
+    window.addFriend = async (uid) => {
+        await updateDoc(doc(db, "users", me.uid), { friends: arrayUnion(uid) });
+        await updateDoc(doc(db, "users", uid), { friends: arrayUnion(me.uid) });
+        alert("Đã thêm bạn!");
     };
 
-    window.addFriend = async (targetUid, targetId) => {
-        // Auto friend for demo simplicity
-        await updateDoc(doc(db,"users",currentUser.uid), { friends: arrayUnion(targetUid) });
-        await updateDoc(doc(db,"users",targetUid), { friends: arrayUnion(currentUser.uid) });
-        alert(`Đã thêm ${targetId} vào danh sách chat!`);
-        getEl('friend-search').value = ""; getEl('search-result-area').innerHTML="";
-    };
-
-    // --- MESSENGER: LIST & CHAT ---
-    function loadFriends() {
-        onSnapshot(doc(db,"users",currentUser.uid), async (snap) => {
-            const fList = snap.data().friends || [];
-            const container = getEl('friend-list'); container.innerHTML = "";
-            
-            for(const fid of fList) {
-                const fSnap = await getDoc(doc(db,"users",fid));
-                if(fSnap.exists()) {
-                    const fData = fSnap.data();
-                    const el = document.createElement('div'); el.className = 'result-item'; el.style.padding = "10px 15px";
-                    el.innerHTML = `
-                        <div style="position:relative;">
-                            <div class="avatar-small" style="width:50px; height:50px; font-size:20px;">${fData.customId[0].toUpperCase()}</div>
-                            <div class="status-dot"></div>
-                        </div>
-                        <div style="margin-left:15px; flex:1;">
-                            <div style="font-weight:600; font-size:16px;">${fData.customId}</div>
-                            <div style="color:#65676b; font-size:14px;">Nhấn để trò chuyện</div>
-                        </div>
-                        <i class="far fa-circle" style="color:#ddd;"></i>
-                    `;
-                    el.onclick = () => openChat(fid, fData.customId);
-                    container.appendChild(el);
+    function loadChatList() {
+        onSnapshot(doc(db, "users", me.uid), async (snap) => {
+            const f = snap.data().friends || [];
+            const list = document.getElementById('chat-list'); list.innerHTML="";
+            for(const fid of f) {
+                const u = await getDoc(doc(db, "users", fid));
+                if(u.exists()) {
+                    const ud = u.data();
+                    const el = document.createElement('div'); el.className="chat-item";
+                    el.innerHTML = `<img src="https://ui-avatars.com/api/?name=${ud.id}&background=random" class="user-ava"><b>${ud.id}</b>`;
+                    el.onclick = () => openChat(fid, ud.id);
+                    list.appendChild(el);
                 }
             }
         });
     }
 
-    window.openChat = (fid, fname) => {
-        activeChatFriendId = fid;
-        show('chat-window', 'flex');
-        getEl('chat-with-name').innerText = fname;
-        getEl('main-app').style.display = 'none'; // Hide main app to simulate full screen
-
-        const chatId = [currentUser.uid, fid].sort().join("_");
-        onSnapshot(query(collection(db,"chats",chatId,"messages"), orderBy("createdAt","asc")), snap => {
-            const box = getEl('messages-box'); box.innerHTML = "";
+    window.openChat = (fid, name) => {
+        activeChatID = fid;
+        document.getElementById('chat-window').style.display='flex';
+        document.getElementById('cw-name').innerText = name;
+        const cid = [me.uid, fid].sort().join("_");
+        onSnapshot(query(collection(db, "chats", cid, "msgs"), orderBy("t", "asc")), snap => {
+            const b = document.getElementById('cw-msgs'); b.innerHTML="";
             snap.forEach(d => {
                 const m = d.data();
                 const div = document.createElement('div');
-                div.className = `msg-bubble ${m.senderId === currentUser.uid ? 'me' : 'them'}`;
-                if(m.type === 'image') {
-                    div.innerHTML = `<img src="${m.text}" class="msg-img">`;
-                    div.style.background = 'transparent'; div.style.padding = '0';
-                } else {
-                    div.innerText = m.text;
-                }
-                box.appendChild(div);
+                div.style = `max-width:70%; padding:8px 12px; border-radius:15px; background:${m.by===me.uid?'var(--primary)':'#333'}; align-self:${m.by===me.uid?'flex-end':'flex-start'}`;
+                div.innerText = m.txt;
+                b.appendChild(div);
             });
-            box.scrollTop = box.scrollHeight;
+            b.scrollTop = b.scrollHeight;
         });
     };
-
-    window.closeChat = () => {
-        hide('chat-window');
-        show('main-app');
-        activeChatFriendId = null;
-    };
-
-    window.sendMessage = async () => {
-        const txt = getEl('msg-input').value.trim();
-        if(!txt || !activeChatFriendId) return;
-        const chatId = [currentUser.uid, activeChatFriendId].sort().join("_");
-        await addDoc(collection(db,"chats",chatId,"messages"), {
-            text: txt, type: 'text', senderId: currentUser.uid, createdAt: serverTimestamp()
-        });
-        getEl('msg-input').value = "";
-    };
-
-    window.handleImageUpload = async (input) => {
-        const file = input.files[0];
-        if(!file || !activeChatFriendId) return;
-        
-        try {
-            const storageRef = ref(storage, `chat_images/${Date.now()}_${file.name}`);
-            await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(storageRef);
-            
-            const chatId = [currentUser.uid, activeChatFriendId].sort().join("_");
-            await addDoc(collection(db,"chats",chatId,"messages"), {
-                text: url, type: 'image', senderId: currentUser.uid, createdAt: serverTimestamp()
-            });
-        } catch(e) { alert("Lỗi gửi ảnh (Kiểm tra xem đã bật Storage chưa): " + e.message); }
+    window.closeChat = () => { document.getElementById('chat-window').style.display='none'; activeChatID=null; };
+    window.sendMsg = async () => {
+        const txt = document.getElementById('cw-inp').value;
+        if(!txt || !activeChatID) return;
+        const cid = [me.uid, activeChatID].sort().join("_");
+        await addDoc(collection(db, "chats", cid, "msgs"), { by:me.uid, txt, t: Date.now() });
+        document.getElementById('cw-inp').value="";
     };
 
 </script>
