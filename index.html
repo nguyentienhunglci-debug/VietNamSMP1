@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>XingChat - Kết nối đam mê</title>
+    <title>XingChat Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0084ff; /* Xanh XingChat */
-            --dark-bg: #000000;
-            --dark-card: #121212;
-            --dark-input: #242526;
-            --text-white: #e4e6eb;
+            --primary: #0084ff;
+            --gradient: linear-gradient(135deg, #0084ff 0%, #00c6ff 100%);
+            --dark-bg: #0f0f0f; /* Đen sâu hơn */
+            --dark-card: #1e1e1e;
+            --dark-input: #2a2a2a;
+            --glass: rgba(30, 30, 30, 0.85); /* Hiệu ứng kính */
+            --text-white: #ffffff;
             --text-gray: #b0b3b8;
+            --danger: #ff4757;
+            --success: #2ed573;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -21,7 +27,8 @@
             color: var(--text-white);
             margin: 0; padding: 0;
             overflow-x: hidden;
-            padding-bottom: 70px;
+            padding-bottom: 90px; /* Chừa chỗ cho menu lơ lửng */
+            user-select: none; /* Chống bôi đen làm cảm giác app hơn */
         }
 
         /* --- AUTH SCREEN --- */
@@ -30,175 +37,238 @@
             min-height: 100vh; background: var(--dark-bg); z-index: 9999; position: fixed; top: 0; width: 100%;
         }
         .auth-card {
-            background: var(--dark-card); padding: 30px; border-radius: 15px;
+            background: var(--dark-card); padding: 30px; border-radius: 25px;
             width: 90%; max-width: 400px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .auth-card h1 { color: var(--primary); font-size: 45px; margin-bottom: 10px; font-weight: 800; letter-spacing: -1px; }
+        .logo-big { 
+            background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 45px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px;
+        }
         .input-dark {
-            width: 100%; padding: 14px; margin-bottom: 12px; background: var(--dark-input);
-            border: 1px solid #333; border-radius: 8px; color: white; font-size: 16px; outline: none; box-sizing: border-box;
+            width: 100%; padding: 16px; margin-bottom: 15px; background: var(--dark-input);
+            border: 1px solid #333; border-radius: 12px; color: white; font-size: 16px; outline: none;
         }
-        .btn-primary {
-            background: var(--primary); color: white; width: 100%; padding: 14px;
-            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 10px;
+        .input-dark:focus { border-color: var(--primary); }
+        .btn-gradient {
+            background: var(--gradient); color: white; width: 100%; padding: 16px;
+            border: none; border-radius: 12px; font-weight: bold; font-size: 18px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 132, 255, 0.3); transition: transform 0.2s;
         }
-        .btn-google {
-            background: white; color: black; width: 100%; padding: 14px;
-            border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .link { color: var(--primary); cursor: pointer; margin-top: 15px; display: inline-block; font-size: 14px; }
+        .btn-gradient:active { transform: scale(0.98); }
 
         /* --- HEADER --- */
         .top-header {
-            padding: 15px; display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; background: var(--dark-bg); z-index: 100; border-bottom: 1px solid #222;
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; background: rgba(15, 15, 15, 0.95); z-index: 100;
+            backdrop-filter: blur(10px); border-bottom: 1px solid #333;
         }
-        .logo-text { font-size: 28px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
+        .app-logo { font-size: 26px; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
+        .bell-icon { 
+            font-size: 24px; color: var(--text-white); position: relative; cursor: pointer; padding: 5px;
+        }
+        .badge {
+            position: absolute; top: 0; right: 0; background: var(--danger); color: white;
+            font-size: 10px; padding: 2px 5px; border-radius: 10px; border: 2px solid var(--dark-bg);
+        }
 
-        /* --- FEED STYLES --- */
-        .post-card { background: var(--dark-card); margin-bottom: 10px; padding: 15px; }
-        .post-header { display: flex; align-items: center; margin-bottom: 10px; }
-        .user-ava { width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; background: #333; object-fit: cover; }
-        .user-name { font-weight: bold; font-size: 16px; }
-        .post-time { font-size: 12px; color: var(--text-gray); }
-        .post-content { font-size: 15px; line-height: 1.5; margin-bottom: 10px; word-wrap: break-word; }
-        
-        .action-row { display: flex; border-top: 1px solid #333; padding-top: 10px; margin-top: 10px; }
-        .action-btn { flex: 1; text-align: center; color: var(--text-gray); font-weight: 600; cursor: pointer; padding: 5px; border-radius: 5px; }
-        .action-btn:active { background: #333; }
-        .action-btn i { margin-right: 5px; }
-
-        /* COMMENT SECTION */
-        .comment-section { background: #1a1a1a; padding: 10px; border-radius: 8px; margin-top: 10px; display: none; }
-        .cmt-item { margin-bottom: 8px; font-size: 14px; }
-        .cmt-item b { color: var(--text-white); }
-        .cmt-input-row { display: flex; gap: 10px; margin-top: 10px; }
-        .cmt-input { flex: 1; background: #333; border: none; padding: 8px 12px; border-radius: 15px; color: white; outline: none; }
-
-        /* --- PROFILE TAB --- */
-        .profile-header { background: var(--dark-card); padding: 20px; text-align: center; margin-bottom: 10px; }
-        .profile-ava-big { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--primary); margin: 0 auto 10px; background: #333; object-fit: cover; }
-        .profile-stats { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
-        .stat-box { text-align: center; }
-        .stat-num { font-weight: bold; font-size: 18px; display: block; }
-        .stat-label { font-size: 13px; color: var(--text-gray); }
-
-        /* --- BOTTOM NAV --- */
+        /* --- BOTTOM NAV (GLASSMORPHISM) --- */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            background: var(--dark-card); border-top: 1px solid #333;
-            display: flex; justify-content: space-around; align-items: center; z-index: 999;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; height: 70px;
+            background: var(--glass);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 35px; /* Bo tròn mạnh */
+            display: flex; justify-content: space-around; align-items: center;
+            z-index: 999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .nav-item { text-align: center; color: var(--text-gray); cursor: pointer; font-size: 24px; position: relative; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active::after { content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; background: var(--primary); border-radius: 50%; }
+        .nav-item {
+            text-align: center; color: var(--text-gray); cursor: pointer;
+            font-size: 24px; transition: 0.3s; position: relative; width: 33%;
+        }
+        .nav-item.active { color: var(--primary); transform: translateY(-2px); }
+        .nav-item.active i { filter: drop-shadow(0 0 10px rgba(0,132,255,0.6)); }
+
+        /* --- FEED --- */
+        .create-post-card {
+            background: var(--dark-card); border-radius: 20px; padding: 15px; margin: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .cp-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .user-ava { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #333; }
+        .cp-input {
+            flex: 1; background: transparent; border: none; color: white; font-size: 16px; outline: none;
+            min-height: 40px;
+        }
+        .post-btn-submit {
+            background: var(--gradient); color: white; border: none; padding: 10px 0; width: 100%;
+            border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer;
+        }
+
+        .post-card { background: var(--dark-card); margin: 0 10px 15px 10px; padding: 15px; border-radius: 15px; }
+        
+        /* --- CHAT LIST --- */
+        .search-container { padding: 0 15px 10px; }
+        .search-box {
+            background: var(--dark-input); padding: 12px; border-radius: 15px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .chat-item {
+            display: flex; align-items: center; padding: 12px 15px; gap: 15px;
+            transition: background 0.2s; border-radius: 15px; margin: 0 10px;
+        }
+        .chat-item:active { background: #333; }
+        .chat-info h4 { margin: 0; font-size: 16px; }
+        .chat-info p { margin: 3px 0 0; color: var(--text-gray); font-size: 13px; }
+
+        /* --- SETTINGS / PROFILE --- */
+        .profile-cover {
+            height: 150px; background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            border-radius: 0 0 20px 20px; position: relative; margin-bottom: 50px;
+        }
+        .profile-ava-big {
+            width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--dark-bg);
+            position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%);
+            background: #333; object-fit: cover;
+        }
+        .setting-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; background: var(--dark-card); margin: 10px 15px; border-radius: 15px;
+        }
+
+        /* --- NOTIFICATION MODAL --- */
+        #noti-panel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg);
+            z-index: 2000; padding: 60px 15px 15px; display: none; overflow-y: auto;
+        }
+        .noti-item {
+            background: var(--dark-card); padding: 15px; border-radius: 15px; margin-bottom: 10px;
+            display: flex; gap: 10px; align-items: center;
+        }
+        .btn-accept { background: var(--primary); color: white; border: none; padding: 6px 15px; border-radius: 8px; font-size: 13px; margin-right: 5px; }
+        .btn-decline { background: #333; color: white; border: none; padding: 6px 15px; border-radius: 8px; font-size: 13px; }
 
         /* --- UTILS --- */
         .hidden { display: none !important; }
-        .red-text { color: #ff4d4d; font-size: 13px; margin-top: 5px; display: none; }
-        
-        .search-box { background: var(--dark-input); padding: 10px; border-radius: 20px; display: flex; align-items: center; margin: 10px 15px; }
-        .search-box input { background: transparent; border: none; color: white; flex: 1; outline: none; margin-left: 10px; }
-        .chat-item { display: flex; padding: 10px 15px; align-items: center; cursor: pointer; }
+        .chat-window { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark-bg); z-index: 5000; display: none; flex-direction: column; }
     </style>
 </head>
 <body>
 
 <div id="auth-screen">
     <div class="auth-card">
-        <h1>XingChat</h1>
+        <div class="logo-big">XingChat</div>
         <div id="login-form">
             <input type="email" id="l-email" class="input-dark" placeholder="Email">
             <input type="password" id="l-pass" class="input-dark" placeholder="Mật khẩu">
-            <div id="l-err" class="red-text"></div>
-            <button class="btn-primary" onclick="emailLogin()">Đăng nhập</button>
-            <button class="btn-google" onclick="googleLogin()"><i class="fab fa-google"></i> Tiếp tục với Google</button>
-            <span class="link" onclick="toggleView('reg')">Chưa có tài khoản? Đăng ký</span>
+            <button class="btn-gradient" onclick="emailLogin()">Đăng nhập</button>
+            <p onclick="toggleView('reg')" style="color:var(--primary); margin-top:20px; cursor:pointer;">Tạo tài khoản mới</p>
         </div>
         <div id="reg-form" class="hidden">
-            <input type="text" id="r-id" class="input-dark" placeholder="Tạo ID (vd: tuan123)" maxlength="15">
+            <input type="text" id="r-id" class="input-dark" placeholder="ID (vd: hung123)" maxlength="15">
             <input type="email" id="r-email" class="input-dark" placeholder="Email">
             <input type="password" id="r-pass" class="input-dark" placeholder="Mật khẩu">
-            <div id="r-err" class="red-text"></div>
-            <button class="btn-primary" onclick="emailRegister()">Đăng ký</button>
-            <span class="link" onclick="toggleView('login')">Quay lại đăng nhập</span>
+            <button class="btn-gradient" onclick="emailRegister()">Đăng ký</button>
+            <p onclick="toggleView('login')" style="color:var(--primary); margin-top:20px; cursor:pointer;">Quay lại đăng nhập</p>
         </div>
     </div>
 </div>
 
 <div id="main-app" class="hidden">
     <div class="top-header">
-        <div class="logo-text">XingChat</div>
+        <div class="app-logo">XingChat</div>
+        <div class="bell-icon" onclick="toggleNoti()">
+            <i class="fas fa-bell"></i>
+            <div id="noti-badge" class="badge hidden">0</div>
+        </div>
+    </div>
+
+    <div id="noti-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="margin:0;">Thông báo</h2>
+            <i class="fas fa-times" style="font-size:24px; padding:10px;" onclick="toggleNoti()"></i>
+        </div>
+        <div id="noti-list"></div>
     </div>
 
     <div id="tab-feed">
-        <div style="padding: 15px; background: var(--dark-card); margin-bottom: 10px;">
-            <div style="display: flex; gap: 10px;">
-                <img id="my-ava-small" class="user-ava" src="">
-                <input type="text" id="post-inp" style="flex:1; background:var(--dark-input); border:none; border-radius:20px; padding:0 15px; color:white; outline:none;" placeholder="Bạn đang nghĩ gì?">
+        <div class="create-post-card">
+            <div class="cp-header">
+                <img id="my-ava-post" class="user-ava" src="">
+                <input type="text" id="post-inp" class="cp-input" placeholder="Bạn đang nghĩ gì thế?">
             </div>
-            <div style="text-align: right; margin-top: 10px;">
-                <button onclick="postStatus()" style="background:var(--primary); color:white; border:none; padding: 6px 20px; border-radius: 6px; font-weight:bold;">Đăng</button>
-            </div>
+            <button class="post-btn-submit" onclick="postStatus()">ĐĂNG BÀI</button>
         </div>
-        <div id="feed-list"></div>
+        <div id="feed-list" style="padding-bottom: 20px;"></div>
     </div>
 
     <div id="tab-chat" class="hidden">
-        <div class="search-box">
-            <i class="fas fa-search" style="color: gray;"></i>
-            <input type="text" placeholder="Tìm kiếm ID bạn bè..." oninput="searchUser(this.value)">
-        </div>
-        <div id="search-results" style="padding: 0 15px;"></div>
-        <div style="padding: 10px 15px; font-weight: bold; color: gray;">Tin nhắn</div>
-        <div id="chat-list"></div>
-    </div>
-
-    <div id="tab-profile" class="hidden">
-        <div class="profile-header">
-            <img id="p-ava" class="profile-ava-big" src="">
-            <h2 id="p-name" style="margin: 0;">Loading...</h2>
-            <div id="p-email" style="color: gray; font-size: 14px; margin-top: 5px;"></div>
-            <div class="profile-stats">
-                <div class="stat-box"><span class="stat-num" id="stat-friends">0</span><span class="stat-label">Bạn bè</span></div>
-                <div class="stat-box"><span class="stat-num" id="stat-posts">0</span><span class="stat-label">Bài viết</span></div>
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search" style="color:gray;"></i>
+                <input type="text" placeholder="Tìm ID bạn bè..." style="background:transparent; border:none; color:white; flex:1; outline:none;" oninput="searchUser(this.value)">
             </div>
-            <button onclick="logout()" style="background: #3a3b3c; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600;"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>
         </div>
-        <div style="padding: 10px 15px; font-weight: bold; color: gray;">Bài viết của tôi</div>
-        <div id="my-posts-list"></div>
+        <div id="search-results" style="padding: 0 15px; margin-bottom:10px;"></div>
+        <div id="chat-list" style="padding-bottom:20px;"></div>
+    </div>
+
+    <div id="tab-settings" class="hidden">
+        <div class="profile-cover">
+            <img id="p-ava" class="profile-ava-big" src="">
+        </div>
+        <div style="text-align:center; margin-bottom:30px;">
+            <h2 id="p-name" style="margin:0;">Loading...</h2>
+            <p id="p-email" style="color:gray; font-size:14px; margin-top:5px;"></p>
+        </div>
+
+        <div class="setting-item">
+            <span><i class="fas fa-moon" style="margin-right:10px;"></i> Giao diện tối</span>
+            <i class="fas fa-toggle-on" style="color:var(--primary); font-size:24px;"></i>
+        </div>
+        
+        <div class="setting-item" onclick="logout()" style="cursor:pointer;">
+            <span style="color:var(--danger);"><i class="fas fa-sign-out-alt" style="margin-right:10px;"></i> Đăng xuất</span>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('feed')">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="nav-item" onclick="switchTab('chat')">
+            <i class="fas fa-comment-dots"></i>
+        </div>
+        <div class="nav-item" onclick="switchTab('settings')">
+            <i class="fas fa-cog"></i>
+        </div>
     </div>
 </div>
 
-<div id="bottom-nav" class="bottom-nav hidden">
-    <div class="nav-item active" onclick="switchTab('feed')"><i class="fas fa-home"></i></div>
-    <div class="nav-item" onclick="switchTab('chat')"><i class="fas fa-comment-dots"></i></div>
-    <div class="nav-item" onclick="switchTab('profile')"><i class="fas fa-user"></i></div>
-</div>
-
-<div id="chat-window" style="position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:2000; display:none; flex-direction:column;">
-    <div style="padding:15px; border-bottom:1px solid #333; display:flex; align-items:center;">
-        <i class="fas fa-arrow-left" onclick="closeChat()" style="font-size:22px; margin-right:15px; color:var(--text-white);"></i>
+<div id="chat-window" class="chat-window">
+    <div style="padding:15px; background:rgba(30,30,30,0.95); backdrop-filter:blur(10px); display:flex; align-items:center; border-bottom:1px solid #333;">
+        <i class="fas fa-chevron-left" onclick="closeChat()" style="font-size:24px; padding:10px; cursor:pointer;"></i>
+        <img id="cw-ava" class="user-ava" style="margin:0 10px;">
         <b id="cw-name" style="font-size:18px;">User</b>
     </div>
     <div id="cw-msgs" style="flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:10px;"></div>
-    <div style="padding:10px; display:flex; border-top:1px solid #333; align-items:center;">
-        <label for="img-upload" style="margin-right:10px;"><i class="fas fa-image" style="font-size:24px; color:var(--primary);"></i></label>
-        <input type="file" id="img-upload" style="display:none;" accept="image/*" onchange="sendImage(this)">
-        <input id="cw-inp" type="text" placeholder="Nhắn tin..." style="flex:1; background:#333; border:none; padding:10px; border-radius:20px; color:white; outline:none;">
-        <button onclick="sendMsg()" style="background:none; border:none; color:var(--primary); font-size:20px; margin-left:10px;"><i class="fas fa-paper-plane"></i></button>
+    <div style="padding:10px; background:#1e1e1e; display:flex; align-items:center;">
+        <label for="img-up" style="padding:10px;"><i class="fas fa-image" style="font-size:24px; color:var(--primary);"></i></label>
+        <input type="file" id="img-up" hidden accept="image/*" onchange="sendImage(this)">
+        <input id="cw-inp" type="text" placeholder="Nhắn tin..." style="flex:1; background:#333; border:none; padding:12px 15px; border-radius:20px; color:white; outline:none; margin:0 5px;">
+        <button onclick="sendMsg()" style="background:none; border:none; color:var(--primary); font-size:22px; padding:10px;"><i class="fas fa-paper-plane"></i></button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     import { getFirestore, collection, addDoc, query, where, onSnapshot, orderBy, serverTimestamp, setDoc, doc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
-    // --- CẤU HÌNH MỚI CỦA BẠN (xingchat-13d44) ---
+    // CONFIG TỪ ẢNH CỦA BẠN (13d44)
     const firebaseConfig = {
       apiKey: "AIzaSyAICFb4QrXY2pDzyuf9u-YF9kX5xlaBss0",
       authDomain: "xingchat-13d44.firebaseapp.com",
@@ -210,7 +280,6 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const storage = getStorage(app);
@@ -218,45 +287,26 @@
     let me = null;
     let activeChatID = null;
 
-    // --- 1. AUTH ---
+    // --- AUTH ---
     window.toggleView = (v) => {
-        document.getElementById('l-err').style.display='none'; document.getElementById('r-err').style.display='none';
         if(v==='reg') { document.getElementById('login-form').classList.add('hidden'); document.getElementById('reg-form').classList.remove('hidden'); }
         else { document.getElementById('login-form').classList.remove('hidden'); document.getElementById('reg-form').classList.add('hidden'); }
     }
-
-    window.googleLogin = async () => {
-        try {
-            const provider = new GoogleAuthProvider();
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            const idRef = doc(db, "users", user.uid);
-            const snap = await getDoc(idRef);
-            if(!snap.exists()) {
-                const newID = user.email.split('@')[0].replace(/[^a-z0-9]/g, "");
-                await setDoc(doc(db, "users", user.uid), { email: user.email, id: newID, friends: [], createdAt: serverTimestamp() });
-                await setDoc(doc(db, "ids", newID), { uid: user.uid });
-            }
-        } catch (e) { alert("Lỗi Google Login: " + e.message + "\n(Hãy bật Google Auth trong Firebase Console!)"); }
-    };
-
     window.emailRegister = async () => {
         const id = document.getElementById('r-id').value.trim().toLowerCase();
         const email = document.getElementById('r-email').value;
         const pass = document.getElementById('r-pass').value;
-        if(!/^[a-z0-9]{1,15}$/.test(id)) return document.getElementById('r-err').innerText = "ID không hợp lệ!", document.getElementById('r-err').style.display='block';
-        
+        if(!/^[a-z0-9]{1,15}$/.test(id)) return alert("ID không hợp lệ");
         try {
-            if((await getDoc(doc(db, "ids", id))).exists()) return document.getElementById('r-err').innerText = "ID đã tồn tại!", document.getElementById('r-err').style.display='block';
+            if((await getDoc(doc(db, "ids", id))).exists()) return alert("ID đã tồn tại");
             const res = await createUserWithEmailAndPassword(auth, email, pass);
             await setDoc(doc(db, "users", res.user.uid), { email, id, friends: [], createdAt: serverTimestamp() });
             await setDoc(doc(db, "ids", id), { uid: res.user.uid });
-        } catch(e) { document.getElementById('r-err').innerText = e.message; document.getElementById('r-err').style.display='block'; }
+        } catch(e) { alert(e.message); }
     };
-
     window.emailLogin = async () => {
         try { await signInWithEmailAndPassword(auth, document.getElementById('l-email').value, document.getElementById('l-pass').value); }
-        catch(e) { document.getElementById('l-err').innerText = "Sai thông tin!"; document.getElementById('l-err').style.display='block'; }
+        catch(e) { alert("Sai thông tin đăng nhập"); }
     };
     window.logout = () => signOut(auth);
 
@@ -267,133 +317,152 @@
                 me = { uid: user.uid, ...snap.data() };
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('bottom-nav').classList.remove('hidden');
-                document.getElementById('my-ava-small').src = `https://ui-avatars.com/api/?name=${me.id}&background=random&color=fff`;
-                loadFeed(); loadProfile(); loadChatList();
+                const ava = `https://ui-avatars.com/api/?name=${me.id}&background=0084ff&color=fff&size=200`;
+                document.getElementById('my-ava-post').src = ava;
+                document.getElementById('p-ava').src = ava;
+                document.getElementById('p-name').innerText = me.id;
+                document.getElementById('p-email').innerText = me.email;
+                loadFeed(); loadChats(); loadNotis();
             }
         } else {
             document.getElementById('auth-screen').classList.remove('hidden');
             document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('bottom-nav').classList.add('hidden');
         }
     });
 
-    // --- 2. LOGIC APP ---
+    // --- TABS ---
     window.switchTab = (tab) => {
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-        ['tab-feed', 'tab-chat', 'tab-profile'].forEach(id => document.getElementById(id).classList.add('hidden'));
-        if(tab === 'feed') { document.querySelectorAll('.nav-item')[0].classList.add('active'); document.getElementById('tab-feed').classList.remove('hidden'); }
-        else if(tab === 'chat') { document.querySelectorAll('.nav-item')[1].classList.add('active'); document.getElementById('tab-chat').classList.remove('hidden'); }
-        else { document.querySelectorAll('.nav-item')[2].classList.add('active'); document.getElementById('tab-profile').classList.remove('hidden'); loadProfile(); }
-    };
+        ['tab-feed','tab-chat','tab-settings'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        if(tab==='feed') { document.querySelectorAll('.nav-item')[0].classList.add('active'); document.getElementById('tab-feed').classList.remove('hidden'); }
+        else if(tab==='chat') { document.querySelectorAll('.nav-item')[1].classList.add('active'); document.getElementById('tab-chat').classList.remove('hidden'); }
+        else { document.querySelectorAll('.nav-item')[2].classList.add('active'); document.getElementById('tab-settings').classList.remove('hidden'); }
+    }
 
+    // --- FEED ---
     window.postStatus = async () => {
         const txt = document.getElementById('post-inp').value; if(!txt.trim()) return;
-        await addDoc(collection(db, "posts"), { uid: me.uid, author: me.id, content: txt, likes: [], comments: [], createdAt: serverTimestamp() });
-        document.getElementById('post-inp').value = "";
+        await addDoc(collection(db, "posts"), { uid: me.uid, author: me.id, content: txt, likes: [], createdAt: serverTimestamp() });
+        document.getElementById('post-inp').value="";
     };
-
     function loadFeed() {
         onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), snap => {
-            const list = document.getElementById('feed-list'); list.innerHTML = "";
+            const list = document.getElementById('feed-list'); list.innerHTML="";
             snap.forEach(d => {
-                const p = d.data(); const pid = d.id;
-                const isLiked = p.likes && p.likes.includes(me.uid);
-                const div = document.createElement('div'); div.className = "post-card";
-                div.innerHTML = `
-                    <div class="post-header"><img src="https://ui-avatars.com/api/?name=${p.author}&background=random" class="user-ava"><div><div class="user-name">${p.author}</div><div class="post-time">${p.createdAt?new Date(p.createdAt.toDate()).toLocaleTimeString():'...'}</div></div></div>
-                    <div class="post-content">${p.content}</div>
-                    <div style="font-size:13px; color:gray;"><i class="fas fa-thumbs-up" style="color:var(--primary)"></i> ${p.likes?p.likes.length:0} <span style="float:right;">${p.comments?p.comments.length:0} bình luận</span></div>
-                    <div class="action-row">
-                        <div class="action-btn" style="${isLiked?'color:var(--primary)':''}" onclick="toggleLike('${pid}')"><i class="fas fa-thumbs-up"></i> Thích</div>
-                        <div class="action-btn" onclick="toggleComment('${pid}')"><i class="fas fa-comment-alt"></i> Bình luận</div>
-                        <div class="action-btn" onclick="sharePost('${p.content}')"><i class="fas fa-share"></i> Chia sẻ</div>
+                const p = d.data();
+                const el = document.createElement('div'); el.className = "post-card";
+                el.innerHTML = `
+                    <div style="display:flex; align-items:center; margin-bottom:10px;">
+                        <img src="https://ui-avatars.com/api/?name=${p.author}&background=random" class="user-ava">
+                        <div style="margin-left:10px;"><b>${p.author}</b><div style="font-size:12px; color:gray;">${p.createdAt?.toDate().toLocaleTimeString()}</div></div>
                     </div>
-                    <div id="cmt-sect-${pid}" class="comment-section">
-                        <div id="cmt-list-${pid}">${p.comments?p.comments.map(c=>`<div class="cmt-item"><b>${c.by}:</b> ${c.txt}</div>`).join(''):''}</div>
-                        <div class="cmt-input-row"><input type="text" id="inp-cmt-${pid}" class="cmt-input" placeholder="Viết bình luận..."><button onclick="sendComment('${pid}')" style="background:none; border:none; color:var(--primary); font-weight:bold;">Gửi</button></div>
+                    <div style="font-size:15px; line-height:1.5;">${p.content}</div>
+                    <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px; display:flex;">
+                        <div style="flex:1; text-align:center; color:${p.likes?.includes(me.uid)?'var(--primary)':'gray'}" onclick="like('${d.id}')"><i class="fas fa-thumbs-up"></i> Thích</div>
+                        <div style="flex:1; text-align:center; color:gray;"><i class="fas fa-comment"></i></div>
                     </div>`;
-                list.appendChild(div);
+                list.appendChild(el);
             });
         });
     }
+    window.like = async(pid)=>{
+        const r = doc(db,"posts",pid); const d=(await getDoc(r)).data();
+        let l=d.likes||[]; if(l.includes(me.uid)) l=l.filter(x=>x!==me.uid); else l.push(me.uid);
+        await updateDoc(r,{likes:l});
+    }
 
-    window.toggleLike = async (pid) => {
-        const ref = doc(db, "posts", pid); const p = (await getDoc(ref)).data();
-        let likes = p.likes || [];
-        if(likes.includes(me.uid)) likes = likes.filter(id => id !== me.uid); else likes.push(me.uid);
-        await updateDoc(ref, { likes });
-    };
-    window.toggleComment = (pid) => { const s = document.getElementById(`cmt-sect-${pid}`); s.style.display = s.style.display === 'block' ? 'none' : 'block'; };
-    window.sendComment = async (pid) => {
-        const inp = document.getElementById(`inp-cmt-${pid}`); if(!inp.value.trim()) return;
-        await updateDoc(doc(db, "posts", pid), { comments: arrayUnion({ by: me.id, txt: inp.value, time: Date.now() }) });
-        inp.value = "";
-    };
-    window.sharePost = (c) => { navigator.share ? navigator.share({title:'XingChat',text:c,url:location.href}) : alert("Copied: " + c); };
-
-    window.loadProfile = () => {
-        document.getElementById('p-ava').src = `https://ui-avatars.com/api/?name=${me.id}&background=random&size=200`;
-        document.getElementById('p-name').innerText = "@" + me.id; document.getElementById('p-email').innerText = me.email;
-        document.getElementById('stat-friends').innerText = me.friends ? me.friends.length : 0;
-        onSnapshot(query(collection(db, "posts"), where("uid", "==", me.uid)), s => {
-            document.getElementById('stat-posts').innerText = s.size;
-            const l = document.getElementById('my-posts-list'); l.innerHTML="";
-            s.forEach(d => { l.innerHTML += `<div class="post-card"><div class="post-content">${d.data().content}</div></div>`; });
+    // --- NOTIFICATIONS (FRIEND REQUESTS) ---
+    window.toggleNoti = () => {
+        const p = document.getElementById('noti-panel');
+        p.style.display = p.style.display === 'block' ? 'none' : 'block';
+    }
+    function loadNotis() {
+        onSnapshot(query(collection(db, "friend_reqs"), where("to", "==", me.uid), where("status", "==", "pending")), snap => {
+            const list = document.getElementById('noti-list'); list.innerHTML="";
+            const badge = document.getElementById('noti-badge');
+            if(snap.empty) { badge.classList.add('hidden'); list.innerHTML = "<p style='text-align:center; color:gray'>Không có thông báo mới</p>"; }
+            else {
+                badge.classList.remove('hidden'); badge.innerText = snap.size;
+                snap.forEach(d => {
+                    const r = d.data();
+                    const el = document.createElement('div'); el.className="noti-item";
+                    el.innerHTML = `
+                        <img src="https://ui-avatars.com/api/?name=${r.fromID}&background=random" class="user-ava">
+                        <div style="flex:1;"><b>${r.fromID}</b> đã gửi lời mời kết bạn</div>
+                        <div>
+                            <button class="btn-accept" onclick="acceptReq('${d.id}','${r.fromUID}')">Chấp nhận</button>
+                            <button class="btn-decline" onclick="declineReq('${d.id}')">Xóa</button>
+                        </div>`;
+                    list.appendChild(el);
+                });
+            }
         });
-    };
-
-    window.searchUser = async (val) => {
-        const b = document.getElementById('search-results'); b.innerHTML=""; if(!val) return;
-        const d = await getDoc(doc(db, "ids", val.trim().toLowerCase()));
-        if(d.exists() && d.data().uid !== me.uid) b.innerHTML = `<div class="chat-item" onclick="addFriend('${d.data().uid}')" style="background:#333; border-radius:10px;"><b style="color:var(--primary)">@${val}</b> <span style="margin-left:auto;">Kết bạn</span></div>`;
-    };
-    window.addFriend = async (uid) => {
-        await updateDoc(doc(db, "users", me.uid), { friends: arrayUnion(uid) });
-        await updateDoc(doc(db, "users", uid), { friends: arrayUnion(me.uid) });
+    }
+    window.acceptReq = async (rid, uid) => {
+        await updateDoc(doc(db,"friend_reqs",rid),{status:"accepted"});
+        await updateDoc(doc(db,"users",me.uid),{friends:arrayUnion(uid)});
+        await updateDoc(doc(db,"users",uid),{friends:arrayUnion(me.uid)});
         alert("Đã kết bạn!");
     };
-    function loadChatList() {
-        onSnapshot(doc(db, "users", me.uid), async (s) => {
-            const f = s.data().friends || []; const l = document.getElementById('chat-list'); l.innerHTML="";
+    window.declineReq = async (rid) => { await updateDoc(doc(db,"friend_reqs",rid),{status:"rejected"}); }
+
+    // --- CHAT & SEARCH ---
+    window.searchUser = async (val) => {
+        const box = document.getElementById('search-results'); box.innerHTML=""; if(!val) return;
+        const d = await getDoc(doc(db, "ids", val.trim().toLowerCase()));
+        if(d.exists() && d.data().uid !== me.uid) {
+            box.innerHTML = `
+            <div class="chat-item" style="background:#333;">
+                <b>${val}</b>
+                <button onclick="sendReq('${d.data().uid}','${val}')" style="margin-left:auto; background:var(--primary); border:none; color:white; padding:5px 10px; border-radius:5px;">Kết bạn</button>
+            </div>`;
+        }
+    }
+    window.sendReq = async (uid, id) => {
+        await addDoc(collection(db,"friend_reqs"), { fromUID: me.uid, fromID: me.id, to: uid, status: "pending" });
+        alert("Đã gửi lời mời!");
+    }
+    function loadChats() {
+        onSnapshot(doc(db,"users",me.uid), async(s)=>{
+            const f=s.data().friends||[]; const l=document.getElementById('chat-list'); l.innerHTML="";
             for(const fid of f) {
-                const u = await getDoc(doc(db, "users", fid));
+                const u = await getDoc(doc(db,"users",fid));
                 if(u.exists()) {
                     const el = document.createElement('div'); el.className="chat-item";
-                    el.innerHTML=`<img src="https://ui-avatars.com/api/?name=${u.data().id}&background=random" class="user-ava"><b>${u.data().id}</b>`;
+                    el.innerHTML=`<img src="https://ui-avatars.com/api/?name=${u.data().id}&background=random" class="user-ava"><div class="chat-info"><h4>${u.data().id}</h4><p>Nhấn để trò chuyện</p></div>`;
                     el.onclick=()=>openChat(fid, u.data().id); l.appendChild(el);
                 }
             }
         });
     }
-
     window.openChat = (fid, name) => {
-        activeChatID = fid; document.getElementById('chat-window').style.display='flex'; document.getElementById('cw-name').innerText = name;
-        onSnapshot(query(collection(db, "chats", [me.uid, fid].sort().join("_"), "msgs"), orderBy("t", "asc")), s => {
-            const b = document.getElementById('cw-msgs'); b.innerHTML="";
-            s.forEach(d => {
-                const m = d.data(); const div = document.createElement('div');
-                div.style = `max-width:70%; padding:8px 12px; border-radius:15px; margin-bottom:5px; background:${m.by===me.uid?'var(--primary)':'#333'}; align-self:${m.by===me.uid?'flex-end':'flex-start'}`;
-                if(m.type === 'img') div.innerHTML = `<img src="${m.txt}" style="max-width:100%; border-radius:10px;">`;
-                else div.innerText = m.txt;
+        activeChatID = fid; document.getElementById('chat-window').style.display='flex';
+        document.getElementById('cw-name').innerText=name;
+        document.getElementById('cw-ava').src=`https://ui-avatars.com/api/?name=${name}&background=random`;
+        onSnapshot(query(collection(db,"chats",[me.uid,fid].sort().join("_"),"msgs"), orderBy("t","asc")), s=>{
+            const b=document.getElementById('cw-msgs'); b.innerHTML="";
+            s.forEach(d=>{
+                const m=d.data(); const isMe=m.by===me.uid;
+                const div=document.createElement('div');
+                div.style=`max-width:70%; padding:10px 15px; border-radius:20px; margin-bottom:5px; align-self:${isMe?'flex-end':'flex-start'}; background:${isMe?'var(--primary)':'#333'}`;
+                if(m.type==='img') div.innerHTML=`<img src="${m.txt}" style="max-width:100%; border-radius:10px;">`;
+                else div.innerText=m.txt;
                 b.appendChild(div);
             });
-            b.scrollTop = b.scrollHeight;
+            b.scrollTop=b.scrollHeight;
         });
-    };
-    window.closeChat = () => { document.getElementById('chat-window').style.display='none'; activeChatID=null; };
+    }
+    window.closeChat = () => { document.getElementById('chat-window').style.display='none'; activeChatID=null; }
     window.sendMsg = async () => {
-        const t = document.getElementById('cw-inp').value; if(!t || !activeChatID) return;
-        await addDoc(collection(db, "chats", [me.uid, activeChatID].sort().join("_"), "msgs"), { by:me.uid, txt:t, type:'text', t:Date.now() });
+        const t=document.getElementById('cw-inp').value; if(!t||!activeChatID) return;
+        await addDoc(collection(db,"chats",[me.uid,activeChatID].sort().join("_"),"msgs"),{by:me.uid,txt:t,type:'text',t:Date.now()});
         document.getElementById('cw-inp').value="";
-    };
-    window.sendImage = async (input) => {
-        const file = input.files[0]; if(!file || !activeChatID) return;
-        const sRef = ref(storage, `chats/${Date.now()}_${file.name}`);
-        await uploadBytes(sRef, file);
-        const url = await getDownloadURL(sRef);
-        await addDoc(collection(db, "chats", [me.uid, activeChatID].sort().join("_"), "msgs"), { by:me.uid, txt:url, type:'img', t:Date.now() });
-    };
+    }
+    window.sendImage = async (inp) => {
+        const f=inp.files[0]; if(!f||!activeChatID) return;
+        const r=ref(storage,`c/${Date.now()}_${f.name}`); await uploadBytes(r,f);
+        await addDoc(collection(db,"chats",[me.uid,activeChatID].sort().join("_"),"msgs"),{by:me.uid,txt:await getDownloadURL(r),type:'img',t:Date.now()});
+    }
 </script>
 </body>
 </html>
