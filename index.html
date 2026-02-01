@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Web Chat</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     * {
       box-sizing: border-box;
@@ -29,7 +30,6 @@
       border: 1px solid #ddd;
     }
 
-    /* HEADER */
     .chat-header {
       padding: 12px;
       background: #0084ff;
@@ -46,7 +46,6 @@
       margin-right: 10px;
     }
 
-    /* MESSAGE AREA */
     .chat-messages {
       flex: 1;
       padding: 10px;
@@ -60,30 +59,24 @@
       margin-bottom: 8px;
       border-radius: 18px;
       font-size: 14px;
-      line-height: 1.4;
-      word-wrap: break-word;
     }
 
     .me {
       background: #0084ff;
       color: #fff;
       margin-left: auto;
-      border-bottom-right-radius: 4px;
     }
 
     .other {
       background: #e4e6eb;
       color: #000;
       margin-right: auto;
-      border-bottom-left-radius: 4px;
     }
 
-    /* INPUT */
     .chat-input {
       display: flex;
       padding: 10px;
       border-top: 1px solid #ddd;
-      background: #fff;
     }
 
     .chat-input input {
@@ -91,7 +84,6 @@
       padding: 10px;
       border-radius: 20px;
       border: 1px solid #ccc;
-      outline: none;
     }
 
     .chat-input button {
@@ -101,51 +93,70 @@
       border-radius: 20px;
       background: #0084ff;
       color: #fff;
-      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
 
 <div class="chat-app">
-  <!-- HEADER -->
   <div class="chat-header">
     <img src="https://i.imgur.com/1X6zK0E.png">
     Chat Online
   </div>
 
-  <!-- MESSAGES -->
-  <div class="chat-messages" id="chat">
-    <div class="message other">Chào bạn 👋</div>
-    <div class="message me">Hello 😄</div>
-  </div>
+  <div class="chat-messages" id="chat"></div>
 
-  <!-- INPUT -->
   <div class="chat-input">
     <input id="msg" placeholder="Nhập tin nhắn...">
-    <button>Gửi</button>
+    <button id="send">Gửi</button>
   </div>
 </div>
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDINi8lDjGXvvN4_nB9hNRcoMVBQowp0xk",
-  authDomain: "web-chatonline.firebaseapp.com",
-  projectId: "web-chatonline",
-  storageBucket: "web-chatonline.firebasestorage.app",
-  messagingSenderId: "579594121865",
-  appId: "1:579594121865:web:3167668be5a42bb4a2cc58",
-  measurementId: "G-RJC8W88TGT"
-};
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  const firebaseConfig = {
+    apiKey: "AIzaSyDINi8lDjGXvvN4_nB9hNRcoMVBQowp0xk",
+    authDomain: "web-chatonline.firebaseapp.com",
+    projectId: "web-chatonline",
+    storageBucket: "web-chatonline.firebasestorage.app",
+    messagingSenderId: "579594121865",
+    appId: "1:579594121865:web:3167668be5a42bb4a2cc58"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const chat = document.getElementById("chat");
+  const msgInput = document.getElementById("msg");
+  const sendBtn = document.getElementById("send");
+
+  const q = query(collection(db, "messages"), orderBy("time"));
+
+  onSnapshot(q, (snapshot) => {
+    chat.innerHTML = "";
+    snapshot.forEach(doc => {
+      const div = document.createElement("div");
+      div.className = "message other";
+      div.textContent = doc.data().text;
+      chat.appendChild(div);
+    });
+    chat.scrollTop = chat.scrollHeight;
+  });
+
+  sendBtn.onclick = async () => {
+    if (msgInput.value.trim() === "") return;
+    await addDoc(collection(db, "messages"), {
+      text: msgInput.value,
+      time: serverTimestamp()
+    });
+    msgInput.value = "";
+  };
+</script>
+
 </body>
 </html>
