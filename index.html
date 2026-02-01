@@ -1,1298 +1,151 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Trợ Lý Cá Nhân</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Web Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    <style>
-        /* =================================================================
-            1. DESIGN SYSTEM & VARIABLES
-            ================================================================= */
-        :root {
-            --bg-primary: #111111;
-            --bg-secondary: #1c1c1e;
-            --card-bg: #1c1c1e;
-            --text-primary: #f5f5f7;
-            --text-secondary: #8e8e93;
-            --accent-primary: #0a84ff;
-            --accent-primary-rgb: 10, 132, 255;
-            --accent-red: #ff453a;
-            --accent-green: #30d158;
-            --accent-orange: #ff9f0a;
-            --border-color: #38383a;
-            --shadow: none;
-            --font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
+    .chat-app {
+      width: 100%;
+      max-width: 420px;
+      height: 100vh;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ddd;
+    }
 
-        html.light-theme {
-            --bg-primary: #f2f2f7;
-            --bg-secondary: #ffffff;
-            --card-bg: #ffffff;
-            --text-primary: #000000;
-            --text-secondary: #636366;
-            --accent-primary: #007aff;
-            --accent-primary-rgb: 0, 122, 255;
-            --border-color: #e5e5ea;
-        }
-        
-        html.kitty-theme {
-            --bg-primary: #fff0f5; /* Lavender Blush */
-            --bg-secondary: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.9); 
-            --text-primary: #5c3c54; /* Dark purple */
-            --text-secondary: #d17fb4; /* Muted pink */
-            --accent-primary: #ff85a2; /* Bright Pink */
-            --accent-primary-rgb: 255, 133, 162;
-            --accent-red: #f75d72;
-            --accent-green: #61d3a3;
-            --accent-orange: #ffb480;
-            --border-color: #f7d6e0; /* Light pink border */
-            --font-family: 'Quicksand', cursive;
-        }
+    /* HEADER */
+    .chat-header {
+      padding: 12px;
+      background: #0084ff;
+      color: #fff;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+    }
 
-        /* =================================================================
-            2. GLOBAL RESETS & BASE STYLES
-            ================================================================= */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html {  
-            color-scheme: dark; 
-            scroll-behavior: smooth;
-        }
-        html.light-theme { color-scheme: light; }
-        html.kitty-theme { color-scheme: light; }
-        
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            padding-bottom: 120px; 
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+    .chat-header img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
 
-        html.kitty-theme body {
-            background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-        }
+    /* MESSAGE AREA */
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #f0f2f5;
+    }
 
-        /* =================================================================
-            3. CORE LAYOUT & COMPONENTS
-            ================================================================= */
-        .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .screen.active { display: block; }
-        
-        .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
-        .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
-        html.kitty-theme h3 { font-size: 24px; }
+    .message {
+      max-width: 70%;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: calc(15px + env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 450px;
-            background-color: rgba(28, 28, 30, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            padding: 6px;
-            z-index: 1000;
-        }
+    .me {
+      background: #0084ff;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+    }
 
-        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
+    .other {
+      background: #e4e6eb;
+      color: #000;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+    }
 
-        .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
-        .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
-        .nav-item .nav-label { font-size: 11px; font-weight: 600; }
-        .nav-item.active { color: var(--accent-primary); }
-        .nav-item:active { transform: scale(0.92); }
+    /* INPUT */
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ddd;
+      background: #fff;
+    }
 
-        #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
-        html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      outline: none;
+    }
 
-        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
-        .btn .icon { width: 18px; height: 18px; stroke-width: 2.5; }
-        .btn:active { opacity: 0.8; transform: scale(0.97); }
-        html.kitty-theme .btn { color: #5c3c54; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); font-size: 18px; }
-        .btn-sec { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); }
-        .btn-danger { background-color: var(--accent-red); }
-        .btn-small { padding: 8px 14px; font-size: 14px; }
-        html.kitty-theme .btn-small { font-size: 16px; }
-
-        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
-
-        .data-card { background-color: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); transition: background-color 0.2s ease, transform 0.2s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .data-card:active { background-color: var(--bg-primary); transform: scale(0.98); }
-        .data-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .data-title { font-size: 20px; font-weight: 600; }
-        .data-subtitle { font-size: 14px; color: var(--text-secondary); }
-        .data-content { font-size: 16px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; white-space: pre-wrap; word-wrap: break-word; }
-        .data-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
-        .data-btn { background-color: var(--bg-secondary); color: var(--text-primary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.2s ease, transform 0.15s ease; font-family: var(--font-family); }
-        .data-btn.delete { color: var(--accent-red); }
-        .data-btn:active { opacity: 0.7; transform: scale(0.96); }
-        
-        .modal { display: flex; align-items: flex-end; justify-content: center; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); z-index: 2000; opacity: 0; transition: opacity 0.4s ease-in-out; pointer-events: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
-        .modal.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background-color: var(--bg-secondary); border-radius: 18px 18px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); border-bottom: none; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
-        .modal.show .modal-content { transform: translateY(0); }
-        @media (min-width: 600px) { .modal { align-items: center; } .modal-content { width: 92%; max-width: 440px; border-radius: 18px; border-bottom: 1px solid var(--border-color); transform: translateY(20px) scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; opacity: 0; } .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; } }
-        .modal-title { font-size: 26px; font-weight: 700; margin-bottom: 24px; }
-        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; color: var(--text-secondary); font-size: 16px; margin-bottom: 8px; font-weight: 600; }
-        .form-input, .form-select, .form-textarea { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 14px; border-radius: 10px; font-size: 17px; -webkit-appearance: none; font-family: var(--font-family); font-weight: 500; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-primary); }
-        .form-textarea { min-height: 120px; }
-
-        .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s, transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
-        
-        #schedule-container { text-align: center; padding-top: 10px; }
-        #clock-time { font-size: 56px; font-weight: 700; letter-spacing: 1px; }
-        html.kitty-theme #clock-time { font-size: 70px; }
-        #clock-date { font-size: 17px; color: var(--text-secondary); margin-top: -5px; margin-bottom: 30px; font-weight: 500; }
-        html.kitty-theme #clock-date { font-size: 20px; }
-        
-        .schedule-section h3 { 
-            font-size: 22px; 
-            font-weight: 700; 
-            text-align: left; 
-            margin-bottom: 20px;
-            padding-left: 4px; 
-        }
-
-        .schedule-item { 
-            background-color: var(--card-bg); 
-            border: 1px solid var(--border-color); 
-            padding: 16px 20px; 
-            border-radius: 12px;
-            margin-bottom: 12px; 
-            font-size: 17px;
-            font-weight: 600;
-            border-left: 5px solid var(--accent-green);
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            text-align: left;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        @media (hover: hover) {
-            .schedule-item:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            }
-            html:not(.light-theme) .schedule-item:hover {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            }
-        }
-        
-        .schedule-item-off { border-left-color: var(--accent-orange); }
-
-        .schedule-item span { 
-            font-size: 13px;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background-color: var(--bg-primary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .schedule-item-off span {
-            color: var(--accent-orange);
-            border-color: color-mix(in srgb, var(--accent-orange) 40%, transparent);
-        }
-        
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .stat-card { background-color: var(--bg-primary); padding: 16px; border-radius: 10px; text-align: left; border: 1px solid var(--border-color); }
-        .stat-card.full-width { grid-column: 1 / -1; }
-        .stat-label { color: var(--text-secondary); font-size: 16px; margin-bottom: 6px; font-weight: 500; }
-        .stat-value { font-size: 26px; font-weight: 700; }
-        .stat-value.red { color: var(--accent-red); }
-        .stat-value.green { color: var(--accent-green); }
-        .finance-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-
-        .txn-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px; border-bottom: 1px solid var(--border-color); }
-        .txn-item:last-child { border-bottom: none; }
-        .txn-amount { font-size: 16px; font-weight: 600; }
-        .txn-amount.red { color: var(--accent-red); }
-        .txn-amount.green { color: var(--accent-green); }
-        
-        .date-header { font-size: 16px; font-weight: 600; color: var(--text-secondary); padding: 16px 4px 8px 4px; background-color: var(--bg-primary); }
-        .password-field-container { margin-top: 12px; }
-        .password-label { font-size: 14px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
-        .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
-        html.kitty-theme .password-value-container { font-family: var(--font-family); }
-        .password-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; font-family: var(--font-family); }
-        .password-btn:active { background-color: var(--bg-primary); transform: scale(0.96); }
-
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 4px; border-bottom: 1px solid var(--border-color); }
-        html.kitty-theme .setting-item span { font-size: 18px; }
-        .setting-item span { font-weight: 600; }
-        .setting-item:last-child { border-bottom: none; }
-        .toggle-switch { width: 50px; height: 30px; background-color: var(--bg-primary); border-radius: 15px; position: relative; border: 1px solid var(--border-color); }
-        .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-        html.light-theme .toggle-knob { background-color: #f2f2f7; border: 1px solid #ddd; }
-        .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
-        html.kitty-theme .toggle-switch.active { background-color: var(--accent-primary); border-color: var(--accent-primary); }
-        .toggle-switch.active .toggle-knob { transform: translateX(20px); }
-        
-        #kitty-transition-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: #111;
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out; 
-            pointer-events: none;
-        }
-        #kitty-transition-overlay.show {
-            display: flex;
-            pointer-events: auto;
-        }
-        
-        #kitty-logo {
-            font-family: 'Pacifico', cursive;
-            font-size: 15vw;
-            color: #ff85a2;
-            text-shadow: 3px 3px 8px rgba(255, 105, 180, 0.5);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        #kitty-logo.show { opacity: 1; transform: scale(1); }
-
-        .kitty-sticker-container { display: none; }
-
-        #kitty-float-container {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-            display: none;
-        }
-        html.kitty-theme #kitty-float-container {
-            display: block;
-        }
-        .floating-kitty {
-            position: absolute;
-            left: -100px;
-            opacity: 0.7;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
-            animation-name: floatAcross;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-        }
-
-        @keyframes floatAcross {
-            0% { transform: translateX(0) translateY(0vh) rotate(0deg); left: -100px; }
-            50% { transform: translateX(50vw) translateY(-5vh) rotate(180deg); }
-            100% { transform: translateX(100vw) translateY(5vh) rotate(360deg); left: 100vw; }
-        }
-
-        /* Styles for Music Bubble */
-        #music-bubble-container {
-            position: fixed;
-            bottom: calc(100px + env(safe-area-inset-bottom));
-            right: 16px;
-            width: 320px;
-            height: 180px;
-            border-radius: 12px;
-            background-color: var(--bg-secondary);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 2px rgba(var(--accent-primary-rgb), 0.5);
-            overflow: hidden;
-            resize: both;
-            min-width: 60px;
-            min-height: 60px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: grab;
-            user-select: none;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        #music-bubble-container.minimized {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        #music-bubble-container.hidden {
-            display: none;
-        }
-
-        #music-bubble-iframe-container {
-            width: 100%;
-            height: 100%;
-            flex-grow: 1;
-        }
-        
-        #music-bubble-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        #music-bubble-container.minimized #music-bubble-iframe {
-            width: 150%;
-            height: 150%;
-            margin-left: -25%;
-            margin-top: -25%;
-            pointer-events: none;
-        }
-
-        .music-bubble-controls {
-            position: absolute;
-            top: 8px; 
-            right: 8px;
-            display: flex;
-            gap: 8px; 
-            z-index: 100;
-        }
-        
-        .music-bubble-controls button {
-            background-color: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            line-height: 1;
-            padding: 0;
-            font-family: var(--font-family);
-        }
-
-        .music-bubble-controls button:hover {
-            background-color: rgba(0,0,0,0.7);
-        }
-        .music-bubble-controls button:active {
-            transform: scale(0.9);
-        }
-
-        #music-bubble-container.minimized .music-bubble-controls {
-            display: none;
-        }
-
-        #music-bubble-toggle-btn {
-            position: fixed;
-            bottom: calc(100px + env(safe-area-inset-bottom));
-            right: 16px;
-            background-color: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        #music-bubble-toggle-btn:active {
-            transform: scale(0.95);
-        }
-        
-        /* =================================================================
-            4. SLEEP MODE STYLES (ĐÃ CẬP NHẬT)
-            ================================================================= */
-        #sleep-mode-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: #000000;
-            z-index: 5000;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center; /* *** THAY ĐỔI: Canh giữa nội dung *** */
-            padding: 20px;
-            padding-top: env(safe-area-inset-top); /* *** THAY ĐỔI: Đẩy nội dung xuống nếu có tai thỏ *** */
-            padding-bottom: env(safe-area-inset-bottom);
-            overflow: hidden; 
-        }
-        
-        /* *** THAY ĐỔI: Thêm 1 thẻ bọc đồng hồ và ngày tháng *** */
-        #sleep-mode-header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #ffffff;
-            z-index: 10;
-        }
-
-        #sleep-mode-clock {
-            font-size: 64px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        
-        /* *** THAY ĐỔI: Thêm CSS cho ngày tháng *** */
-        #sleep-mode-date {
-            font-size: 18px;
-            font-weight: 500;
-            color: #f5f5f7;
-            margin-top: 5px;
-        }
-        
-        #sleep-mode-video-container {
-            width: 90vw;
-            max-width: 800px;
-            aspect-ratio: 16 / 9;
-            background-color: #111;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        
-        #sleep-mode-video-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 30px;
-            padding: 0 10px;
-            max-width: 800px;
-            overflow-y: auto;
-            z-index: 10;
-        }
-        
-        .sleep-video-btn {
-            background-color: #2c2c2e;
-            color: #f5f5f7;
-            border: 1px solid #38383a;
-            border-radius: 10px;
-            padding: 10px 18px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            font-family: var(--font-family);
-        }
-        .sleep-video-btn:active {
-            background-color: #38383a;
-            transform: scale(0.96);
-        }
-        
-        #sleep-mode-exit-btn {
-            position: absolute;
-            top: calc(15px + env(safe-area-inset-top));
-            right: calc(15px + env(safe-area-inset-right));
-            background-color: rgba(44, 44, 46, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            color: white;
-            font-size: 24px;
-            font-weight: 600;
-            cursor: pointer;
-            line-height: 36px;
-            text-align: center;
-            z-index: 20; /* *** THAY ĐỔI: Tăng z-index để nổi lên trên *** */
-        }
-        
-    </style>
+    .chat-input button {
+      margin-left: 8px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 20px;
+      background: #0084ff;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
-<div id="kitty-float-container"></div>
+<div class="chat-app">
+  <!-- HEADER -->
+  <div class="chat-header">
+    <img src="https://i.imgur.com/1X6zK0E.png">
+    Chat Online
+  </div>
 
-<div id="kitty-transition-overlay">
-    <h1 id="kitty-logo">Hello Kitty</h1>
+  <!-- MESSAGES -->
+  <div class="chat-messages" id="chat">
+    <div class="message other">Chào bạn 👋</div>
+    <div class="message me">Hello 😄</div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="chat-input">
+    <input id="msg" placeholder="Nhập tin nhắn...">
+    <button>Gửi</button>
+  </div>
 </div>
-
-<div class="main-container">
-    <div id="schedule" class="screen active">
-        <div class="screen-title-bar"><h2>Lịch trình</h2></div>
-        <div id="schedule-container">
-            <div id="clock-time">--:--:--</div>
-            <div id="clock-date">---, --/--/----</div>
-            <div id="today-schedule" class="schedule-section"></div>
-            <div id="tomorrow-details-container" class="schedule-section" style="display:none; animation: fadeIn 0.4s ease; margin-top: -10px;"></div>
-            <div id="future-schedule" class="schedule-section"></div>
-        </div>
-    </div>
-
-    <div id="finance" class="screen">
-        <div class="screen-title-bar"><h2>Tài chính</h2></div>
-        <div class="card">
-             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                 <h3 style="margin: 0;">Tổng quan tháng này</h3>
-                 <button class="btn btn-small btn-sec" style="margin: 0;" onclick="showLastMonthSummary()">Tháng trước</button>
-             </div>
-            <div class="stat-grid">
-                <div class="stat-card full-width"><div class="stat-label">Tổng số dư</div><div class="stat-value" id="bal">0₫</div></div>
-                <div class="stat-card"><div class="stat-label">Đã chi</div><div class="stat-value red" id="exp">0₫</div></div>
-                <div class="stat-card"><div class="stat-label">Thu nhập</div><div class="stat-value green" id="inc">0₫</div></div>
-            </div>
-            <div class="finance-actions">
-                <button class="btn btn-danger" style="margin: 0;" onclick="openTxn('expense')">Chi tiêu</button>
-                <button class="btn" style="margin: 0; background-color: var(--accent-green);" onclick="openTxn('income')">Thu nhập</button>
-            </div>
-        </div>
-        <div class="card">
-            <h3>Lịch sử giao dịch (Tháng này)</h3>
-            <input type="text" class="form-input" placeholder="Tìm kiếm giao dịch..." id="search" oninput="renderHistory()" style="margin-bottom: 15px;">
-            <div id="histList"></div>
-        </div>
-    </div>
-
-    <div id="notes" class="screen">
-        <div class="screen-title-bar">
-            <h2>Ghi chú</h2>
-            <button class="btn btn-small" onclick="openNote()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                <span>Ghi chú mới</span>
-            </button>
-        </div>
-        <div id="notesList"></div>
-    </div>
-
-    <div id="passwords" class="screen">
-        <div class="screen-title-bar">
-            <h2>Mật khẩu</h2>
-            <button class="btn btn-small" onclick="openPasswordModal()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                <span>Thêm mới</span>
-            </button>
-        </div>
-        <div id="passwordsList"></div>
-    </div>
-
-    <div id="settings" class="screen">
-        <div class="screen-title-bar"><h2>Cài đặt</h2></div>
-        <div class="card">
-            <h3>Giao diện</h3>
-            <div class="setting-item">
-                <span>Chế độ sáng/tối</span>
-                <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()"><div class="toggle-knob"></div></div>
-            </div>
-            <div class="setting-item">
-                <span>Hello Kitty Mode</span>
-                <div class="toggle-switch" id="kitty-theme-toggle" onclick="toggleKittyTheme()"><div class="toggle-knob"></div></div>
-            </div>
-        </div>
-        <div class="card">
-            <h3>Quản lý dữ liệu</h3>
-            <button class="btn btn-danger" onclick="resetData()">Xóa toàn bộ dữ liệu</button>
-            <button class="btn btn-sec" onclick="reloadApp()">Cập nhật phiên bản</button>
-        </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div id="nav-active-bubble"></div>
-        <div class="nav-item active" onclick="goTo('schedule', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <div class="nav-label">Lịch trình</div>
-        </div>
-        <div class="nav-item" onclick="goTo('finance', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            <div class="nav-label">Tài chính</div>
-        </div>
-        <div class="nav-item" onclick="goTo('notes', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <div class="nav-label">Ghi chú</div>
-        </div>
-        <div class="nav-item" onclick="goTo('passwords', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
-            <div class="nav-label">Mật khẩu</div>
-        </div>
-        <div class="nav-item" onclick="goTo('settings', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <div class="nav-label">Cài đặt</div>
-        </div>
-    </div>
-</div>
-
-<div id="music-bubble-container" class="hidden">
-    <div class="music-bubble-controls">
-        <button onclick="toggleMinimizeMusicBubble()">-</button>
-        <button onclick="enterSleepMode()">
-            <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m0 0v-4m0 4l-5-5"></path></svg>
-        </button>
-        <button onclick="toggleMusicBubble()">&times;</button>
-    </div>
-    <div id="music-bubble-iframe-container">
-        <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-</div>
-
-<button id="music-bubble-toggle-btn" onclick="toggleMusicBubble()">
-    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14M3 6v14a2 2 0 002 2h4.5a2 2 0 002-2V6.414A2 2 0 0010.414 5H5a2 2 0 00-2 2z"></path></svg>
-</button>
-
-<div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
-
-<div id="sleep-mode-overlay">
-    
-    <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
-    
-    <div id="sleep-mode-header">
-        <div id="sleep-mode-clock">--:--:--</div>
-        <div id="sleep-mode-date">---, --/--/----</div>
-    </div>
-
-    <div id="sleep-mode-video-container">
-        </div>
-    <div id="sleep-mode-video-list">
-        </div>
-</div>
-
-
-<script type="text/javascript">
-'use strict';
-
-const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
-
-(function init() {
-    const savedTheme = localStorage.getItem('theme');
-    document.documentElement.className = ''; 
-
-    if (savedTheme === 'kitty') {
-        document.documentElement.classList.add('kitty-theme');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('kitty-theme-toggle')?.classList.add('active');
-            document.getElementById('theme-toggle')?.classList.remove('active');
-        });
-    } else if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('theme-toggle')?.classList.add('active');
-            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
-        });
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('theme-toggle')?.classList.remove('active');
-            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
-        });
-    }
-})();
-
-const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
-
-// ===============================================
-// <<< PHẦN 1: CẬP NHẬT DỮ LIỆU THỜI KHÓA BIỂU >>>
-// Các mảng morning/afternoon giờ luôn có 5 phần tử. Tiết trống được đánh dấu bằng chuỗi rỗng ''.
-// ===============================================
-const scheduleData = [
-    { dayName: 'Chủ Nhật', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] },
-    {
-        dayName: 'Thứ Hai',
-        morning: [
-            'LS&ĐL (Sử) – Giang',
-            'Toán – Đ. Mai',
-            'Toán – Đ. Mai',
-            'Tin – Ánh',
-            'KHTN (Sinh) – P. Nhung'
-        ],
-        afternoon: [
-            'C.Nghệ – H. Vân',
-            'LS&ĐL (Địa) – H. Nhung',
-            'Nghệ thuật (AN) – T. Nga',
-            '',
-            '',
-            ''
-        ]
-    },
-    {
-        dayName: 'Thứ Ba',
-        morning: [
-            'Toán – Đ. Mai',
-            'T.Anh - Đ.Oanh',
-            'GDCD – Huệ',
-            'KHTN (Hóa) – P. Nhung',
-            'KHTN (Lý) – T. Thùy'
-        ],
-        afternoon: [
-            'Nghệ thuật (MT) – Thùy',
-            'GDTC – Tuấn',
-            'C.Nghệ – H. Vân',
-            '',
-            '',
-            ''
-        ]
-    },
-    {
-        dayName: 'Thứ Tư',
-        morning: [
-            'Văn – Đ. Hoa',
-            'Văn – Đ. Hoa',
-            'LS&ĐL (Sử) – Giang',
-            'T.Anh – D. Oanh',
-            'KHTN (Lý) – T. Thùy'
-        ],
-        afternoon: [
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            '',
-            '',
-            ''
-        ]
-    },
-    {
-        dayName: 'Thứ Năm',
-        morning: [
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhungg',
-            ''
-        ],
-        afternoon: [
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            '',
-            ''
-        ]
-    },
-    {
-        dayName: 'Thứ Sáu',
-        morning: [
-            'GDTC – Tuấn',
-            'Văn – D. Hoa',
-            'GDĐP – H. Vân',
-            'T.Anh – D. Oanh',
-            'KHTN (Hóa) – P. Nhung'
-        ],
-        afternoon: ['', '', '', '', '']
-    },
-    { dayName: 'Thứ Bảy', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] }
-];
-// ===============================================
-
-let lastRenderedDay = -1, clockInterval = null;
-const scrollPositions = {};
-
-function updateNavBubble(activeElement) {
-    const bubble = document.getElementById('nav-active-bubble');
-    if (!activeElement || !bubble) return;
-    bubble.style.width = `${activeElement.offsetWidth}px`;
-    bubble.style.left = `${activeElement.offsetLeft}px`;
-}
-function goTo(screenId, element) {
-    const currentScreen = document.querySelector('.screen.active');
-    if (currentScreen) scrollPositions[currentScreen.id] = window.scrollY;
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    element.classList.add('active');
-    const newPosition = scrollPositions[screenId] || 0;
-    window.scrollTo(0, newPosition);
-    updateNavBubble(element);
-}
-function updateClockAndSchedule() {
-    const now = new Date();
-    const dayIndex = now.getDay();
-    document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
-    if (dayIndex !== lastRenderedDay) {
-        renderFullSchedule(now);
-        lastRenderedDay = dayIndex;
-    }
-}
-
-// ====================================================================
-// <<< PHẦN 2: CẬP NHẬT HÀM HIỂN THỊ THỜI KHÓA BIỂU >>>
-// Hàm này được viết lại để hiển thị đủ 5 tiết/buổi và chữ "Nghỉ".
-// ====================================================================
-function renderFullSchedule(now) {
-    const dayIndex = now.getDay();
-    document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const today = scheduleData[dayIndex];
-    const todayContainer = document.getElementById('today-schedule');
-    
-    let todayHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3><button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
-    
-    const isDayOff = today.morning.every(s => !s) && today.afternoon.every(s => !s);
-
-    if (isDayOff) {
-        todayHTML += `<div class="schedule-item schedule-item-off"><div>Hôm nay được nghỉ</div><span>Nghỉ</span></div>`;
-    } else {
-        // Buổi sáng
-        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
-        for (let i = 0; i < 5; i++) {
-            const subject = today.morning[i];
-            if (subject) {
-                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
-            } else {
-                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
-            }
-        }
-
-        // Buổi chiều
-        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
-        for (let i = 0; i < 5; i++) {
-            const subject = today.afternoon[i];
-            if (subject) {
-                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
-            } else {
-                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
-            }
-        }
-    }
-    todayContainer.innerHTML = todayHTML;
-    
-    const futureContainer = document.getElementById('future-schedule');
-    futureContainer.innerHTML = `<h3>Sắp tới</h3>` + [1, 2, 3, 4, 5, 6].map(offset => {
-        const nextDayIndex = (dayIndex + offset) % 7;
-        const nextDay = scheduleData[nextDayIndex];
-        const hasClasses = nextDay.morning.some(s => s) || nextDay.afternoon.some(s => s);
-        return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}"><div>${nextDay.dayName}</div><span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
-    }).join('');
-    
-    document.getElementById('tomorrow-details-container').style.display = 'none';
-}
-
-function toggleTomorrowSchedule() {
-    const container = document.getElementById('tomorrow-details-container');
-    const btn = document.getElementById('toggle-tomorrow-btn');
-    const isVisible = container.style.display === 'block';
-    
-    if (isVisible) {
-        container.style.display = 'none';
-        btn.textContent = 'Xem ngày mai';
-    } else {
-        const now = new Date();
-        const tomorrowIndex = (now.getDay() + 1) % 7;
-        const tomorrow = scheduleData[tomorrowIndex];
-        let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
-        
-        const isDayOff = tomorrow.morning.every(s => !s) && tomorrow.afternoon.every(s => !s);
-
-        if (isDayOff) {
-            tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`;
-        } else {
-            // Buổi sáng
-            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
-            for (let i = 0; i < 5; i++) {
-                const subject = tomorrow.morning[i];
-                if (subject) {
-                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
-                } else {
-                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
-                }
-            }
-
-            // Buổi chiều
-            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
-            for (let i = 0; i < 5; i++) {
-                const subject = tomorrow.afternoon[i];
-                if (subject) {
-                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
-                } else {
-                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
-                }
-            }
-        }
-        
-        container.innerHTML = tomorrowHTML;
-        container.style.display = 'block';
-        btn.textContent = 'Ẩn chi tiết';
-    }
-}
-// ====================================================================
-
-function toggleTheme() {
-    if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme();
-    const isLight = document.documentElement.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    document.getElementById('theme-toggle').classList.toggle('active', isLight);
-    document.getElementById('kitty-theme-toggle').classList.remove('active');
-    updateNavBubble(document.querySelector('.nav-item.active'));
-}
-
-function toggleKittyTheme() {
-    const html = document.documentElement;
-    const isKitty = html.classList.contains('kitty-theme');
-    const toggle = document.getElementById('kitty-theme-toggle');
-    const overlay = document.getElementById('kitty-transition-overlay');
-    const logo = document.getElementById('kitty-logo');
-
-    overlay.classList.add('show');
-    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-    setTimeout(() => { logo.classList.add('show'); }, 500);
-
-    setTimeout(() => {
-        if (isKitty) {
-            html.classList.remove('kitty-theme');
-            const prevTheme = localStorage.getItem('theme-before-kitty') || 'dark';
-            localStorage.setItem('theme', prevTheme);
-            if (prevTheme === 'light') html.classList.add('light-theme');
-            document.getElementById('theme-toggle').classList.toggle('active', prevTheme === 'light');
-            toggle.classList.remove('active');
-        } else {
-            const currentTheme = html.classList.contains('light-theme') ? 'light' : 'dark';
-            localStorage.setItem('theme-before-kitty', currentTheme);
-            html.classList.remove('light-theme');
-            html.classList.add('kitty-theme');
-            localStorage.setItem('theme', 'kitty');
-            toggle.classList.add('active');
-            document.getElementById('theme-toggle').classList.remove('active');
-        }
-        updateNavBubble(document.querySelector('.nav-item.active'));
-    }, 2000);
-
-    setTimeout(() => {
-        overlay.style.opacity = '0';
-    }, 2500);
-
-    setTimeout(() => {
-        overlay.classList.remove('show');
-        logo.classList.remove('show');
-    }, 3000);
-}
-
-function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
-function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
-function showToast(message) {
-    document.querySelector('.copy-toast')?.remove();
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.className = 'copy-toast';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
-}
-
-function renderFinance() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const allTxns = DB.get('txns'); const txns = allTxns.filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }); const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val); document.getElementById('bal').textContent = format(income - expense); document.getElementById('inc').textContent = format(income); document.getElementById('exp').textContent = format(expense); renderHistory(); }
-function formatDateHeader(date) { const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const d = new Date(date); today.setHours(0, 0, 0, 0); yesterday.setHours(0, 0, 0, 0); d.setHours(0, 0, 0, 0); if (d.getTime() === today.getTime()) return 'Hôm nay'; if (d.getTime() === yesterday.getTime()) return 'Hôm qua'; return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }); }
-function renderHistory() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const query = document.getElementById('search').value.toLowerCase(); const txns = DB.get('txns').filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }).filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date)); const listEl = document.getElementById('histList'); if (txns.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`; return; } let lastDateStr = ''; let html = ''; txns.forEach(t => { const txDate = new Date(t.date); const dateStr = txDate.toLocaleDateString('vi-VN'); if (dateStr !== lastDateStr) { html += `<div class="date-header">${formatDateHeader(txDate)}</div>`; lastDateStr = dateStr; } const isExpense = t.type === 'expense'; const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : ''; html += `<div class="txn-item"><div style="flex: 1; margin-right: 10px;"><div class="data-title">${t.category}</div>${noteHTML}</div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`; }); listEl.innerHTML = html; }
-function openTxn(type) { document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập'; document.getElementById('type').value = type; document.getElementById('amt').value = ''; document.getElementById('note').value = ''; openModal('txnModal'); }
-function saveTxn() { const amount = parseFloat(document.getElementById('amt').value); if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); } const txns = DB.get('txns'); txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category: document.getElementById('cat').value, note: document.getElementById('note').value.trim(), type: document.getElementById('type').value, }); DB.save('txns', txns); closeModal('txnModal'); renderFinance(); }
-function showLastMonthSummary() { const now = new Date(); const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); const prevMonth = prevMonthDate.getMonth(); const prevYear = prevMonthDate.getFullYear(); const prevMonthExpenses = DB.get('txns').filter(t => { const txDate = new Date(t.date); return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear; }); const summaryContentEl = document.getElementById('summaryContent'); if (prevMonthExpenses.length === 0) { summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`; } else { const byCategory = prevMonthExpenses.reduce((acc, txn) => { acc[txn.category] = (acc[txn.category] || 0) + txn.amount; return acc; }, {}); const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a); const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0); let summaryHTML = sortedCategories.map(([category, amount]) => `<div class="txn-item"><div><div class="data-title">${category}</div></div><div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div></div>`).join(''); summaryHTML += `<div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;"><div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div><div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div></div>`; summaryContentEl.innerHTML = summaryHTML; } document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`; openModal('summaryModal'); }
-function renderNotes() { const notes = DB.get('notes'); const listEl = document.getElementById('notesList'); if (notes.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có ghi chú.</p>`; return; } listEl.innerHTML = notes.map(n => `<div class="data-card" onclick="openNote('${n.id}')"><div class="data-header"><span class="data-title">${n.title}</span><span class="data-subtitle">${new Date(n.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div><div class="data-actions"><button class="data-btn delete" onclick="event.stopPropagation(); deleteNote('${n.id}');">Xóa</button></div></div>`).join(''); }
-function openNote(id = null) { const [titleEl, contentEl, idEl, modalTitleEl] = ['noteTitle', 'noteContent', 'editNoteId', 'noteModalTitle'].map(el => document.getElementById(el)); if (id) { const note = DB.get('notes').find(n => n.id === id); modalTitleEl.textContent = "Chỉnh sửa ghi chú"; titleEl.value = note.title; contentEl.value = note.content; idEl.value = id; } else { modalTitleEl.textContent = "Tạo ghi chú mới"; titleEl.value = ''; contentEl.value = ''; idEl.value = ''; } openModal('noteModal'); }
-function saveNote() { const title = document.getElementById('noteTitle').value.trim(); if (!title) { return alert('Vui lòng nhập tiêu đề.'); } const id = document.getElementById('editNoteId').value; let notes = DB.get('notes'); const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() }; if (id) { const index = notes.findIndex(n => n.id === id); if (index > -1) notes[index] = { ...notes[index], ...newContent }; } else { notes.unshift({ id: 'note_' + Date.now(), ...newContent }); } DB.save('notes', notes); closeModal('noteModal'); renderNotes(); }
-function deleteNote(id) { if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) { DB.save('notes', DB.get('notes').filter(n => n.id !== id)); renderNotes(); } }
-function renderPasswords() { const passwords = DB.get('passwords'); const listEl = document.getElementById('passwordsList'); if (passwords.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có mật khẩu.</p>`; return; } listEl.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="password-field-container"><div class="password-label">Tên đăng nhập</div><div class="password-value-container">${p.username || 'N/A'}</div><div class="password-actions" style="grid-template-columns: 1fr;"><button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button></div></div><div class="password-field-container"><div class="password-label">Mật khẩu</div><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join(''); }
-function openPasswordModal(id = null) { const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el)); if (id) { const p = DB.get('passwords').find(item => item.id === id); titleEl.textContent = "Chỉnh sửa mật khẩu"; serviceEl.value = p.service; userEl.value = p.username; passEl.value = p.password; idEl.value = id; } else { titleEl.textContent = "Thêm mật khẩu mới"; serviceEl.value = ''; userEl.value = ''; passEl.value = ''; idEl.value = ''; } openModal('passwordModal'); }
-function savePassword() { const service = document.getElementById('passwordService').value.trim(); const password = document.getElementById('passwordValue').value; if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); } let passwords = DB.get('passwords'); const id = document.getElementById('editPasswordId').value; const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password }; if (id) { const index = passwords.findIndex(p => p.id === id); if (index > -1) passwords[index] = { ...passwords[index], ...newEntry }; } else { passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry }); } DB.save('passwords', passwords); closeModal('passwordModal'); renderPasswords(); }
-function deletePassword(id) { if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) { DB.save('passwords', DB.get('passwords').filter(p => p.id !== id)); renderPasswords(); } }
-function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); if (passField.textContent === '••••••••') { const password = DB.get('passwords').find(item => item.id === id)?.password; passField.textContent = password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; } }
-function copyToClipboard(text, type) { if (!text) { showToast(`Không có ${type} để sao chép!`); return; } if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showToast(`Đã sao chép ${type}!`); }).catch(err => { showToast(`Lỗi khi sao chép!`); }); } else { const textArea = document.createElement('textarea'); textArea.value = text; textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px'; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showToast(`Đã sao chép ${type}!`); } catch (err) { showToast(`Lỗi khi sao chép!`); } document.body.removeChild(textArea); } }
-function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
-function reloadApp() { window.location.reload(); }
-
-function createFloatingKitties() {
-    const container = document.getElementById('kitty-float-container');
-    if (!container || container.children.length > 0) return;
-    const NUM_KITTIES = 15;
-    
-    for (let i = 0; i < NUM_KITTIES; i++) {
-        const kitty = document.createElement('img');
-        kitty.src = FLOATING_KITTY_ICON;
-        kitty.className = 'floating-kitty';
-        kitty.style.width = `${Math.random() * 40 + 20}px`;
-        kitty.style.top = `${Math.random() * 100}%`;
-        kitty.style.animationDuration = `${Math.random() * 10 + 8}s`;
-        kitty.style.animationDelay = `${Math.random() * 10}s`;
-        container.appendChild(kitty);
-    }
-}
-
-// Music Bubble Functions
-let player; // YouTube IFrame Player API object
-let isMusicBubbleMinimized = false;
-let isMusicBubbleHidden = true;
-
-const musicBubbleContainer = document.getElementById('music-bubble-container');
-const musicBubbleToggleBtn = document.getElementById('music-bubble-toggle-btn');
-const musicBubbleIframe = document.getElementById('music-bubble-iframe');
-
-function toggleMusicBubble() {
-    isMusicBubbleHidden = !isMusicBubbleHidden;
-    musicBubbleContainer.classList.toggle('hidden', isMusicBubbleHidden);
-    musicBubbleToggleBtn.style.display = isMusicBubbleHidden ? 'flex' : 'none';
-
-    if (!isMusicBubbleHidden) {
-        musicBubbleContainer.classList.remove('minimized');
-        isMusicBubbleMinimized = false;
-        if (player && player.getPlayerState() !== 1) { // 1 means playing
-             player.playVideo();
-        }
-    } else {
-        if (player) {
-            player.playVideo();
-        }
-    }
-}
-
-function toggleMinimizeMusicBubble() {
-    isMusicBubbleMinimized = !isMusicBubbleMinimized;
-    musicBubbleContainer.classList.toggle('minimized', isMusicBubbleMinimized);
-    musicBubbleContainer.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
-    if (isMusicBubbleMinimized) {
-        if (player) player.playVideo();
-    } else {
-        if (player) player.playVideo();
-    }
-}
-
-function makeDraggable(element) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    let isDragging = false;
-
-    if (element) {
-        element.onmousedown = dragMouseDown;
-        element.ontouchstart = dragTouchDown;
-    }
-
-    function dragMouseDown(e) {
-        e = e || window.event;
-        if (isMusicBubbleMinimized) {
-            toggleMinimizeMusicBubble();
-            return;
-        }
-        e.preventDefault();
-        isDragging = true;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-        element.style.cursor = 'grabbing';
-    }
-
-    function dragTouchDown(e) {
-        e = e || window.event;
-        if (isMusicBubbleMinimized) {
-            toggleMinimizeMusicBubble();
-            return;
-        }
-        isDragging = true;
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-        document.ontouchend = closeDragElement;
-        document.ontouchmove = elementDragTouch;
-        element.style.cursor = 'grabbing';
-    }
-
-    function elementDrag(e) {
-        if (!isDragging) return;
-        e = e || window.event;
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-        const bodyRect = document.body.getBoundingClientRect();
-        const elemRect = element.getBoundingClientRect();
-        if (elemRect.left < 0) element.style.left = '0px';
-        if (elemRect.top < 0) element.style.top = '0px';
-        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
-        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
-    }
-
-    function elementDragTouch(e) {
-        if (!isDragging) return;
-        e = e || window.event;
-        e.preventDefault();
-        pos1 = pos3 - e.touches[0].clientX;
-        pos2 = pos4 - e.touches[0].clientY;
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-        const bodyRect = document.body.getBoundingClientRect();
-        const elemRect = element.getBoundingClientRect();
-        if (elemRect.left < 0) element.style.left = '0px';
-        if (elemRect.top < 0) element.style.top = '0px';
-        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
-        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
-    }
-
-    function closeDragElement() {
-        isDragging = false;
-        document.onmouseup = null;
-        document.onmousemove = null;
-        document.ontouchend = null;
-        document.ontouchmove = null;
-        element.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
-    }
-}
-
-// Load YouTube IFrame Player API asynchronously
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('music-bubble-iframe', {
-        events: {
-            'onReady': onPlayerReady
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    event.target.playVideo();
-    renderVideoList(); 
-}
-
-const tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-// =================================================================
-// *** PHẦN MỚI: CHẾ ĐỘ NGỦ (SLEEP MODE) ***
-// =================================================================
-
-const sleepVideos = [
-    { id: 'zWJOQ3tkzf3gWVkU', title: 'Lofi Hip Hop ' },
-    { id: 'sxE6fkjnxmY', title: 'Tiếng mưa ' },
-    { id: 'Nb9xmsoO8oc', title: 'Độ Mixi Live' },
-    { id: 't1mP3DBwwzg', title: 'Nhạc không gian ' },
-    { id: 'oQqmDSmsL04', title: 'Sóng biển ' }
-];
-
-let sleepClockInterval = null;
-
-function renderVideoList() {
-    const listContainer = document.getElementById('sleep-mode-video-list');
-    listContainer.innerHTML = '';
-    sleepVideos.forEach(video => {
-        const btn = document.createElement('button');
-        btn.className = 'sleep-video-btn';
-        btn.textContent = video.title;
-        btn.onclick = () => changeSleepVideo(video.id);
-        listContainer.appendChild(btn);
-    });
-}
-
-function changeSleepVideo(videoId) {
-    if (player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById(videoId);
-    } else {
-        console.error("Trình phát YouTube chưa sẵn sàng.");
-    }
-}
-
-function enterSleepMode() {
-    document.querySelector('.main-container').style.display = 'none';
-    document.querySelector('.bottom-nav').style.display = 'none';
-    document.getElementById('music-bubble-container').classList.add('hidden');
-    document.getElementById('music-bubble-toggle-btn').style.display = 'none';
-    
-    const iframe = document.getElementById('music-bubble-iframe');
-    document.getElementById('sleep-mode-video-container').appendChild(iframe);
-    
-    document.getElementById('sleep-mode-overlay').style.display = 'flex';
-    
-    if (player) player.playVideo();
-    
-    if (sleepClockInterval) clearInterval(sleepClockInterval);
-    
-    const updateSleepClock = () => {
-        const now = new Date();
-        const timeEl = document.getElementById('sleep-mode-clock');
-        const dateEl = document.getElementById('sleep-mode-date');
-        
-        if (timeEl) {
-            timeEl.textContent = now.toLocaleTimeString('vi-VN');
-        }
-        if (dateEl) {
-            dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        }
-    };
-    
-    updateSleepClock();
-    sleepClockInterval = setInterval(updateSleepClock, 1000);
-    
-    isMusicBubbleHidden = true;
-}
-
-function exitSleepMode() {
-    document.getElementById('sleep-mode-overlay').style.display = 'none';
-
-    const iframe = document.getElementById('music-bubble-iframe');
-    document.getElementById('music-bubble-iframe-container').appendChild(iframe);
-
-    document.querySelector('.main-container').style.display = 'block';
-    document.querySelector('.bottom-nav').style.display = 'flex';
-    document.getElementById('music-bubble-toggle-btn').style.display = 'flex';
-
-    if (sleepClockInterval) clearInterval(sleepClockInterval);
-    sleepClockInterval = null;
-    
-    const dateEl = document.getElementById('sleep-mode-date');
-    if (dateEl) dateEl.textContent = '---, --/--/----';
-
-    if (player) player.pauseVideo();
-}
-
-
-document.addEventListener('DOMContentLoaded', () => { 
-    if (!clockInterval) { 
-        updateClockAndSchedule(); 
-        clockInterval = setInterval(updateClockAndSchedule, 1000); 
-    } 
-    renderFinance(); 
-    renderNotes(); 
-    renderPasswords(); 
-    createFloatingKitties();
-    const initialActiveItem = document.querySelector('.nav-item.active'); 
-    setTimeout(() => { 
-        updateNavBubble(initialActiveItem); 
-    }, 50); 
-    makeDraggable(musicBubbleContainer);
-});
-window.addEventListener('resize', () => { updateNavBubble(document.querySelector('.nav-item.active')); });
-
-</script>
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDINi8lDjGXvvN4_nB9hNRcoMVBQowp0xk",
+  authDomain: "web-chatonline.firebaseapp.com",
+  projectId: "web-chatonline",
+  storageBucket: "web-chatonline.firebasestorage.app",
+  messagingSenderId: "579594121865",
+  appId: "1:579594121865:web:3167668be5a42bb4a2cc58",
+  measurementId: "G-RJC8W88TGT"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 </body>
 </html>
