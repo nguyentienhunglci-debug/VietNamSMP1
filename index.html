@@ -17,7 +17,7 @@
 
     <style>
         /* =================================================================
-           CSS CƠ BẢN (GIỮ NGUYÊN)
+           CSS CƠ BẢN
            ================================================================= */
         :root { --bg-primary: #111111; --bg-secondary: #1c1c1e; --card-bg: #1c1c1e; --text-primary: #f5f5f7; --text-secondary: #8e8e93; --accent-primary: #0a84ff; --accent-red: #ff453a; --accent-green: #30d158; --accent-orange: #ff9f0a; --border-color: #38383a; --font-family: 'Quicksand', sans-serif; }
         html.light-theme { --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --card-bg: #ffffff; --text-primary: #000000; --text-secondary: #636366; --accent-primary: #007aff; --border-color: #e5e5ea; }
@@ -323,12 +323,14 @@
 
 // 1. CONFIG FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyAICFb4QrXY2pDzyuf9u-YF9kX5xlaBss0",
-  authDomain: "xingchat-13d44.firebaseapp.com",
-  projectId: "xingchat-13d44",
-  storageBucket: "xingchat-13d44.firebasestorage.app",
-  messagingSenderId: "802782197419",
-  appId: "1:802782197419:web:91b50dc75ee978fd0aa9ee"
+  apiKey: "AIzaSyC4RZXkpXUoogacdxeRSVxcpcH1MouIEuI",
+  authDomain: "xingface.firebaseapp.com",
+  databaseURL: "https://xingface-default-rtdb.firebaseio.com",
+  projectId: "xingface",
+  storageBucket: "xingface.firebasestorage.app",
+  messagingSenderId: "188925980019",
+  appId: "1:188925980019:web:75ea207dae0f5d74fea906",
+  measurementId: "G-MJ3QRQV9VW"
 };
 
 firebase.initializeApp(firebaseConfig);
