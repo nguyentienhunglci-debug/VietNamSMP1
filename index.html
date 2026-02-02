@@ -320,7 +320,7 @@
     </div>
     <div class="modal-actions">
         <button class="btn btn-sec" onclick="closeModal('postModal')" style="flex:1;">Hủy</button>
-        <button class="btn" onclick="submitPost()" style="flex:1;">Đăng bài</button>
+        <button class="btn" id="btnSubmitPost" onclick="submitPost()" style="flex:1;">Đăng bài</button>
     </div>
 </div></div>
 
@@ -370,18 +370,10 @@ const DB = {
     sync: (key, callback) => {
         db.ref(key).on('value', (snapshot) => {
             const val = snapshot.val();
-            if (key === 'posts' || key === 'messages') {
+            if (key === 'posts') {
                 const arr = val ? Object.values(val) : [];
                 DATA_CACHE[key] = arr;
                 callback(arr);
-                
-                // NOTIFICATION LOGIC
-                if(arr.length > 0) {
-                   const lastItem = arr[arr.length - 1];
-                   if (currentUser && lastItem.authorId !== currentUser.uid) {
-                       document.getElementById('notif-badge').classList.add('active');
-                   }
-                }
             } else {
                 const data = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
                 DATA_CACHE[key] = data;
@@ -478,7 +470,7 @@ async function handleForgotPassword() {
     }
 }
 
-// 4. POST LOGIC (ĐÃ SỬA LỖI ĐĂNG BÀI)
+// 4. POST LOGIC
 function renderCommunity(posts) {
     const list = document.getElementById('postsList');
     const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -524,27 +516,29 @@ function submitPost() {
     const content = document.getElementById('postContent').value.trim();
     if (!content) { alert("Nội dung không được để trống!"); return; }
     
-    // Nút Loading
-    const btn = document.querySelector('#postModal .btn');
+    const btn = document.getElementById('btnSubmitPost');
     const oldText = btn.textContent;
     btn.textContent = "Đang đăng...";
     btn.disabled = true;
+    btn.style.opacity = "0.7";
 
     db.ref('posts').push({
         content: content, 
-        authorEmail: currentUser.email,
-        authorId: currentUser.uid, 
+        authorEmail: currentUser ? currentUser.email : 'Ẩn danh',
+        authorId: currentUser ? currentUser.uid : 'anon', 
         createdAt: new Date().toISOString()
     }, (error) => {
         btn.textContent = oldText;
         btn.disabled = false;
+        btn.style.opacity = "1";
         
         if (error) {
             console.error(error);
-            alert("LỖI: " + error.message + "\n(Hãy chắc chắn bạn đã chỉnh Rules trên Firebase thành true)");
+            alert("LỖI: Firebase từ chối!\nBạn hãy vào Console -> Realtime Database -> Rules và sửa thành '.write': true");
         } else {
             closeModal('postModal'); 
             showToast("Đã đăng bài thành công!");
+            document.getElementById('postContent').value = '';
         }
     });
 }
@@ -689,31 +683,28 @@ function showToast(msg) {
 }
 async function resetData() { if(confirm("Xóa toàn bộ dữ liệu?")) { await DB.save('txns',[]); await DB.save('passwords',[]); alert("Đã xóa."); } }
 
-// 9. CHAT FEATURE
+// 9. CHAT FEATURE (REALTIME DATABASE VERSION)
 function toggleChatBubble() { 
     document.getElementById('chat-bubble-container').classList.toggle('hidden'); 
     document.getElementById('notif-badge').classList.remove('active');
 }
 function toggleMinimizeChat() { document.getElementById('chat-bubble-container').classList.toggle('minimized'); }
 
-function renderChat(messages) {
+function appendChatMessage(msg) {
     const area = document.getElementById('chat-messages-area');
-    const sorted = messages.sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
-    
-    if(sorted.length === 0) {
-         area.innerHTML = '<div style="text-align:center; color:var(--text-secondary); font-size:12px; margin-top:20px;">Chưa có tin nhắn nào.</div>';
-         return;
+    // Xóa dòng "Chưa có tin nhắn" nếu có
+    if(area.querySelector('div[style*="text-align:center"]')) {
+        area.innerHTML = '';
     }
-
-    area.innerHTML = sorted.map(m => {
-        const isMe = currentUser && m.authorId === currentUser.uid;
-        const shortName = m.authorEmail ? m.authorEmail.split('@')[0] : 'User';
-        return `
-        <div class="chat-msg ${isMe ? 'me' : 'other'}">
-            <span class="chat-msg-author">${shortName}</span>
-            ${m.text}
-        </div>`;
-    }).join('');
+    
+    const isMe = currentUser && msg.uid === currentUser.uid;
+    const shortName = msg.email ? msg.email.split('@')[0] : 'User';
+    
+    const div = document.createElement('div');
+    div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
+    div.innerHTML = `<span class="chat-msg-author">${shortName}</span>${msg.text}`;
+    
+    area.appendChild(div);
     area.scrollTop = area.scrollHeight;
 }
 
@@ -723,12 +714,14 @@ function sendChatMessage() {
     const text = input.value.trim();
     if(!text) return;
     
+    // Gửi lên Realtime Database (Thay vì Firestore addDoc)
     db.ref('messages').push({
         text: text,
-        authorEmail: currentUser.email,
-        authorId: currentUser.uid,
-        timestamp: new Date().toISOString()
+        uid: currentUser.uid,
+        email: currentUser.email,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
     });
+    
     input.value = '';
 }
 function handleChatEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
@@ -760,8 +753,18 @@ document.addEventListener('DOMContentLoaded', () => {
     DB.sync('txns', renderFinance);
     DB.sync('passwords', renderPasswords);
     DB.sync('posts', renderCommunity);
-    DB.sync('messages', renderChat); 
     
+    // LOGIC NHẬN TIN NHẮN REALTIME (Thay vì onSnapshot của Firestore)
+    db.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
+        const msg = snapshot.val();
+        appendChatMessage(msg);
+        
+        // Notification
+        if(currentUser && msg.uid !== currentUser.uid) {
+            document.getElementById('notif-badge').classList.add('active');
+        }
+    });
+
     // Theme Check
     if(localStorage.getItem('theme')==='kitty') { document.documentElement.classList.add('kitty-theme'); document.getElementById('kitty-theme-toggle').classList.add('active'); }
     else if(localStorage.getItem('theme')==='light') { document.documentElement.classList.add('light-theme'); }
