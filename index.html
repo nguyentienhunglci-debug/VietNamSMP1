@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Trợ Lý Cá Nhân - XingFace Pro</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -28,20 +28,40 @@
         body { font-family: var(--font-family); background-color: var(--bg-primary); color: var(--text-primary); padding-bottom: 120px; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
         html.kitty-theme body { background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg'); background-size: cover; background-position: center center; background-attachment: fixed; }
         
-        /* LAYOUT & NAV */
+        /* LAYOUT & NAV (ĐÃ SỬA LỖI TRÔI) */
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
         .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
         .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
         
-        .bottom-nav { position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 450px; background-color: rgba(28, 28, 30, 0.75); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; padding: 6px; z-index: 1000; }
-        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); } html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
-        .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
+        /* FIXED BOTTOM NAV - QUAN TRỌNG: position: fixed và z-index cao */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: calc(15px + env(safe-area-inset-bottom)); 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: calc(100% - 32px); 
+            max-width: 450px; 
+            background-color: rgba(28, 28, 30, 0.85); /* Tăng độ đậm nền một chút */
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color); 
+            border-radius: 30px; 
+            box-shadow: 0 5px 25px rgba(0,0,0,0.3); 
+            display: flex; 
+            padding: 6px; 
+            z-index: 9999; /* Luôn nổi trên cùng */
+        }
+        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.85); } 
+        html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.9); }
+        
+        .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 2; position: relative; }
         .nav-item.active { color: var(--accent-primary); }
         .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
         .nav-item .nav-label { font-size: 11px; font-weight: 600; }
-        #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
+        
+        #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1; pointer-events: none; }
         html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
 
         /* UI COMPONENTS */
@@ -102,9 +122,7 @@
         .floating-kitty { position: absolute; left: -100px; opacity: 0.7; animation: floatAcross linear infinite; }
         @keyframes floatAcross { 0% { transform: translateX(0) rotate(0deg); left: -100px; } 100% { transform: translateX(100vw) rotate(360deg); left: 100vw; } }
 
-        /* =================================================================
-           CỘNG ĐỒNG (NÂNG CẤP)
-           ================================================================= */
+        /* CỘNG ĐỒNG */
         .post-input-container { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; cursor: pointer; }
         .post-input-header { display: flex; align-items: center; gap: 10px; }
         .user-avatar-small { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
@@ -118,16 +136,12 @@
         
         .post-actions { border-top: 1px solid var(--border-color); padding-top: 12px; display: flex; gap: 30px; }
         
-        /* NEW BUTTON STYLES */
         .action-btn { background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--font-family); transition: all 0.2s; }
         .action-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; transition: all 0.2s; }
         .action-btn:hover { color: var(--accent-primary); }
-        
-        /* LIKE ANIMATION */
         .action-btn.liked { color: var(--accent-red); }
         .action-btn.liked svg { fill: var(--accent-red); stroke: var(--accent-red); transform: scale(1.1); }
         
-        /* COMMENTS SECTION */
         .comment-section { display: none; margin-top: 15px; border-top: 1px solid var(--border-color); padding-top: 10px; animation: fadeIn 0.3s; }
         .comment-section.active { display: block; }
         .comment-input-area { display: flex; gap: 10px; margin-top: 10px; }
@@ -143,9 +157,7 @@
         .status-offline { background: #3a3a3c; color: #8e8e93; }
         .status-online { background: rgba(48, 209, 88, 0.2); color: #30d158; border: 1px solid #30d158; }
 
-        /* =================================================================
-           CHAT (NÂNG CẤP)
-           ================================================================= */
+        /* CHAT */
         #notification-bell { position: fixed; top: 15px; right: 20px; z-index: 2000; color: var(--text-primary); cursor: pointer; }
         #notif-badge { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: white; border-radius: 50%; width: 10px; height: 10px; display: none; }
         #notif-badge.active { display: block; }
@@ -171,14 +183,12 @@
         #chat-conversation { flex: 1; display: none; flex-direction: column; background: var(--bg-primary); height: 100%; }
         #chat-messages-area { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         
-        /* Message Bubbles */
         .chat-msg { max-width: 75%; padding: 8px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; }
         .chat-msg.me { align-self: flex-end; background: var(--accent-primary); color: white; border-bottom-right-radius: 4px; }
         .chat-msg.other { align-self: flex-start; background: var(--card-bg); border: 1px solid var(--border-color); border-bottom-left-radius: 4px; }
         
         .msg-status { font-size: 10px; text-align: right; margin-top: 2px; opacity: 0.7; }
 
-        /* Typing Indicator */
         .typing-indicator { display: none; align-self: flex-start; background: var(--card-bg); border-radius: 18px; padding: 8px 12px; margin-bottom: 10px; border: 1px solid var(--border-color); }
         .typing-indicator span { display: inline-block; width: 6px; height: 6px; background-color: var(--text-secondary); border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; margin: 0 2px; }
         .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
@@ -288,24 +298,24 @@
             <button class="btn btn-sec" onclick="window.location.reload()">Cập nhật phiên bản</button>
         </div>
     </div>
+</div>
 
-    <div class="bottom-nav">
-        <div id="nav-active-bubble"></div>
-        <div class="nav-item active" onclick="goTo('schedule', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><div class="nav-label">Lịch trình</div>
-        </div>
-        <div class="nav-item" onclick="goTo('finance', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><div class="nav-label">Tài chính</div>
-        </div>
-        <div class="nav-item" onclick="goTo('community', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><div class="nav-label">Cộng đồng</div>
-        </div>
-        <div class="nav-item" onclick="goTo('passwords', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg><div class="nav-label">Mật khẩu</div>
-        </div>
-        <div class="nav-item" onclick="goTo('settings', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><div class="nav-label">Cài đặt</div>
-        </div>
+<div class="bottom-nav">
+    <div id="nav-active-bubble"></div>
+    <div class="nav-item active" onclick="goTo('schedule', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><div class="nav-label">Lịch trình</div>
+    </div>
+    <div class="nav-item" onclick="goTo('finance', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><div class="nav-label">Tài chính</div>
+    </div>
+    <div class="nav-item" onclick="goTo('community', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><div class="nav-label">Cộng đồng</div>
+    </div>
+    <div class="nav-item" onclick="goTo('passwords', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg><div class="nav-label">Mật khẩu</div>
+    </div>
+    <div class="nav-item" onclick="goTo('settings', this)">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><div class="nav-label">Cài đặt</div>
     </div>
 </div>
 
@@ -396,7 +406,6 @@ const DB = {
         db.ref(key).on('value', (snapshot) => {
             const val = snapshot.val();
             if (key === 'posts') {
-                // Post object to array + ID
                 const arr = [];
                 if(val) {
                     Object.keys(val).forEach(k => {
@@ -487,10 +496,9 @@ async function handleForgotPassword() {
     try { await auth.sendPasswordResetEmail(email); alert("Đã gửi email đặt lại mật khẩu."); } catch(e) { alert("Lỗi: " + e.message); }
 }
 
-// 4. POST LOGIC (UPDATED WITH ICONS & REALTIME LIKES)
+// 4. POST LOGIC
 function renderCommunity(posts) {
     const list = document.getElementById('postsList');
-    // Sort descending by date
     const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     if (sortedPosts.length === 0) { list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-secondary)">Chưa có bài viết nào.</div>`; return; }
     
@@ -500,18 +508,14 @@ function renderCommunity(posts) {
         const dateStr = `${date.getDate()}/${date.getMonth()+1}`;
         const shortName = p.authorEmail ? p.authorEmail.split('@')[0] : 'Ẩn danh';
         
-        // Like Logic
         const likes = p.likes || {};
         const likeCount = Object.keys(likes).length;
         const isLiked = currentUser && likes[currentUser.uid];
         const heartClass = isLiked ? 'liked' : '';
-        const heartFill = isLiked ? 'currentColor' : 'none'; // Will be handled by CSS class but SVG attr backup
-
-        // Comment Logic
+        
         const comments = p.comments || {};
         const commentCount = Object.keys(comments).length;
 
-        // Render comments list immediately but hidden
         const commentListHTML = Object.values(comments).map(c => 
             `<div class="comment-item">
                 <div class="comment-bubble">
@@ -575,20 +579,14 @@ function submitPost() {
     });
 }
 
-// Like functionality
 function toggleLike(postId) {
     if(!currentUser) { showToast("Vui lòng đăng nhập để thích!"); return; }
     const ref = db.ref(`posts/${postId}/likes/${currentUser.uid}`);
     ref.once('value', snapshot => {
-        if(snapshot.exists()) {
-            ref.remove(); // Unlike
-        } else {
-            ref.set(true); // Like
-        }
+        if(snapshot.exists()) { ref.remove(); } else { ref.set(true); }
     });
 }
 
-// Comment Functionality
 function toggleCommentSection(postId) {
     const sec = document.getElementById(`comment-section-${postId}`);
     sec.classList.toggle('active');
@@ -609,7 +607,7 @@ function submitComment(postId) {
     input.value = '';
 }
 
-// 5. SCHEDULE & FINANCE (NO CHANGE)
+// 5. SCHEDULE & FINANCE
 const scheduleData=[{dayName:'Chủ Nhật',morning:['','','','',''],afternoon:['','','','','']},{dayName:'Thứ Hai',morning:['LS&ĐL (Sử) – Giang','Toán – Đ. Mai','Toán – Đ. Mai','Tin – Ánh','KHTN (Sinh) – P. Nhung'],afternoon:['C.Nghệ – H. Vân','LS&ĐL (Địa) – H. Nhung','Nghệ thuật (AN) – T. Nga','','','']},{dayName:'Thứ Ba',morning:['Toán – Đ. Mai','T.Anh - Đ.Oanh','GDCD – Huệ','KHTN (Hóa) – P. Nhung','KHTN (Lý) – T. Thùy'],afternoon:['Nghệ thuật (MT) – Thùy','GDTC – Tuấn','C.Nghệ – H. Vân','','','']},{dayName:'Thứ Tư',morning:['Văn – Đ. Hoa','Văn – Đ. Hoa','LS&ĐL (Sử) – Giang','T.Anh – D. Oanh','KHTN (Lý) – T. Thùy'],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','','']},{dayName:'Thứ Năm',morning:['HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhungg',''],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','']},{dayName:'Thứ Sáu',morning:['GDTC – Tuấn','Văn – D. Hoa','GDĐP – H. Vân','T.Anh – D. Oanh','KHTN (Hóa) – P. Nhung'],afternoon:['','','','','']},{dayName:'Thứ Bảy',morning:['','','','',''],afternoon:['','','','','']}];
 let lastRenderedDay=-1;
 function updateClockAndSchedule(){const n=new Date();document.getElementById('clock-time').textContent=n.toLocaleTimeString('vi-VN');if(n.getDay()!==lastRenderedDay){renderFullSchedule(n);lastRenderedDay=n.getDay()}}
@@ -630,10 +628,7 @@ function closeModal(id){document.getElementById(id).classList.remove('show')}
 function showToast(m){const t=document.createElement('div');t.className='copy-toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2000)}
 async function resetData(){if(confirm("Xóa toàn bộ dữ liệu?")){await DB.save('txns',[]);await DB.save('passwords',[]);alert("Đã xóa.")}}
 
-
-// ============================================
-// 6. CHAT 1-ON-1 SYSTEM (NÂNG CẤP)
-// ============================================
+// 6. CHAT
 const chatContainer = document.getElementById('chat-bubble-container');
 const userListView = document.getElementById('chat-user-list');
 const convoView = document.getElementById('chat-conversation');
@@ -641,7 +636,6 @@ const chatTitle = document.getElementById('chatTitleText');
 const backBtn = document.getElementById('chatBackBtn');
 const typingIndicator = document.getElementById('typingIndicator');
 
-// Toggle Chat Bubble
 function toggleChatBubble() { 
     chatContainer.classList.toggle('hidden'); 
     document.getElementById('notif-badge').classList.remove('active');
@@ -651,7 +645,6 @@ function toggleChatBubble() {
 }
 function toggleMinimizeChat() { chatContainer.classList.toggle('minimized'); }
 
-// Load Users
 function loadUserList() {
     userListView.style.display = 'block';
     convoView.style.display = 'none';
@@ -693,7 +686,6 @@ function loadUserList() {
     });
 }
 
-// Open Chat
 function openChatWith(partnerUid, partnerName) {
     if(!currentUser) { alert("Vui lòng đăng nhập để chat."); openAuthModal('login'); return; }
     
@@ -702,71 +694,50 @@ function openChatWith(partnerUid, partnerName) {
     convoView.style.display = 'flex';
     backBtn.style.display = 'block';
     chatTitle.textContent = partnerName;
-    
     document.getElementById('chat-messages-area').innerHTML = '';
-    
-    // Define Chat ID
     currentChatId = currentUser.uid < partnerUid ? `${currentUser.uid}_${partnerUid}` : `${partnerUid}_${currentUser.uid}`;
     
-    // Update my "Last Seen" for this chat immediately
     db.ref(`chats/${currentChatId}/lastSeen/${currentUser.uid}`).set(firebase.database.ServerValue.TIMESTAMP);
-
-    // Listen for Partner's Last Seen
     db.ref(`chats/${currentChatId}/lastSeen/${partnerUid}`).on('value', snap => {
         currentPartnerLastSeen = snap.val() || 0;
-        // Re-render messages to show "seen" status
-        // Note: For optimization, you would only update last message, but here we redraw or update DOM
         document.querySelectorAll('.msg-status').forEach(el => {
             const timestamp = parseInt(el.getAttribute('data-time'));
-            if(timestamp <= currentPartnerLastSeen) {
-                el.textContent = "Đã xem";
-            }
+            if(timestamp <= currentPartnerLastSeen) { el.textContent = "Đã xem"; }
         });
     });
 
-    // Listen to messages
     currentChatRef = db.ref('chats/' + currentChatId + '/messages');
     currentChatRef.limitToLast(50).on('child_added', snapshot => {
         const msg = snapshot.val();
         appendChatMessage(msg);
-        
-        // If I am receiving a message while chat is open, update my last seen
         if(msg.senderId !== currentUser.uid) {
             db.ref(`chats/${currentChatId}/lastSeen/${currentUser.uid}`).set(firebase.database.ServerValue.TIMESTAMP);
         }
     });
 
-    // Listen for Typing
     db.ref(`chats/${currentChatId}/typing/${partnerUid}`).on('value', snap => {
         if(snap.val() === true) {
             typingIndicator.style.display = 'block';
             document.getElementById('chat-messages-area').scrollTop = document.getElementById('chat-messages-area').scrollHeight;
-        } else {
-            typingIndicator.style.display = 'none';
-        }
+        } else { typingIndicator.style.display = 'none'; }
     });
 }
 
-function backToUserList() {
-    loadUserList();
-}
+function backToUserList() { loadUserList(); }
 
 function appendChatMessage(msg) {
     const area = document.getElementById('chat-messages-area');
     const isMe = currentUser && msg.senderId === currentUser.uid;
-    
     const div = document.createElement('div');
     div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
     div.innerHTML = `
         ${msg.text}
         ${isMe ? `<div class="msg-status" data-time="${msg.timestamp}">${msg.timestamp <= currentPartnerLastSeen ? 'Đã xem' : 'Đã gửi'}</div>` : ''}
     `;
-    
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
 }
 
-// Send Logic
 function sendChatMessage() {
     if(!currentUser || !currentChatPartnerId) return;
     const input = document.getElementById('chatInput');
@@ -774,31 +745,22 @@ function sendChatMessage() {
     if(!text) return;
 
     db.ref(`chats/${currentChatId}/messages`).push({
-        text: text,
-        senderId: currentUser.uid,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
+        text: text, senderId: currentUser.uid, timestamp: firebase.database.ServerValue.TIMESTAMP
     });
-    
-    // Stop typing immediately when sent
     db.ref(`chats/${currentChatId}/typing/${currentUser.uid}`).remove();
     input.value = '';
 }
 
-// Typing Logic
 function handleTyping() {
     if(!currentChatId || !currentUser) return;
-    
     db.ref(`chats/${currentChatId}/typing/${currentUser.uid}`).set(true);
-    
     if(typingTimeout) clearTimeout(typingTimeout);
     typingTimeout = setTimeout(() => {
         db.ref(`chats/${currentChatId}/typing/${currentUser.uid}`).remove();
     }, 2000);
 }
-
 function handleChatEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
 
-// INIT
 document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClockAndSchedule, 1000); updateClockAndSchedule();
     DB.sync('txns', renderFinance);
@@ -808,7 +770,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(localStorage.getItem('theme')==='kitty') { document.documentElement.classList.add('kitty-theme'); document.getElementById('kitty-theme-toggle').classList.add('active'); }
     else if(localStorage.getItem('theme')==='light') { document.documentElement.classList.add('light-theme'); }
     
-    // Kitty Float
     const kc = document.getElementById('kitty-float-container');
     for(let i=0;i<15;i++) {
         const k = document.createElement('img'); k.src="https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png";
