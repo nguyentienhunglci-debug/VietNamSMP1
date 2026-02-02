@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Trợ Lý Cá Nhân</title>
     
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="manifest" href="manifest.webmanifest">
@@ -17,7 +20,7 @@
 
     <style>
         /* =================================================================
-            1. DESIGN SYSTEM & VARIABLES
+            DESIGN SYSTEM & VARIABLES (GIỮ NGUYÊN)
             ================================================================= */
         :root {
             --bg-primary: #111111;
@@ -62,7 +65,7 @@
         }
 
         /* =================================================================
-            2. GLOBAL RESETS & BASE STYLES
+            GLOBAL RESETS & BASE STYLES
             ================================================================= */
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
@@ -90,7 +93,7 @@
         }
 
         /* =================================================================
-            3. CORE LAYOUT & COMPONENTS
+            CORE LAYOUT & COMPONENTS
             ================================================================= */
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -443,7 +446,7 @@
         }
         
         /* =================================================================
-            4. SLEEP MODE STYLES (ĐÃ CẬP NHẬT)
+            SLEEP MODE STYLES
             ================================================================= */
         #sleep-mode-overlay {
             position: fixed;
@@ -453,14 +456,13 @@
             display: none; 
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* *** THAY ĐỔI: Canh giữa nội dung *** */
+            justify-content: center;
             padding: 20px;
-            padding-top: env(safe-area-inset-top); /* *** THAY ĐỔI: Đẩy nội dung xuống nếu có tai thỏ *** */
+            padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
             overflow: hidden; 
         }
         
-        /* *** THAY ĐỔI: Thêm 1 thẻ bọc đồng hồ và ngày tháng *** */
         #sleep-mode-header {
             text-align: center;
             margin-bottom: 30px;
@@ -474,7 +476,6 @@
             letter-spacing: 1px;
         }
         
-        /* *** THAY ĐỔI: Thêm CSS cho ngày tháng *** */
         #sleep-mode-date {
             font-size: 18px;
             font-weight: 500;
@@ -539,7 +540,7 @@
             cursor: pointer;
             line-height: 36px;
             text-align: center;
-            z-index: 20; /* *** THAY ĐỔI: Tăng z-index để nổi lên trên *** */
+            z-index: 20; 
         }
         
     </style>
@@ -625,7 +626,7 @@
         </div>
         <div class="card">
             <h3>Quản lý dữ liệu</h3>
-            <button class="btn btn-danger" onclick="resetData()">Xóa toàn bộ dữ liệu</button>
+            <button class="btn btn-danger" onclick="resetData()">Xóa toàn bộ dữ liệu (Cloud)</button>
             <button class="btn btn-sec" onclick="reloadApp()">Cập nhật phiên bản</button>
         </div>
     </div>
@@ -678,23 +679,30 @@
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 
 <div id="sleep-mode-overlay">
-    
     <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
-    
     <div id="sleep-mode-header">
         <div id="sleep-mode-clock">--:--:--</div>
         <div id="sleep-mode-date">---, --/--/----</div>
     </div>
-
-    <div id="sleep-mode-video-container">
-        </div>
-    <div id="sleep-mode-video-list">
-        </div>
+    <div id="sleep-mode-video-container"></div>
+    <div id="sleep-mode-video-list"></div>
 </div>
-
 
 <script type="text/javascript">
 'use strict';
+
+// 2. CẤU HÌNH & KHỞI TẠO FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyAICFb4QrXY2pDzyuf9u-YF9kX5xlaBss0",
+  authDomain: "xingchat-13d44.firebaseapp.com",
+  projectId: "xingchat-13d44",
+  storageBucket: "xingchat-13d44.firebasestorage.app",
+  messagingSenderId: "802782197419",
+  appId: "1:802782197419:web:91b50dc75ee978fd0aa9ee"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
 const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
 
@@ -722,95 +730,61 @@ const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-tr
     }
 })();
 
-const DB = { get: (key) => JSON.parse(localStorage.getItem(key) || '[]'), save: (key, data) => localStorage.setItem(key, JSON.stringify(data)), };
+// 3. HỆ THỐNG DB MỚI (SYNC FIREBASE + CACHE LOCAL)
+// Biến này chứa dữ liệu mới nhất từ Firebase để hiển thị ngay lập tức
+const DATA_CACHE = {
+    txns: [],
+    notes: [],
+    passwords: []
+};
 
-// ===============================================
-// <<< PHẦN 1: CẬP NHẬT DỮ LIỆU THỜI KHÓA BIỂU >>>
-// Các mảng morning/afternoon giờ luôn có 5 phần tử. Tiết trống được đánh dấu bằng chuỗi rỗng ''.
+const DB = { 
+    // Lấy dữ liệu từ cache (đồng bộ) để không phải sửa logic hiển thị cũ
+    get: (key) => DATA_CACHE[key] || [],
+    
+    // Lưu dữ liệu lên Firebase
+    save: (key, data) => {
+        return database.ref(key).set(data);
+    },
+    
+    // Lắng nghe thay đổi từ Firebase
+    sync: (key, callback) => {
+        database.ref(key).on('value', (snapshot) => {
+            const val = snapshot.val();
+            // Đảm bảo dữ liệu luôn là mảng
+            const data = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
+            DATA_CACHE[key] = data; // Cập nhật cache
+            callback(data); // Gọi hàm render
+        });
+    }
+};
+
 // ===============================================
 const scheduleData = [
     { dayName: 'Chủ Nhật', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] },
     {
         dayName: 'Thứ Hai',
-        morning: [
-            'LS&ĐL (Sử) – Giang',
-            'Toán – Đ. Mai',
-            'Toán – Đ. Mai',
-            'Tin – Ánh',
-            'KHTN (Sinh) – P. Nhung'
-        ],
-        afternoon: [
-            'C.Nghệ – H. Vân',
-            'LS&ĐL (Địa) – H. Nhung',
-            'Nghệ thuật (AN) – T. Nga',
-            '',
-            '',
-            ''
-        ]
+        morning: ['LS&ĐL (Sử) – Giang', 'Toán – Đ. Mai', 'Toán – Đ. Mai', 'Tin – Ánh', 'KHTN (Sinh) – P. Nhung'],
+        afternoon: ['C.Nghệ – H. Vân', 'LS&ĐL (Địa) – H. Nhung', 'Nghệ thuật (AN) – T. Nga', '', '', '']
     },
     {
         dayName: 'Thứ Ba',
-        morning: [
-            'Toán – Đ. Mai',
-            'T.Anh - Đ.Oanh',
-            'GDCD – Huệ',
-            'KHTN (Hóa) – P. Nhung',
-            'KHTN (Lý) – T. Thùy'
-        ],
-        afternoon: [
-            'Nghệ thuật (MT) – Thùy',
-            'GDTC – Tuấn',
-            'C.Nghệ – H. Vân',
-            '',
-            '',
-            ''
-        ]
+        morning: ['Toán – Đ. Mai', 'T.Anh - Đ.Oanh', 'GDCD – Huệ', 'KHTN (Hóa) – P. Nhung', 'KHTN (Lý) – T. Thùy'],
+        afternoon: ['Nghệ thuật (MT) – Thùy', 'GDTC – Tuấn', 'C.Nghệ – H. Vân', '', '', '']
     },
     {
         dayName: 'Thứ Tư',
-        morning: [
-            'Văn – Đ. Hoa',
-            'Văn – Đ. Hoa',
-            'LS&ĐL (Sử) – Giang',
-            'T.Anh – D. Oanh',
-            'KHTN (Lý) – T. Thùy'
-        ],
-        afternoon: [
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            '',
-            '',
-            ''
-        ]
+        morning: ['Văn – Đ. Hoa', 'Văn – Đ. Hoa', 'LS&ĐL (Sử) – Giang', 'T.Anh – D. Oanh', 'KHTN (Lý) – T. Thùy'],
+        afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '', '']
     },
     {
         dayName: 'Thứ Năm',
-        morning: [
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhung',
-            'HĐTN – H. Nhungg',
-            ''
-        ],
-        afternoon: [
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            'Chiều Nghỉ',
-            '',
-            ''
-        ]
+        morning: ['HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhungg', ''],
+        afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '']
     },
     {
         dayName: 'Thứ Sáu',
-        morning: [
-            'GDTC – Tuấn',
-            'Văn – D. Hoa',
-            'GDĐP – H. Vân',
-            'T.Anh – D. Oanh',
-            'KHTN (Hóa) – P. Nhung'
-        ],
+        morning: ['GDTC – Tuấn', 'Văn – D. Hoa', 'GDĐP – H. Vân', 'T.Anh – D. Oanh', 'KHTN (Hóa) – P. Nhung'],
         afternoon: ['', '', '', '', '']
     },
     { dayName: 'Thứ Bảy', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] }
@@ -847,10 +821,6 @@ function updateClockAndSchedule() {
     }
 }
 
-// ====================================================================
-// <<< PHẦN 2: CẬP NHẬT HÀM HIỂN THỊ THỜI KHÓA BIỂU >>>
-// Hàm này được viết lại để hiển thị đủ 5 tiết/buổi và chữ "Nghỉ".
-// ====================================================================
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -864,7 +834,6 @@ function renderFullSchedule(now) {
     if (isDayOff) {
         todayHTML += `<div class="schedule-item schedule-item-off"><div>Hôm nay được nghỉ</div><span>Nghỉ</span></div>`;
     } else {
-        // Buổi sáng
         todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
         for (let i = 0; i < 5; i++) {
             const subject = today.morning[i];
@@ -874,8 +843,6 @@ function renderFullSchedule(now) {
                 todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
             }
         }
-
-        // Buổi chiều
         todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
         for (let i = 0; i < 5; i++) {
             const subject = today.afternoon[i];
@@ -912,13 +879,11 @@ function toggleTomorrowSchedule() {
         const tomorrowIndex = (now.getDay() + 1) % 7;
         const tomorrow = scheduleData[tomorrowIndex];
         let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
-        
         const isDayOff = tomorrow.morning.every(s => !s) && tomorrow.afternoon.every(s => !s);
 
         if (isDayOff) {
             tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`;
         } else {
-            // Buổi sáng
             tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
             for (let i = 0; i < 5; i++) {
                 const subject = tomorrow.morning[i];
@@ -928,8 +893,6 @@ function toggleTomorrowSchedule() {
                     tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
                 }
             }
-
-            // Buổi chiều
             tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
             for (let i = 0; i < 5; i++) {
                 const subject = tomorrow.afternoon[i];
@@ -940,13 +903,11 @@ function toggleTomorrowSchedule() {
                 }
             }
         }
-        
         container.innerHTML = tomorrowHTML;
         container.style.display = 'block';
         btn.textContent = 'Ẩn chi tiết';
     }
 }
-// ====================================================================
 
 function toggleTheme() {
     if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme();
@@ -1014,19 +975,33 @@ function renderFinance() { const now = new Date(); const currentMonth = now.getM
 function formatDateHeader(date) { const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const d = new Date(date); today.setHours(0, 0, 0, 0); yesterday.setHours(0, 0, 0, 0); d.setHours(0, 0, 0, 0); if (d.getTime() === today.getTime()) return 'Hôm nay'; if (d.getTime() === yesterday.getTime()) return 'Hôm qua'; return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }); }
 function renderHistory() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const query = document.getElementById('search').value.toLowerCase(); const txns = DB.get('txns').filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }).filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date)); const listEl = document.getElementById('histList'); if (txns.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`; return; } let lastDateStr = ''; let html = ''; txns.forEach(t => { const txDate = new Date(t.date); const dateStr = txDate.toLocaleDateString('vi-VN'); if (dateStr !== lastDateStr) { html += `<div class="date-header">${formatDateHeader(txDate)}</div>`; lastDateStr = dateStr; } const isExpense = t.type === 'expense'; const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : ''; html += `<div class="txn-item"><div style="flex: 1; margin-right: 10px;"><div class="data-title">${t.category}</div>${noteHTML}</div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`; }); listEl.innerHTML = html; }
 function openTxn(type) { document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập'; document.getElementById('type').value = type; document.getElementById('amt').value = ''; document.getElementById('note').value = ''; openModal('txnModal'); }
-function saveTxn() { const amount = parseFloat(document.getElementById('amt').value); if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); } const txns = DB.get('txns'); txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category: document.getElementById('cat').value, note: document.getElementById('note').value.trim(), type: document.getElementById('type').value, }); DB.save('txns', txns); closeModal('txnModal'); renderFinance(); }
+async function saveTxn() { 
+    const amount = parseFloat(document.getElementById('amt').value); 
+    if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); } 
+    const txns = [...DB.get('txns')]; // Clone mảng từ cache
+    txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category: document.getElementById('cat').value, note: document.getElementById('note').value.trim(), type: document.getElementById('type').value, }); 
+    await DB.save('txns', txns); 
+    closeModal('txnModal'); 
+}
 function showLastMonthSummary() { const now = new Date(); const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); const prevMonth = prevMonthDate.getMonth(); const prevYear = prevMonthDate.getFullYear(); const prevMonthExpenses = DB.get('txns').filter(t => { const txDate = new Date(t.date); return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear; }); const summaryContentEl = document.getElementById('summaryContent'); if (prevMonthExpenses.length === 0) { summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`; } else { const byCategory = prevMonthExpenses.reduce((acc, txn) => { acc[txn.category] = (acc[txn.category] || 0) + txn.amount; return acc; }, {}); const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a); const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0); let summaryHTML = sortedCategories.map(([category, amount]) => `<div class="txn-item"><div><div class="data-title">${category}</div></div><div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div></div>`).join(''); summaryHTML += `<div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;"><div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div><div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div></div>`; summaryContentEl.innerHTML = summaryHTML; } document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`; openModal('summaryModal'); }
 function renderNotes() { const notes = DB.get('notes'); const listEl = document.getElementById('notesList'); if (notes.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có ghi chú.</p>`; return; } listEl.innerHTML = notes.map(n => `<div class="data-card" onclick="openNote('${n.id}')"><div class="data-header"><span class="data-title">${n.title}</span><span class="data-subtitle">${new Date(n.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div><div class="data-actions"><button class="data-btn delete" onclick="event.stopPropagation(); deleteNote('${n.id}');">Xóa</button></div></div>`).join(''); }
 function openNote(id = null) { const [titleEl, contentEl, idEl, modalTitleEl] = ['noteTitle', 'noteContent', 'editNoteId', 'noteModalTitle'].map(el => document.getElementById(el)); if (id) { const note = DB.get('notes').find(n => n.id === id); modalTitleEl.textContent = "Chỉnh sửa ghi chú"; titleEl.value = note.title; contentEl.value = note.content; idEl.value = id; } else { modalTitleEl.textContent = "Tạo ghi chú mới"; titleEl.value = ''; contentEl.value = ''; idEl.value = ''; } openModal('noteModal'); }
-function saveNote() { const title = document.getElementById('noteTitle').value.trim(); if (!title) { return alert('Vui lòng nhập tiêu đề.'); } const id = document.getElementById('editNoteId').value; let notes = DB.get('notes'); const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() }; if (id) { const index = notes.findIndex(n => n.id === id); if (index > -1) notes[index] = { ...notes[index], ...newContent }; } else { notes.unshift({ id: 'note_' + Date.now(), ...newContent }); } DB.save('notes', notes); closeModal('noteModal'); renderNotes(); }
-function deleteNote(id) { if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) { DB.save('notes', DB.get('notes').filter(n => n.id !== id)); renderNotes(); } }
+async function saveNote() { const title = document.getElementById('noteTitle').value.trim(); if (!title) { return alert('Vui lòng nhập tiêu đề.'); } const id = document.getElementById('editNoteId').value; let notes = [...DB.get('notes')]; const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() }; if (id) { const index = notes.findIndex(n => n.id === id); if (index > -1) notes[index] = { ...notes[index], ...newContent }; } else { notes.unshift({ id: 'note_' + Date.now(), ...newContent }); } await DB.save('notes', notes); closeModal('noteModal'); }
+async function deleteNote(id) { if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) { await DB.save('notes', DB.get('notes').filter(n => n.id !== id)); } }
 function renderPasswords() { const passwords = DB.get('passwords'); const listEl = document.getElementById('passwordsList'); if (passwords.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có mật khẩu.</p>`; return; } listEl.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="password-field-container"><div class="password-label">Tên đăng nhập</div><div class="password-value-container">${p.username || 'N/A'}</div><div class="password-actions" style="grid-template-columns: 1fr;"><button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button></div></div><div class="password-field-container"><div class="password-label">Mật khẩu</div><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join(''); }
 function openPasswordModal(id = null) { const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el)); if (id) { const p = DB.get('passwords').find(item => item.id === id); titleEl.textContent = "Chỉnh sửa mật khẩu"; serviceEl.value = p.service; userEl.value = p.username; passEl.value = p.password; idEl.value = id; } else { titleEl.textContent = "Thêm mật khẩu mới"; serviceEl.value = ''; userEl.value = ''; passEl.value = ''; idEl.value = ''; } openModal('passwordModal'); }
-function savePassword() { const service = document.getElementById('passwordService').value.trim(); const password = document.getElementById('passwordValue').value; if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); } let passwords = DB.get('passwords'); const id = document.getElementById('editPasswordId').value; const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password }; if (id) { const index = passwords.findIndex(p => p.id === id); if (index > -1) passwords[index] = { ...passwords[index], ...newEntry }; } else { passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry }); } DB.save('passwords', passwords); closeModal('passwordModal'); renderPasswords(); }
-function deletePassword(id) { if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) { DB.save('passwords', DB.get('passwords').filter(p => p.id !== id)); renderPasswords(); } }
+async function savePassword() { const service = document.getElementById('passwordService').value.trim(); const password = document.getElementById('passwordValue').value; if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); } let passwords = [...DB.get('passwords')]; const id = document.getElementById('editPasswordId').value; const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password }; if (id) { const index = passwords.findIndex(p => p.id === id); if (index > -1) passwords[index] = { ...passwords[index], ...newEntry }; } else { passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry }); } await DB.save('passwords', passwords); closeModal('passwordModal'); }
+async function deletePassword(id) { if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) { await DB.save('passwords', DB.get('passwords').filter(p => p.id !== id)); } }
 function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); if (passField.textContent === '••••••••') { const password = DB.get('passwords').find(item => item.id === id)?.password; passField.textContent = password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; } }
 function copyToClipboard(text, type) { if (!text) { showToast(`Không có ${type} để sao chép!`); return; } if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showToast(`Đã sao chép ${type}!`); }).catch(err => { showToast(`Lỗi khi sao chép!`); }); } else { const textArea = document.createElement('textarea'); textArea.value = text; textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px'; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showToast(`Đã sao chép ${type}!`); } catch (err) { showToast(`Lỗi khi sao chép!`); } document.body.removeChild(textArea); } }
-function resetData() { if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu. Bạn có muốn tiếp tục?')) { localStorage.clear(); sessionStorage.clear(); alert('Đã xóa toàn bộ dữ liệu.'); window.location.reload(); } }
+async function resetData() { 
+    if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu TRÊN CLOUD. Bạn có muốn tiếp tục?')) { 
+        await DB.save('txns', []);
+        await DB.save('notes', []);
+        await DB.save('passwords', []);
+        alert('Đã xóa toàn bộ dữ liệu trên đám mây.'); 
+    } 
+}
 function reloadApp() { window.location.reload(); }
 
 function createFloatingKitties() {
@@ -1047,7 +1022,7 @@ function createFloatingKitties() {
 }
 
 // Music Bubble Functions
-let player; // YouTube IFrame Player API object
+let player; 
 let isMusicBubbleMinimized = false;
 let isMusicBubbleHidden = true;
 
@@ -1063,7 +1038,7 @@ function toggleMusicBubble() {
     if (!isMusicBubbleHidden) {
         musicBubbleContainer.classList.remove('minimized');
         isMusicBubbleMinimized = false;
-        if (player && player.getPlayerState() !== 1) { // 1 means playing
+        if (player && player.getPlayerState() !== 1) { 
              player.playVideo();
         }
     } else {
@@ -1168,7 +1143,6 @@ function makeDraggable(element) {
     }
 }
 
-// Load YouTube IFrame Player API asynchronously
 function onYouTubeIframeAPIReady() {
     player = new YT.Player('music-bubble-iframe', {
         events: {
@@ -1187,10 +1161,6 @@ tag.src = "https://www.youtube.com/iframe_api";
 const firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-
-// =================================================================
-// *** PHẦN MỚI: CHẾ ĐỘ NGỦ (SLEEP MODE) ***
-// =================================================================
 
 const sleepVideos = [
     { id: 'zWJOQ3tkzf3gWVkU', title: 'Lofi Hip Hop ' },
@@ -1281,9 +1251,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateClockAndSchedule(); 
         clockInterval = setInterval(updateClockAndSchedule, 1000); 
     } 
-    renderFinance(); 
-    renderNotes(); 
-    renderPasswords(); 
+
+    // BẮT ĐẦU ĐỒNG BỘ DỮ LIỆU
+    DB.sync('txns', renderFinance); 
+    DB.sync('notes', renderNotes); 
+    DB.sync('passwords', renderPasswords); 
+
     createFloatingKitties();
     const initialActiveItem = document.querySelector('.nav-item.active'); 
     setTimeout(() => { 
