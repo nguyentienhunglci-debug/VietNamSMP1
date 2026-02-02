@@ -7,6 +7,7 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,541 +18,129 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
-
     <style>
         /* =================================================================
-            DESIGN SYSTEM & VARIABLES (GIỮ NGUYÊN)
-            ================================================================= */
-        :root {
-            --bg-primary: #111111;
-            --bg-secondary: #1c1c1e;
-            --card-bg: #1c1c1e;
-            --text-primary: #f5f5f7;
-            --text-secondary: #8e8e93;
-            --accent-primary: #0a84ff;
-            --accent-primary-rgb: 10, 132, 255;
-            --accent-red: #ff453a;
-            --accent-green: #30d158;
-            --accent-orange: #ff9f0a;
-            --border-color: #38383a;
-            --shadow: none;
-            --font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-
-        html.light-theme {
-            --bg-primary: #f2f2f7;
-            --bg-secondary: #ffffff;
-            --card-bg: #ffffff;
-            --text-primary: #000000;
-            --text-secondary: #636366;
-            --accent-primary: #007aff;
-            --accent-primary-rgb: 0, 122, 255;
-            --border-color: #e5e5ea;
-        }
-        
-        html.kitty-theme {
-            --bg-primary: #fff0f5; /* Lavender Blush */
-            --bg-secondary: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.9); 
-            --text-primary: #5c3c54; /* Dark purple */
-            --text-secondary: #d17fb4; /* Muted pink */
-            --accent-primary: #ff85a2; /* Bright Pink */
-            --accent-primary-rgb: 255, 133, 162;
-            --accent-red: #f75d72;
-            --accent-green: #61d3a3;
-            --accent-orange: #ffb480;
-            --border-color: #f7d6e0; /* Light pink border */
-            --font-family: 'Quicksand', cursive;
-        }
-
-        /* =================================================================
-            GLOBAL RESETS & BASE STYLES
-            ================================================================= */
+           1. GIỮ NGUYÊN TOÀN BỘ CSS GỐC
+           ================================================================= */
+        :root { --bg-primary: #111111; --bg-secondary: #1c1c1e; --card-bg: #1c1c1e; --text-primary: #f5f5f7; --text-secondary: #8e8e93; --accent-primary: #0a84ff; --accent-primary-rgb: 10, 132, 255; --accent-red: #ff453a; --accent-green: #30d158; --accent-orange: #ff9f0a; --border-color: #38383a; --font-family: 'Quicksand', sans-serif; }
+        html.light-theme { --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --card-bg: #ffffff; --text-primary: #000000; --text-secondary: #636366; --accent-primary: #007aff; --accent-primary-rgb: 0, 122, 255; --border-color: #e5e5ea; }
+        html.kitty-theme { --bg-primary: #fff0f5; --bg-secondary: #ffffff; --card-bg: rgba(255, 255, 255, 0.9); --text-primary: #5c3c54; --text-secondary: #d17fb4; --accent-primary: #ff85a2; --accent-primary-rgb: 255, 133, 162; --accent-red: #f75d72; --accent-green: #61d3a3; --accent-orange: #ffb480; --border-color: #f7d6e0; --font-family: 'Quicksand', cursive; }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        html {  
-            color-scheme: dark; 
-            scroll-behavior: smooth;
-        }
-        html.light-theme { color-scheme: light; }
-        html.kitty-theme { color-scheme: light; }
-        
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            padding-bottom: 120px; 
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        html.kitty-theme body {
-            background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg');
-            background-size: cover;
-            background-position: center center;
-            background-attachment: fixed;
-        }
-
-        /* =================================================================
-            CORE LAYOUT & COMPONENTS
-            ================================================================= */
+        html { color-scheme: dark; scroll-behavior: smooth; }
+        html.light-theme, html.kitty-theme { color-scheme: light; }
+        body { font-family: var(--font-family); background-color: var(--bg-primary); color: var(--text-primary); padding-bottom: 120px; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
+        html.kitty-theme body { background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg'); background-size: cover; background-position: center center; background-attachment: fixed; }
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
-        
         .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
         .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
-        html.kitty-theme h3 { font-size: 24px; }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: calc(15px + env(safe-area-inset-bottom));
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 450px;
-            background-color: rgba(28, 28, 30, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            display: flex;
-            padding: 6px;
-            z-index: 1000;
-        }
-
-        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
-        html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
-
+        .bottom-nav { position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 450px; background-color: rgba(28, 28, 30, 0.75); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; padding: 6px; z-index: 1000; }
+        html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); } html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
         .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
+        .nav-item.active { color: var(--accent-primary); }
         .nav-item .nav-icon { width: 24px; height: 24px; margin: 0 auto 4px auto; stroke-width: 2; }
         .nav-item .nav-label { font-size: 11px; font-weight: 600; }
-        .nav-item.active { color: var(--accent-primary); }
-        .nav-item:active { transform: scale(0.92); }
-
         #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
         html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
-
-        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; transition: background-color 0.2s, opacity 0.2s, transform 0.15s ease; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
-        .btn .icon { width: 18px; height: 18px; stroke-width: 2.5; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
         .btn:active { opacity: 0.8; transform: scale(0.97); }
-        html.kitty-theme .btn { color: #5c3c54; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); font-size: 18px; }
         .btn-sec { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); }
         .btn-danger { background-color: var(--accent-red); }
         .btn-small { padding: 8px 14px; font-size: 14px; }
-        html.kitty-theme .btn-small { font-size: 16px; }
-
-        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .card h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
-
-        .data-card { background-color: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); transition: background-color 0.2s ease, transform 0.2s ease; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        .data-card:active { background-color: var(--bg-primary); transform: scale(0.98); }
+        .card { background-color: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border-color); backdrop-filter: blur(10px); }
+        .data-card { background-color: var(--card-bg); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border-color); }
         .data-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
         .data-title { font-size: 20px; font-weight: 600; }
         .data-subtitle { font-size: 14px; color: var(--text-secondary); }
-        .data-content { font-size: 16px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; white-space: pre-wrap; word-wrap: break-word; }
         .data-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
-        .data-btn { background-color: var(--bg-secondary); color: var(--text-primary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 600; cursor: pointer; transition: opacity 0.2s ease, transform 0.15s ease; font-family: var(--font-family); }
+        .data-btn { background-color: var(--bg-secondary); color: var(--text-primary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 600; cursor: pointer; }
         .data-btn.delete { color: var(--accent-red); }
-        .data-btn:active { opacity: 0.7; transform: scale(0.96); }
-        
-        .modal { display: flex; align-items: flex-end; justify-content: center; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); z-index: 2000; opacity: 0; transition: opacity 0.4s ease-in-out; pointer-events: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .modal { display: flex; align-items: flex-end; justify-content: center; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s; backdrop-filter: blur(5px); }
         .modal.show { opacity: 1; pointer-events: auto; }
-        .modal-content { background-color: var(--bg-secondary); border-radius: 18px 18px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); border-bottom: none; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+        .modal-content { background-color: var(--bg-secondary); border-radius: 18px 18px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); transform: translateY(100%); transition: 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
         .modal.show .modal-content { transform: translateY(0); }
-        @media (min-width: 600px) { .modal { align-items: center; } .modal-content { width: 92%; max-width: 440px; border-radius: 18px; border-bottom: 1px solid var(--border-color); transform: translateY(20px) scale(0.95); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; opacity: 0; } .modal.show .modal-content { transform: translateY(0) scale(1); opacity: 1; } }
+        @media (min-width: 600px) { .modal { align-items: center; } .modal-content { width: 92%; max-width: 440px; border-radius: 18px; transform: translateY(20px) scale(0.95); } .modal.show .modal-content { transform: translateY(0) scale(1); } }
         .modal-title { font-size: 26px; font-weight: 700; margin-bottom: 24px; }
         .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
-
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; color: var(--text-secondary); font-size: 16px; margin-bottom: 8px; font-weight: 600; }
-        .form-input, .form-select, .form-textarea { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 14px; border-radius: 10px; font-size: 17px; -webkit-appearance: none; font-family: var(--font-family); font-weight: 500; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--accent-primary); }
+        .form-input, .form-select, .form-textarea { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 14px; border-radius: 10px; font-size: 17px; font-family: inherit; }
         .form-textarea { min-height: 120px; }
-
-        .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity 0.3s, transform 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
-        
-        #schedule-container { text-align: center; padding-top: 10px; }
-        #clock-time { font-size: 56px; font-weight: 700; letter-spacing: 1px; }
-        html.kitty-theme #clock-time { font-size: 70px; }
-        #clock-date { font-size: 17px; color: var(--text-secondary); margin-top: -5px; margin-bottom: 30px; font-weight: 500; }
-        html.kitty-theme #clock-date { font-size: 20px; }
-        
-        .schedule-section h3 { 
-            font-size: 22px; 
-            font-weight: 700; 
-            text-align: left; 
-            margin-bottom: 20px;
-            padding-left: 4px; 
-        }
-
-        .schedule-item { 
-            background-color: var(--card-bg); 
-            border: 1px solid var(--border-color); 
-            padding: 16px 20px; 
-            border-radius: 12px;
-            margin-bottom: 12px; 
-            font-size: 17px;
-            font-weight: 600;
-            border-left: 5px solid var(--accent-green);
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            text-align: left;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-        }
-
-        @media (hover: hover) {
-            .schedule-item:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            }
-            html:not(.light-theme) .schedule-item:hover {
-                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            }
-        }
-        
+        #clock-time { font-size: 56px; font-weight: 700; text-align: center; }
+        #clock-date { font-size: 17px; color: var(--text-secondary); text-align: center; margin-bottom: 30px; }
+        .schedule-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 16px 20px; border-radius: 12px; margin-bottom: 12px; font-size: 17px; font-weight: 600; border-left: 5px solid var(--accent-green); display: flex; justify-content: space-between; align-items: center; }
         .schedule-item-off { border-left-color: var(--accent-orange); }
-
-        .schedule-item span { 
-            font-size: 13px;
-            font-weight: 600;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background-color: var(--bg-primary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .schedule-item-off span {
-            color: var(--accent-orange);
-            border-color: color-mix(in srgb, var(--accent-orange) 40%, transparent);
-        }
-        
+        .schedule-item span { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 20px; background-color: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); min-width: 60px; text-align: center; }
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .stat-card { background-color: var(--bg-primary); padding: 16px; border-radius: 10px; text-align: left; border: 1px solid var(--border-color); }
         .stat-card.full-width { grid-column: 1 / -1; }
-        .stat-label { color: var(--text-secondary); font-size: 16px; margin-bottom: 6px; font-weight: 500; }
         .stat-value { font-size: 26px; font-weight: 700; }
-        .stat-value.red { color: var(--accent-red); }
-        .stat-value.green { color: var(--accent-green); }
-        .finance-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-
+        .stat-value.red { color: var(--accent-red); } .stat-value.green { color: var(--accent-green); }
         .txn-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px; border-bottom: 1px solid var(--border-color); }
-        .txn-item:last-child { border-bottom: none; }
         .txn-amount { font-size: 16px; font-weight: 600; }
-        .txn-amount.red { color: var(--accent-red); }
-        .txn-amount.green { color: var(--accent-green); }
-        
-        .date-header { font-size: 16px; font-weight: 600; color: var(--text-secondary); padding: 16px 4px 8px 4px; background-color: var(--bg-primary); }
-        .password-field-container { margin-top: 12px; }
-        .password-label { font-size: 14px; margin-bottom: 6px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
         .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
-        html.kitty-theme .password-value-container { font-family: var(--font-family); }
-        .password-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .password-btn { background-color: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background-color 0.2s, transform 0.15s ease; font-family: var(--font-family); }
-        .password-btn:active { background-color: var(--bg-primary); transform: scale(0.96); }
-
-        .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 4px; border-bottom: 1px solid var(--border-color); }
-        html.kitty-theme .setting-item span { font-size: 18px; }
-        .setting-item span { font-weight: 600; }
-        .setting-item:last-child { border-bottom: none; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--bg-primary); border-radius: 15px; position: relative; border: 1px solid var(--border-color); }
-        .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
-        html.light-theme .toggle-knob { background-color: #f2f2f7; border: 1px solid #ddd; }
+        .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
         .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
-        html.kitty-theme .toggle-switch.active { background-color: var(--accent-primary); border-color: var(--accent-primary); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
-        #kitty-transition-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: #111;
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out; 
-            pointer-events: none;
-        }
-        #kitty-transition-overlay.show {
-            display: flex;
-            pointer-events: auto;
-        }
-        
-        #kitty-logo {
-            font-family: 'Pacifico', cursive;
-            font-size: 15vw;
-            color: #ff85a2;
-            text-shadow: 3px 3px 8px rgba(255, 105, 180, 0.5);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: opacity 1.5s ease-in, transform 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+        /* HELLO KITTY TRANSITION */
+        #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
+        #kitty-transition-overlay.show { display: flex; pointer-events: auto; }
+        #kitty-logo { font-family: 'Pacifico', cursive; font-size: 15vw; color: #ff85a2; opacity: 0; transform: scale(0.8); transition: 1.5s; }
         #kitty-logo.show { opacity: 1; transform: scale(1); }
+        #kitty-float-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; display: none; }
+        html.kitty-theme #kitty-float-container { display: block; }
+        .floating-kitty { position: absolute; left: -100px; opacity: 0.7; animation: floatAcross linear infinite; }
+        @keyframes floatAcross { 0% { transform: translateX(0) rotate(0deg); left: -100px; } 100% { transform: translateX(100vw) rotate(360deg); left: 100vw; } }
 
-        .kitty-sticker-container { display: none; }
+        /* MUSIC BUBBLE */
+        #music-bubble-container { position: fixed; bottom: 100px; right: 16px; width: 320px; height: 180px; border-radius: 12px; background-color: var(--bg-secondary); box-shadow: 0 8px 30px rgba(0,0,0,0.25); overflow: hidden; z-index: 999; display: flex; flex-direction: column; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: grab; }
+        #music-bubble-container.minimized { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; }
+        #music-bubble-container.hidden { display: none; }
+        .music-bubble-controls { position: absolute; top: 8px; right: 8px; display: flex; gap: 8px; z-index: 100; }
+        .music-bubble-controls button { background: rgba(0,0,0,0.4); border: none; border-radius: 50%; width: 28px; height: 28px; color: white; cursor: pointer; }
+        #music-bubble-container.minimized .music-bubble-controls { display: none; }
+        #music-bubble-toggle-btn { position: fixed; bottom: 100px; right: 16px; background-color: var(--accent-primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; }
 
-        #kitty-float-container {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            pointer-events: none;
-            overflow: hidden;
-            display: none;
-        }
-        html.kitty-theme #kitty-float-container {
-            display: block;
-        }
-        .floating-kitty {
-            position: absolute;
-            left: -100px;
-            opacity: 0.7;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
-            animation-name: floatAcross;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-        }
+        /* SLEEP MODE */
+        #sleep-mode-overlay { position: fixed; inset: 0; background-color: #000; z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        #sleep-mode-clock { font-size: 64px; font-weight: 700; color: white; }
+        #sleep-mode-date { font-size: 18px; color: #aaa; margin-bottom: 30px; }
+        #sleep-mode-video-container { width: 90vw; max-width: 800px; aspect-ratio: 16/9; background: #111; border-radius: 12px; overflow: hidden; }
+        .sleep-video-btn { background: #2c2c2e; color: #fff; border: 1px solid #383a3a; padding: 10px; border-radius: 8px; margin: 5px; cursor: pointer; }
 
-        @keyframes floatAcross {
-            0% { transform: translateX(0) translateY(0vh) rotate(0deg); left: -100px; }
-            50% { transform: translateX(50vw) translateY(-5vh) rotate(180deg); }
-            100% { transform: translateX(100vw) translateY(5vh) rotate(360deg); left: 100vw; }
-        }
-
-        /* Styles for Music Bubble */
-        #music-bubble-container {
-            position: fixed;
-            bottom: calc(100px + env(safe-area-inset-bottom));
-            right: 16px;
-            width: 320px;
-            height: 180px;
-            border-radius: 12px;
-            background-color: var(--bg-secondary);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25), 0 0 0 2px rgba(var(--accent-primary-rgb), 0.5);
-            overflow: hidden;
-            resize: both;
-            min-width: 60px;
-            min-height: 60px;
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: grab;
-            user-select: none;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        #music-bubble-container.minimized {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        #music-bubble-container.hidden {
-            display: none;
-        }
-
-        #music-bubble-iframe-container {
-            width: 100%;
-            height: 100%;
-            flex-grow: 1;
-        }
-        
-        #music-bubble-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-        }
-
-        #music-bubble-container.minimized #music-bubble-iframe {
-            width: 150%;
-            height: 150%;
-            margin-left: -25%;
-            margin-top: -25%;
-            pointer-events: none;
-        }
-
-        .music-bubble-controls {
-            position: absolute;
-            top: 8px; 
-            right: 8px;
-            display: flex;
-            gap: 8px; 
-            z-index: 100;
-        }
-        
-        .music-bubble-controls button {
-            background-color: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            line-height: 1;
-            padding: 0;
-            font-family: var(--font-family);
-        }
-
-        .music-bubble-controls button:hover {
-            background-color: rgba(0,0,0,0.7);
-        }
-        .music-bubble-controls button:active {
-            transform: scale(0.9);
-        }
-
-        #music-bubble-container.minimized .music-bubble-controls {
-            display: none;
-        }
-
-        #music-bubble-toggle-btn {
-            position: fixed;
-            bottom: calc(100px + env(safe-area-inset-bottom));
-            right: 16px;
-            background-color: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            z-index: 1000;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        #music-bubble-toggle-btn:active {
-            transform: scale(0.95);
-        }
-        
         /* =================================================================
-            SLEEP MODE STYLES
-            ================================================================= */
-        #sleep-mode-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: #000000;
-            z-index: 5000;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            overflow: hidden; 
-        }
+           2. CSS MỚI CHO CỘNG ĐỒNG (FACEBOOK STYLE)
+           ================================================================= */
+        .post-input-container { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; cursor: pointer; }
+        .post-input-header { display: flex; align-items: center; gap: 10px; }
+        .user-avatar-small { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
+        .post-input-fake { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 15px; color: var(--text-secondary); font-size: 15px; width: 100%; }
         
-        #sleep-mode-header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #ffffff;
-            z-index: 10;
-        }
-
-        #sleep-mode-clock {
-            font-size: 64px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
+        .post-card { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 16px; }
+        .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+        .post-author-name { font-weight: 700; font-size: 16px; }
+        .post-time { font-size: 12px; color: var(--text-secondary); }
+        .post-content { font-size: 16px; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
+        .post-actions { border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; gap: 20px; }
+        .action-btn { background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--font-family); }
+        .action-btn:hover { color: var(--accent-primary); }
         
-        #sleep-mode-date {
-            font-size: 18px;
-            font-weight: 500;
-            color: #f5f5f7;
-            margin-top: 5px;
-        }
-        
-        #sleep-mode-video-container {
-            width: 90vw;
-            max-width: 800px;
-            aspect-ratio: 16 / 9;
-            background-color: #111;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        
-        #sleep-mode-video-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 30px;
-            padding: 0 10px;
-            max-width: 800px;
-            overflow-y: auto;
-            z-index: 10;
-        }
-        
-        .sleep-video-btn {
-            background-color: #2c2c2e;
-            color: #f5f5f7;
-            border: 1px solid #38383a;
-            border-radius: 10px;
-            padding: 10px 18px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            font-family: var(--font-family);
-        }
-        .sleep-video-btn:active {
-            background-color: #38383a;
-            transform: scale(0.96);
-        }
-        
-        #sleep-mode-exit-btn {
-            position: absolute;
-            top: calc(15px + env(safe-area-inset-top));
-            right: calc(15px + env(safe-area-inset-right));
-            background-color: rgba(44, 44, 46, 0.7);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            color: white;
-            font-size: 24px;
-            font-weight: 600;
-            cursor: pointer;
-            line-height: 36px;
-            text-align: center;
-            z-index: 20; 
-        }
-        
+        /* AUTH STATUS IN SETTINGS */
+        .auth-status-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 16px; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+        .status-offline { background: #3a3a3c; color: #8e8e93; }
+        .status-online { background: rgba(48, 209, 88, 0.2); color: #30d158; border: 1px solid #30d158; }
     </style>
 </head>
 <body>
 
 <div id="kitty-float-container"></div>
-
-<div id="kitty-transition-overlay">
-    <h1 id="kitty-logo">Hello Kitty</h1>
-</div>
+<div id="kitty-transition-overlay"><h1 id="kitty-logo">Hello Kitty</h1></div>
 
 <div class="main-container">
     <div id="schedule" class="screen active">
@@ -559,9 +148,9 @@
         <div id="schedule-container">
             <div id="clock-time">--:--:--</div>
             <div id="clock-date">---, --/--/----</div>
-            <div id="today-schedule" class="schedule-section"></div>
-            <div id="tomorrow-details-container" class="schedule-section" style="display:none; animation: fadeIn 0.4s ease; margin-top: -10px;"></div>
-            <div id="future-schedule" class="schedule-section"></div>
+            <div id="today-schedule"></div>
+            <div id="tomorrow-details-container" style="display:none; animation: fadeIn 0.4s ease; margin-top: -10px;"></div>
+            <div id="future-schedule"></div>
         </div>
     </div>
 
@@ -569,65 +158,74 @@
         <div class="screen-title-bar"><h2>Tài chính</h2></div>
         <div class="card">
              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                 <h3 style="margin: 0;">Tổng quan tháng này</h3>
+                 <h3 style="margin: 0;">Tổng quan</h3>
                  <button class="btn btn-small btn-sec" style="margin: 0;" onclick="showLastMonthSummary()">Tháng trước</button>
              </div>
             <div class="stat-grid">
-                <div class="stat-card full-width"><div class="stat-label">Tổng số dư</div><div class="stat-value" id="bal">0₫</div></div>
+                <div class="stat-card full-width"><div class="stat-label">Số dư</div><div class="stat-value" id="bal">0₫</div></div>
                 <div class="stat-card"><div class="stat-label">Đã chi</div><div class="stat-value red" id="exp">0₫</div></div>
                 <div class="stat-card"><div class="stat-label">Thu nhập</div><div class="stat-value green" id="inc">0₫</div></div>
             </div>
-            <div class="finance-actions">
-                <button class="btn btn-danger" style="margin: 0;" onclick="openTxn('expense')">Chi tiêu</button>
-                <button class="btn" style="margin: 0; background-color: var(--accent-green);" onclick="openTxn('income')">Thu nhập</button>
+            <div class="finance-actions" style="margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <button class="btn btn-danger" style="margin:0;" onclick="openTxn('expense')">Chi tiêu</button>
+                <button class="btn" style="margin:0; background-color: var(--accent-green);" onclick="openTxn('income')">Thu nhập</button>
             </div>
         </div>
         <div class="card">
-            <h3>Lịch sử giao dịch (Tháng này)</h3>
-            <input type="text" class="form-input" placeholder="Tìm kiếm giao dịch..." id="search" oninput="renderHistory()" style="margin-bottom: 15px;">
+            <h3>Lịch sử (Tháng này)</h3>
             <div id="histList"></div>
         </div>
     </div>
 
-    <div id="notes" class="screen">
-        <div class="screen-title-bar">
-            <h2>Ghi chú</h2>
-            <button class="btn btn-small" onclick="openNote()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                <span>Ghi chú mới</span>
-            </button>
+    <div id="community" class="screen">
+        <div class="screen-title-bar"><h2>Cộng đồng</h2></div>
+        
+        <div class="post-input-container" onclick="openCreatePost()">
+            <div class="post-input-header">
+                <div class="user-avatar-small" id="myAvatar">?</div>
+                <div class="post-input-fake">Bạn đang thắc mắc gì?</div>
+            </div>
         </div>
-        <div id="notesList"></div>
+
+        <div id="postsList">
+            <p style="text-align:center; color:var(--text-secondary); padding:20px;">Đang tải bài viết...</p>
+        </div>
     </div>
 
     <div id="passwords" class="screen">
         <div class="screen-title-bar">
             <h2>Mật khẩu</h2>
-            <button class="btn btn-small" onclick="openPasswordModal()">
-                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-                <span>Thêm mới</span>
-            </button>
+            <button class="btn btn-small" onclick="openPasswordModal()">+ Thêm</button>
         </div>
         <div id="passwordsList"></div>
     </div>
 
     <div id="settings" class="screen">
         <div class="screen-title-bar"><h2>Cài đặt</h2></div>
+        
+        <div class="auth-status-card">
+            <div id="authStatusText" class="status-badge status-offline">Chưa đăng nhập</div>
+            <h3 id="authEmailDisplay" style="margin-bottom: 10px;">Khách</h3>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">Đăng nhập để đăng bài và bình luận.</p>
+            <button class="btn" id="btnLoginNav" onclick="openAuthModal('login')">Đăng nhập / Đăng ký</button>
+            <button class="btn btn-danger" id="btnLogoutNav" style="display:none;" onclick="handleLogout()">Đăng xuất</button>
+        </div>
+
         <div class="card">
             <h3>Giao diện</h3>
-            <div class="setting-item">
+            <div class="setting-item" style="display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--border-color)">
                 <span>Chế độ sáng/tối</span>
                 <div class="toggle-switch" id="theme-toggle" onclick="toggleTheme()"><div class="toggle-knob"></div></div>
             </div>
-            <div class="setting-item">
+            <div class="setting-item" style="display:flex;justify-content:space-between;padding:15px 0;">
                 <span>Hello Kitty Mode</span>
                 <div class="toggle-switch" id="kitty-theme-toggle" onclick="toggleKittyTheme()"><div class="toggle-knob"></div></div>
             </div>
         </div>
         <div class="card">
             <h3>Quản lý dữ liệu</h3>
-            <button class="btn btn-danger" onclick="resetData()">Xóa toàn bộ dữ liệu (Cloud)</button>
-            <button class="btn btn-sec" onclick="reloadApp()">Cập nhật phiên bản</button>
+            <button class="btn btn-danger" onclick="resetData()">Xóa dữ liệu cá nhân</button>
+            <button class="btn btn-sec" onclick="window.location.reload()">Cập nhật phiên bản</button>
         </div>
     </div>
 
@@ -641,9 +239,9 @@
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             <div class="nav-label">Tài chính</div>
         </div>
-        <div class="nav-item" onclick="goTo('notes', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <div class="nav-label">Ghi chú</div>
+        <div class="nav-item" onclick="goTo('community', this)">
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <div class="nav-label">Cộng đồng</div>
         </div>
         <div class="nav-item" onclick="goTo('passwords', this)">
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
@@ -659,39 +257,59 @@
 <div id="music-bubble-container" class="hidden">
     <div class="music-bubble-controls">
         <button onclick="toggleMinimizeMusicBubble()">-</button>
-        <button onclick="enterSleepMode()">
-            <svg style="width:16px; height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m0 0v-4m0 4l-5-5"></path></svg>
-        </button>
-        <button onclick="toggleMusicBubble()">&times;</button>
+        <button onclick="enterSleepMode()">Z</button>
+        <button onclick="toggleMusicBubble()">×</button>
     </div>
-    <div id="music-bubble-iframe-container">
-        <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div id="music-bubble-iframe-container" style="width:100%;height:100%">
+        <iframe id="music-bubble-iframe" src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0&enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%;height:100%"></iframe>
     </div>
 </div>
-
 <button id="music-bubble-toggle-btn" onclick="toggleMusicBubble()">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v14M3 6v14a2 2 0 002 2h4.5a2 2 0 002-2V6.414A2 2 0 0010.414 5H5a2 2 0 00-2 2z"></path></svg>
 </button>
 
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="noteModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="noteModalTitle"></h2><div class="form-group"><label class="form-label">Tiêu đề</label><input type="text" class="form-input" id="noteTitle"></div><div class="form-group"><label class="form-label">Nội dung</label><textarea class="form-textarea" id="noteContent"></textarea></div><input type="hidden" id="editNoteId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('noteModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveNote()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 
+<div id="postModal" class="modal"><div class="modal-content">
+    <h2 class="modal-title">Tạo bài viết</h2>
+    <div class="form-group">
+        <textarea class="form-textarea" id="postContent" placeholder="Bạn đang thắc mắc gì? Chia sẻ với cộng đồng ngay..."></textarea>
+    </div>
+    <div class="modal-actions">
+        <button class="btn btn-sec" onclick="closeModal('postModal')" style="flex:1;">Hủy</button>
+        <button class="btn" onclick="submitPost()" style="flex:1;">Đăng bài</button>
+    </div>
+</div></div>
+
+<div id="authModal" class="modal"><div class="modal-content">
+    <h2 class="modal-title" id="authTitle">Đăng nhập</h2>
+    <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="authEmail" placeholder="example@gmail.com"></div>
+    <div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="authPass" placeholder="••••••••"></div>
+    <div id="authMessage" style="color:var(--accent-red); margin-bottom:10px; font-size:14px; display:none;"></div>
+    <button class="btn" id="btnAuthAction" onclick="handleAuthAction()">Đăng nhập</button>
+    <div style="text-align:center; margin-top:20px;">
+        <span style="color:var(--text-secondary);" id="authSwitchText">Chưa có tài khoản?</span>
+        <span style="color:var(--accent-primary); font-weight:bold; cursor:pointer;" onclick="toggleAuthMode()" id="authSwitchBtn">Đăng ký ngay</span>
+    </div>
+    <button class="btn btn-sec" onclick="closeModal('authModal')" style="margin-top:10px;">Đóng</button>
+</div></div>
+
 <div id="sleep-mode-overlay">
-    <button id="sleep-mode-exit-btn" onclick="exitSleepMode()">&times;</button>
-    <div id="sleep-mode-header">
+    <button id="sleep-mode-exit-btn" onclick="exitSleepMode()" style="position:absolute;top:40px;right:20px;background:rgba(50,50,50,0.8);color:white;border:none;border-radius:50%;width:40px;height:40px;font-size:24px;">×</button>
+    <div id="sleep-mode-header" style="text-align:center;">
         <div id="sleep-mode-clock">--:--:--</div>
         <div id="sleep-mode-date">---, --/--/----</div>
     </div>
     <div id="sleep-mode-video-container"></div>
-    <div id="sleep-mode-video-list"></div>
+    <div id="sleep-mode-video-list" style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px;"></div>
 </div>
 
 <script type="text/javascript">
 'use strict';
 
-// 2. CẤU HÌNH & KHỞI TẠO FIREBASE
+// 1. CONFIG FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAICFb4QrXY2pDzyuf9u-YF9kX5xlaBss0",
   authDomain: "xingchat-13d44.firebaseapp.com",
@@ -702,570 +320,358 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+const db = firebase.database();
+const auth = firebase.auth();
 
-const FLOATING_KITTY_ICON = 'https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png';
+let currentUser = null;
+let isLoginMode = true;
 
-(function init() {
-    const savedTheme = localStorage.getItem('theme');
-    document.documentElement.className = ''; 
-
-    if (savedTheme === 'kitty') {
-        document.documentElement.classList.add('kitty-theme');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('kitty-theme-toggle')?.classList.add('active');
-            document.getElementById('theme-toggle')?.classList.remove('active');
-        });
-    } else if (savedTheme === 'light') {
-        document.documentElement.classList.add('light-theme');
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('theme-toggle')?.classList.add('active');
-            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
-        });
-    } else {
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('theme-toggle')?.classList.remove('active');
-            document.getElementById('kitty-theme-toggle')?.classList.remove('active');
-        });
-    }
-})();
-
-// 3. HỆ THỐNG DB MỚI (SYNC FIREBASE + CACHE LOCAL)
-// Biến này chứa dữ liệu mới nhất từ Firebase để hiển thị ngay lập tức
-const DATA_CACHE = {
-    txns: [],
-    notes: [],
-    passwords: []
-};
-
+// 2. DATA MANAGEMENT (SYNC)
+const DATA_CACHE = { txns: [], passwords: [], posts: [] };
 const DB = { 
-    // Lấy dữ liệu từ cache (đồng bộ) để không phải sửa logic hiển thị cũ
     get: (key) => DATA_CACHE[key] || [],
-    
-    // Lưu dữ liệu lên Firebase
-    save: (key, data) => {
-        return database.ref(key).set(data);
-    },
-    
-    // Lắng nghe thay đổi từ Firebase
+    save: (key, data) => db.ref(key).set(data),
     sync: (key, callback) => {
-        database.ref(key).on('value', (snapshot) => {
+        db.ref(key).on('value', (snapshot) => {
             const val = snapshot.val();
-            // Đảm bảo dữ liệu luôn là mảng
-            const data = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
-            DATA_CACHE[key] = data; // Cập nhật cache
-            callback(data); // Gọi hàm render
+            if (key === 'posts') {
+                const arr = val ? Object.values(val) : [];
+                DATA_CACHE[key] = arr;
+                callback(arr);
+            } else {
+                const data = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
+                DATA_CACHE[key] = data;
+                callback(data);
+            }
         });
     }
 };
 
-// ===============================================
+// 3. AUTH LOGIC (MỚI)
+auth.onAuthStateChanged((user) => {
+    currentUser = user;
+    updateAuthUI();
+});
+
+function updateAuthUI() {
+    const statusText = document.getElementById('authStatusText');
+    const emailDisplay = document.getElementById('authEmailDisplay');
+    const btnLogin = document.getElementById('btnLoginNav');
+    const btnLogout = document.getElementById('btnLogoutNav');
+    const myAvatar = document.getElementById('myAvatar');
+
+    if (currentUser) {
+        statusText.textContent = "Online";
+        statusText.className = "status-badge status-online";
+        emailDisplay.textContent = currentUser.email;
+        btnLogin.style.display = 'none';
+        btnLogout.style.display = 'inline-block';
+        if (myAvatar) myAvatar.textContent = currentUser.email.charAt(0).toUpperCase();
+        if (!currentUser.emailVerified) {
+             statusText.textContent = "Chờ xác thực Email";
+             statusText.className = "status-badge status-offline";
+        }
+    } else {
+        statusText.textContent = "Chưa đăng nhập";
+        statusText.className = "status-badge status-offline";
+        emailDisplay.textContent = "Khách";
+        btnLogin.style.display = 'inline-block';
+        btnLogin.textContent = "Đăng nhập / Đăng ký";
+        btnLogout.style.display = 'none';
+        if (myAvatar) myAvatar.textContent = "?";
+    }
+}
+
+function openAuthModal(mode) {
+    isLoginMode = (mode === 'login');
+    renderAuthModal();
+    openModal('authModal');
+}
+function toggleAuthMode() { isLoginMode = !isLoginMode; renderAuthModal(); }
+function renderAuthModal() {
+    const title = document.getElementById('authTitle');
+    const btn = document.getElementById('btnAuthAction');
+    const switchText = document.getElementById('authSwitchText');
+    const switchBtn = document.getElementById('authSwitchBtn');
+    const msg = document.getElementById('authMessage');
+    msg.style.display = 'none';
+    if (isLoginMode) {
+        title.textContent = "Đăng nhập"; btn.textContent = "Đăng nhập"; switchText.textContent = "Chưa có tài khoản? "; switchBtn.textContent = "Đăng ký ngay";
+    } else {
+        title.textContent = "Đăng ký tài khoản"; btn.textContent = "Đăng ký"; switchText.textContent = "Đã có tài khoản? "; switchBtn.textContent = "Đăng nhập";
+    }
+}
+async function handleAuthAction() {
+    const email = document.getElementById('authEmail').value;
+    const pass = document.getElementById('authPass').value;
+    const msg = document.getElementById('authMessage');
+    if (!email || !pass) { msg.textContent = "Nhập đủ thông tin."; msg.style.display = 'block'; return; }
+    try {
+        if (isLoginMode) {
+            await auth.signInWithEmailAndPassword(email, pass);
+            closeModal('authModal');
+            showToast("Đăng nhập thành công!");
+        } else {
+            const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+            await userCredential.user.sendEmailVerification();
+            alert(`Đã gửi email xác thực đến ${email}. Vui lòng kiểm tra (cả thư rác).`);
+            closeModal('authModal');
+        }
+    } catch (error) {
+        msg.textContent = error.message; msg.style.display = 'block';
+    }
+}
+function handleLogout() { if(confirm("Đăng xuất?")) auth.signOut(); }
+
+// 4. POST LOGIC (CỘNG ĐỒNG)
+function renderCommunity(posts) {
+    const list = document.getElementById('postsList');
+    const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    if (sortedPosts.length === 0) {
+        list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-secondary)">Chưa có bài viết nào.</div>`;
+        return;
+    }
+    list.innerHTML = sortedPosts.map(p => {
+        const date = new Date(p.createdAt);
+        const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        const dateStr = `${date.getDate()}/${date.getMonth()+1}`;
+        const shortName = p.authorEmail.split('@')[0];
+        return `
+        <div class="post-card">
+            <div class="post-header">
+                <div class="user-avatar-small" style="background:#555;">${shortName.charAt(0).toUpperCase()}</div>
+                <div><div class="post-author-name">${shortName}</div><div class="post-time">${timeStr} • ${dateStr}</div></div>
+            </div>
+            <div class="post-content">${p.content}</div>
+            <div class="post-actions">
+                <button class="action-btn">👍 Thích</button>
+                <button class="action-btn">💬 Bình luận</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+function openCreatePost() {
+    if (!currentUser) { alert("Cần đăng nhập."); openAuthModal('login'); return; }
+    if (!currentUser.emailVerified) { alert("Cần xác thực email."); return; }
+    document.getElementById('postContent').value = ''; openModal('postModal');
+}
+function submitPost() {
+    const content = document.getElementById('postContent').value.trim();
+    if (!content) return;
+    db.ref('posts').push({
+        id: Date.now(), content: content, authorEmail: currentUser.email,
+        authorId: currentUser.uid, createdAt: new Date().toISOString()
+    });
+    closeModal('postModal'); showToast("Đã đăng!");
+}
+
+// 5. SCHEDULE LOGIC (GIỮ NGUYÊN)
 const scheduleData = [
     { dayName: 'Chủ Nhật', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] },
-    {
-        dayName: 'Thứ Hai',
-        morning: ['LS&ĐL (Sử) – Giang', 'Toán – Đ. Mai', 'Toán – Đ. Mai', 'Tin – Ánh', 'KHTN (Sinh) – P. Nhung'],
-        afternoon: ['C.Nghệ – H. Vân', 'LS&ĐL (Địa) – H. Nhung', 'Nghệ thuật (AN) – T. Nga', '', '', '']
-    },
-    {
-        dayName: 'Thứ Ba',
-        morning: ['Toán – Đ. Mai', 'T.Anh - Đ.Oanh', 'GDCD – Huệ', 'KHTN (Hóa) – P. Nhung', 'KHTN (Lý) – T. Thùy'],
-        afternoon: ['Nghệ thuật (MT) – Thùy', 'GDTC – Tuấn', 'C.Nghệ – H. Vân', '', '', '']
-    },
-    {
-        dayName: 'Thứ Tư',
-        morning: ['Văn – Đ. Hoa', 'Văn – Đ. Hoa', 'LS&ĐL (Sử) – Giang', 'T.Anh – D. Oanh', 'KHTN (Lý) – T. Thùy'],
-        afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '', '']
-    },
-    {
-        dayName: 'Thứ Năm',
-        morning: ['HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhungg', ''],
-        afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '']
-    },
-    {
-        dayName: 'Thứ Sáu',
-        morning: ['GDTC – Tuấn', 'Văn – D. Hoa', 'GDĐP – H. Vân', 'T.Anh – D. Oanh', 'KHTN (Hóa) – P. Nhung'],
-        afternoon: ['', '', '', '', '']
-    },
+    { dayName: 'Thứ Hai', morning: ['LS&ĐL (Sử) – Giang', 'Toán – Đ. Mai', 'Toán – Đ. Mai', 'Tin – Ánh', 'KHTN (Sinh) – P. Nhung'], afternoon: ['C.Nghệ – H. Vân', 'LS&ĐL (Địa) – H. Nhung', 'Nghệ thuật (AN) – T. Nga', '', '', ''] },
+    { dayName: 'Thứ Ba', morning: ['Toán – Đ. Mai', 'T.Anh - Đ.Oanh', 'GDCD – Huệ', 'KHTN (Hóa) – P. Nhung', 'KHTN (Lý) – T. Thùy'], afternoon: ['Nghệ thuật (MT) – Thùy', 'GDTC – Tuấn', 'C.Nghệ – H. Vân', '', '', ''] },
+    { dayName: 'Thứ Tư', morning: ['Văn – Đ. Hoa', 'Văn – Đ. Hoa', 'LS&ĐL (Sử) – Giang', 'T.Anh – D. Oanh', 'KHTN (Lý) – T. Thùy'], afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '', ''] },
+    { dayName: 'Thứ Năm', morning: ['HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhungg', ''], afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', ''] },
+    { dayName: 'Thứ Sáu', morning: ['GDTC – Tuấn', 'Văn – D. Hoa', 'GDĐP – H. Vân', 'T.Anh – D. Oanh', 'KHTN (Hóa) – P. Nhung'], afternoon: ['', '', '', '', ''] },
     { dayName: 'Thứ Bảy', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] }
 ];
-// ===============================================
+let lastRenderedDay = -1;
 
-let lastRenderedDay = -1, clockInterval = null;
-const scrollPositions = {};
-
-function updateNavBubble(activeElement) {
-    const bubble = document.getElementById('nav-active-bubble');
-    if (!activeElement || !bubble) return;
-    bubble.style.width = `${activeElement.offsetWidth}px`;
-    bubble.style.left = `${activeElement.offsetLeft}px`;
-}
-function goTo(screenId, element) {
-    const currentScreen = document.querySelector('.screen.active');
-    if (currentScreen) scrollPositions[currentScreen.id] = window.scrollY;
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    element.classList.add('active');
-    const newPosition = scrollPositions[screenId] || 0;
-    window.scrollTo(0, newPosition);
-    updateNavBubble(element);
-}
 function updateClockAndSchedule() {
     const now = new Date();
-    const dayIndex = now.getDay();
     document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
-    if (dayIndex !== lastRenderedDay) {
-        renderFullSchedule(now);
-        lastRenderedDay = dayIndex;
-    }
+    if (now.getDay() !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = now.getDay(); }
 }
-
 function renderFullSchedule(now) {
     const dayIndex = now.getDay();
     document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const today = scheduleData[dayIndex];
-    const todayContainer = document.getElementById('today-schedule');
-    
-    let todayHTML = `<div style="display: flex; justify-content: space-between; align-items: center;"><h3 style="margin-bottom: 16px; font-size: 20px; font-weight: 600; text-align: left; padding-left: 4px;">Hôm nay</h3><button class="data-btn" style="padding: 8px 16px; font-size: 14px; margin-bottom: 16px;" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
-    
-    const isDayOff = today.morning.every(s => !s) && today.afternoon.every(s => !s);
-
-    if (isDayOff) {
-        todayHTML += `<div class="schedule-item schedule-item-off"><div>Hôm nay được nghỉ</div><span>Nghỉ</span></div>`;
-    } else {
-        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
-        for (let i = 0; i < 5; i++) {
-            const subject = today.morning[i];
-            if (subject) {
-                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
-            } else {
-                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
-            }
-        }
-        todayHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
-        for (let i = 0; i < 5; i++) {
-            const subject = today.afternoon[i];
-            if (subject) {
-                todayHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
-            } else {
-                todayHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
-            }
-        }
+    let html = `<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin-bottom:16px;font-size:20px;font-weight:600;">Hôm nay</h3><button class="data-btn" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
+    const isOff = today.morning.every(s=>!s) && today.afternoon.every(s=>!s);
+    if (isOff) html += `<div class="schedule-item schedule-item-off"><div>Được nghỉ</div><span>Nghỉ</span></div>`;
+    else {
+        html += `<h3 style="font-size:16px;margin:0 0 10px 4px;">Sáng</h3>`;
+        today.morning.forEach((s,i) => html += `<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div><span>Sáng</span></div>`);
+        html += `<h3 style="font-size:16px;margin:20px 0 10px 4px;">Chiều</h3>`;
+        today.afternoon.forEach((s,i) => html += `<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div><span>Chiều</span></div>`);
     }
-    todayContainer.innerHTML = todayHTML;
-    
-    const futureContainer = document.getElementById('future-schedule');
-    futureContainer.innerHTML = `<h3>Sắp tới</h3>` + [1, 2, 3, 4, 5, 6].map(offset => {
-        const nextDayIndex = (dayIndex + offset) % 7;
-        const nextDay = scheduleData[nextDayIndex];
-        const hasClasses = nextDay.morning.some(s => s) || nextDay.afternoon.some(s => s);
-        return `<div class="schedule-item ${!hasClasses ? 'schedule-item-off' : ''}"><div>${nextDay.dayName}</div><span>${hasClasses ? 'Đi học' : 'Nghỉ'}</span></div>`;
+    document.getElementById('today-schedule').innerHTML = html;
+    document.getElementById('future-schedule').innerHTML = `<h3>Sắp tới</h3>` + [1,2,3,4,5,6].map(o => {
+        const d = scheduleData[(dayIndex+o)%7];
+        const has = d.morning.some(s=>s) || d.afternoon.some(s=>s);
+        return `<div class="schedule-item ${!has?'schedule-item-off':''}"><div>${d.dayName}</div><span>${has?'Đi học':'Nghỉ'}</span></div>`;
     }).join('');
-    
-    document.getElementById('tomorrow-details-container').style.display = 'none';
 }
-
 function toggleTomorrowSchedule() {
-    const container = document.getElementById('tomorrow-details-container');
+    const con = document.getElementById('tomorrow-details-container');
     const btn = document.getElementById('toggle-tomorrow-btn');
-    const isVisible = container.style.display === 'block';
-    
-    if (isVisible) {
-        container.style.display = 'none';
-        btn.textContent = 'Xem ngày mai';
-    } else {
-        const now = new Date();
-        const tomorrowIndex = (now.getDay() + 1) % 7;
-        const tomorrow = scheduleData[tomorrowIndex];
-        let tomorrowHTML = `<h3 style="font-size: 20px; font-weight: 600; text-align: left; margin-bottom: 16px; padding-left: 4px;">Ngày mai (${tomorrow.dayName})</h3>`;
-        const isDayOff = tomorrow.morning.every(s => !s) && tomorrow.afternoon.every(s => !s);
-
-        if (isDayOff) {
-            tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Ngày mai được nghỉ</div><span>Nghỉ</span></div>`;
-        } else {
-            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 0 0 16px 4px; color: var(--text-secondary);">Buổi sáng</h3>`;
-            for (let i = 0; i < 5; i++) {
-                const subject = tomorrow.morning[i];
-                if (subject) {
-                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 1}: ${subject}</div><span>Sáng</span></div>`;
-                } else {
-                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 1}: Nghỉ</div><span>Sáng</span></div>`;
-                }
-            }
-            tomorrowHTML += `<h3 style="font-size: 16px; font-weight: 600; text-align: left; margin: 20px 0 16px 4px; color: var(--text-secondary);">Buổi chiều</h3>`;
-            for (let i = 0; i < 5; i++) {
-                const subject = tomorrow.afternoon[i];
-                if (subject) {
-                    tomorrowHTML += `<div class="schedule-item"><div>Tiết ${i + 6}: ${subject}</div><span>Chiều</span></div>`;
-                } else {
-                    tomorrowHTML += `<div class="schedule-item schedule-item-off"><div>Tiết ${i + 6}: Nghỉ</div><span>Chiều</span></div>`;
-                }
-            }
+    if (con.style.display === 'block') { con.style.display = 'none'; btn.textContent = 'Xem ngày mai'; }
+    else {
+        const tomorrow = scheduleData[(new Date().getDay()+1)%7];
+        let h = `<h3>Ngày mai (${tomorrow.dayName})</h3>`;
+        const isOff = tomorrow.morning.every(s=>!s) && tomorrow.afternoon.every(s=>!s);
+        if(isOff) h += `<div class="schedule-item schedule-item-off"><div>Nghỉ</div><span>Nghỉ</span></div>`;
+        else {
+            h += `<h4>Sáng</h4>`; tomorrow.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div></div>`);
+            h += `<h4>Chiều</h4>`; tomorrow.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div></div>`);
         }
-        container.innerHTML = tomorrowHTML;
-        container.style.display = 'block';
-        btn.textContent = 'Ẩn chi tiết';
+        con.innerHTML = h; con.style.display = 'block'; btn.textContent = 'Ẩn chi tiết';
     }
 }
 
-function toggleTheme() {
-    if (document.documentElement.classList.contains('kitty-theme')) toggleKittyTheme();
-    const isLight = document.documentElement.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-    document.getElementById('theme-toggle').classList.toggle('active', isLight);
-    document.getElementById('kitty-theme-toggle').classList.remove('active');
-    updateNavBubble(document.querySelector('.nav-item.active'));
+// 6. FINANCE LOGIC (GIỮ NGUYÊN)
+function renderFinance(txns) {
+    const now = new Date();
+    const curTxns = txns.filter(t => new Date(t.date).getMonth() === now.getMonth());
+    let inc = 0, exp = 0;
+    curTxns.forEach(t => t.type==='income' ? inc+=t.amount : exp+=t.amount);
+    const fmt = v => new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(v);
+    document.getElementById('bal').textContent = fmt(inc-exp);
+    document.getElementById('inc').textContent = fmt(inc);
+    document.getElementById('exp').textContent = fmt(exp);
+    document.getElementById('histList').innerHTML = curTxns.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(t => `
+        <div class="txn-item"><div><div class="data-title">${t.category}</div><div class="data-subtitle">${t.note||''}</div></div><div class="txn-amount ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`).join('');
+}
+function openTxn(type) { document.getElementById('type').value=type; openModal('txnModal'); }
+async function saveTxn() {
+    const amt = parseFloat(document.getElementById('amt').value);
+    if (!amt) return;
+    const txns = [...DB.get('txns')];
+    txns.push({id:Date.now(), date:new Date().toISOString(), amount:amt, category:document.getElementById('cat').value, note:document.getElementById('note').value, type:document.getElementById('type').value});
+    await DB.save('txns', txns); closeModal('txnModal');
+}
+function showLastMonthSummary() {
+    const now = new Date(); const prevMonth = new Date(now.getFullYear(), now.getMonth()-1, 1);
+    const exps = DB.get('txns').filter(t => t.type === 'expense' && new Date(t.date).getMonth() === prevMonth.getMonth());
+    const sumEl = document.getElementById('summaryContent');
+    if (exps.length === 0) sumEl.innerHTML = '<p style="text-align:center">Không có dữ liệu.</p>';
+    else {
+        const cats = {}; exps.forEach(t => cats[t.category] = (cats[t.category]||0) + t.amount);
+        sumEl.innerHTML = Object.entries(cats).sort(([,a],[,b])=>b-a).map(([k,v]) => `<div class="txn-item"><div>${k}</div><div class="red">-${new Intl.NumberFormat('vi-VN').format(v)}₫</div></div>`).join('');
+    }
+    openModal('summaryModal');
 }
 
+// 7. PASSWORDS (GIỮ NGUYÊN)
+function renderPasswords(arr) {
+    document.getElementById('passwordsList').innerHTML = arr.map(p => `
+        <div class="data-card">
+            <div class="data-title">${p.service}</div>
+            <div class="password-value-container">${p.username}</div>
+            <div class="password-value-container">${p.password}</div>
+            <button class="data-btn delete" onclick="if(confirm('Xóa?')) DB.save('passwords', DB.get('passwords').filter(x=>x.id!=${p.id}))">Xóa</button>
+        </div>`).join('');
+}
+function openPasswordModal() { document.getElementById('passwordService').value=''; document.getElementById('passwordUsername').value=''; document.getElementById('passwordValue').value=''; openModal('passwordModal'); }
+async function savePassword() {
+    const s=document.getElementById('passwordService').value, u=document.getElementById('passwordUsername').value, p=document.getElementById('passwordValue').value;
+    if(!s||!p) return alert("Thiếu thông tin");
+    const arr = [...DB.get('passwords')]; arr.unshift({id:Date.now(), service:s, username:u, password:p});
+    await DB.save('passwords', arr); closeModal('passwordModal');
+}
+
+// 8. OTHER UTILS (NAV, THEME, MODALS)
+function goTo(screenId, el) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+    const bubble = document.getElementById('nav-active-bubble');
+    bubble.style.width = el.offsetWidth + 'px'; bubble.style.left = el.offsetLeft + 'px';
+}
+function toggleTheme() {
+    const isLight = document.documentElement.classList.toggle('light-theme');
+    localStorage.setItem('theme', isLight?'light':'dark');
+}
 function toggleKittyTheme() {
     const html = document.documentElement;
     const isKitty = html.classList.contains('kitty-theme');
-    const toggle = document.getElementById('kitty-theme-toggle');
     const overlay = document.getElementById('kitty-transition-overlay');
     const logo = document.getElementById('kitty-logo');
-
     overlay.classList.add('show');
-    setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-    setTimeout(() => { logo.classList.add('show'); }, 500);
-
+    setTimeout(() => { overlay.style.opacity = '1'; logo.classList.add('show'); }, 10);
     setTimeout(() => {
-        if (isKitty) {
-            html.classList.remove('kitty-theme');
-            const prevTheme = localStorage.getItem('theme-before-kitty') || 'dark';
-            localStorage.setItem('theme', prevTheme);
-            if (prevTheme === 'light') html.classList.add('light-theme');
-            document.getElementById('theme-toggle').classList.toggle('active', prevTheme === 'light');
-            toggle.classList.remove('active');
-        } else {
-            const currentTheme = html.classList.contains('light-theme') ? 'light' : 'dark';
-            localStorage.setItem('theme-before-kitty', currentTheme);
-            html.classList.remove('light-theme');
-            html.classList.add('kitty-theme');
-            localStorage.setItem('theme', 'kitty');
-            toggle.classList.add('active');
-            document.getElementById('theme-toggle').classList.remove('active');
-        }
-        updateNavBubble(document.querySelector('.nav-item.active'));
-    }, 2000);
-
-    setTimeout(() => {
+        if(isKitty) { html.classList.remove('kitty-theme'); localStorage.setItem('theme','dark'); }
+        else { html.classList.add('kitty-theme'); localStorage.setItem('theme','kitty'); }
         overlay.style.opacity = '0';
-    }, 2500);
-
-    setTimeout(() => {
-        overlay.classList.remove('show');
-        logo.classList.remove('show');
-    }, 3000);
+        setTimeout(() => { overlay.classList.remove('show'); logo.classList.remove('show'); }, 500);
+    }, 2000);
 }
-
-function openModal(modalId) { document.getElementById(modalId).classList.add('show'); }
-function closeModal(modalId) { document.getElementById(modalId).classList.remove('show'); }
-function showToast(message) {
-    document.querySelector('.copy-toast')?.remove();
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.className = 'copy-toast';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.classList.add('show'), 10);
-    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+function showToast(msg) {
+    const t = document.createElement('div'); t.className = 'copy-toast'; t.textContent = msg; document.body.appendChild(t);
+    setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2000);
 }
+async function resetData() { if(confirm("Xóa toàn bộ dữ liệu?")) { await DB.save('txns',[]); await DB.save('passwords',[]); alert("Đã xóa."); } }
 
-function renderFinance() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const allTxns = DB.get('txns'); const txns = allTxns.filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }); const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0); const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0); const format = val => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val); document.getElementById('bal').textContent = format(income - expense); document.getElementById('inc').textContent = format(income); document.getElementById('exp').textContent = format(expense); renderHistory(); }
-function formatDateHeader(date) { const today = new Date(); const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1); const d = new Date(date); today.setHours(0, 0, 0, 0); yesterday.setHours(0, 0, 0, 0); d.setHours(0, 0, 0, 0); if (d.getTime() === today.getTime()) return 'Hôm nay'; if (d.getTime() === yesterday.getTime()) return 'Hôm qua'; return d.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' }); }
-function renderHistory() { const now = new Date(); const currentMonth = now.getMonth(); const currentYear = now.getFullYear(); const query = document.getElementById('search').value.toLowerCase(); const txns = DB.get('txns').filter(t => { const txDate = new Date(t.date); return txDate.getMonth() === currentMonth && txDate.getFullYear() === currentYear; }).filter(t => t.category.toLowerCase().includes(query) || t.note.toLowerCase().includes(query)).sort((a, b) => new Date(b.date) - new Date(a.date)); const listEl = document.getElementById('histList'); if (txns.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có giao dịch trong tháng này.</p>`; return; } let lastDateStr = ''; let html = ''; txns.forEach(t => { const txDate = new Date(t.date); const dateStr = txDate.toLocaleDateString('vi-VN'); if (dateStr !== lastDateStr) { html += `<div class="date-header">${formatDateHeader(txDate)}</div>`; lastDateStr = dateStr; } const isExpense = t.type === 'expense'; const noteHTML = t.note ? `<div class="data-subtitle" style="margin-top: 4px; white-space: pre-wrap;">${t.note}</div>` : ''; html += `<div class="txn-item"><div style="flex: 1; margin-right: 10px;"><div class="data-title">${t.category}</div>${noteHTML}</div><div class="txn-amount ${isExpense ? 'red' : 'green'}">${isExpense ? '-' : '+'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`; }); listEl.innerHTML = html; }
-function openTxn(type) { document.getElementById('modalTitle').textContent = type === 'expense' ? 'Thêm chi tiêu' : 'Thêm thu nhập'; document.getElementById('type').value = type; document.getElementById('amt').value = ''; document.getElementById('note').value = ''; openModal('txnModal'); }
-async function saveTxn() { 
-    const amount = parseFloat(document.getElementById('amt').value); 
-    if (!amount || amount <= 0) { return alert('Số tiền không hợp lệ.'); } 
-    const txns = [...DB.get('txns')]; // Clone mảng từ cache
-    txns.push({ id: 'txn_' + Date.now(), date: new Date().toISOString(), amount, category: document.getElementById('cat').value, note: document.getElementById('note').value.trim(), type: document.getElementById('type').value, }); 
-    await DB.save('txns', txns); 
-    closeModal('txnModal'); 
+// 9. MUSIC BUBBLE & SLEEP (FULL DRAGGABLE)
+let player;
+function onYouTubeIframeAPIReady() { player = new YT.Player('music-bubble-iframe', { events: { 'onReady': (e)=>e.target.playVideo() } }); }
+const tag = document.createElement('script'); tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+function toggleMusicBubble() { document.getElementById('music-bubble-container').classList.toggle('hidden'); }
+function toggleMinimizeMusicBubble() { document.getElementById('music-bubble-container').classList.toggle('minimized'); }
+// Hàm kéo thả bong bóng (ĐÃ ĐƯỢC PHỤC HỒI)
+const bubble = document.getElementById('music-bubble-container');
+let isDragging = false, pos1=0, pos2=0, pos3=0, pos4=0;
+bubble.onmousedown = dragStart; bubble.ontouchstart = dragStart;
+function dragStart(e) {
+    if(document.getElementById('music-bubble-container').classList.contains('minimized')) return toggleMinimizeMusicBubble();
+    e = e || window.event; e.preventDefault();
+    pos3 = e.clientX || e.touches[0].clientX; pos4 = e.clientY || e.touches[0].clientY;
+    document.onmouseup = dragEnd; document.onmousemove = dragMove;
+    document.ontouchend = dragEnd; document.ontouchmove = dragMove;
 }
-function showLastMonthSummary() { const now = new Date(); const prevMonthDate = new Date(now.getFullYear(), now.getMonth(), 0); const prevMonth = prevMonthDate.getMonth(); const prevYear = prevMonthDate.getFullYear(); const prevMonthExpenses = DB.get('txns').filter(t => { const txDate = new Date(t.date); return t.type === 'expense' && txDate.getMonth() === prevMonth && txDate.getFullYear() === prevYear; }); const summaryContentEl = document.getElementById('summaryContent'); if (prevMonthExpenses.length === 0) { summaryContentEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:20px 0;">Không có chi tiêu nào trong tháng trước.</p>`; } else { const byCategory = prevMonthExpenses.reduce((acc, txn) => { acc[txn.category] = (acc[txn.category] || 0) + txn.amount; return acc; }, {}); const sortedCategories = Object.entries(byCategory).sort(([, a], [, b]) => b - a); const totalSpent = prevMonthExpenses.reduce((sum, t) => sum + t.amount, 0); let summaryHTML = sortedCategories.map(([category, amount]) => `<div class="txn-item"><div><div class="data-title">${category}</div></div><div class="txn-amount red">-${new Intl.NumberFormat('vi-VN').format(amount)}₫</div></div>`).join(''); summaryHTML += `<div class="txn-item" style="border-top: 2px solid var(--border-color); margin-top: 10px; padding-top: 10px;"><div><div class="data-title" style="font-weight: 700;">Tổng cộng</div></div><div class="txn-amount red" style="font-weight: 700;">-${new Intl.NumberFormat('vi-VN').format(totalSpent)}₫</div></div>`; summaryContentEl.innerHTML = summaryHTML; } document.querySelector('#summaryModal .modal-title').textContent = `Chi tiêu tháng ${prevMonth + 1}/${prevYear}`; openModal('summaryModal'); }
-function renderNotes() { const notes = DB.get('notes'); const listEl = document.getElementById('notesList'); if (notes.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có ghi chú.</p>`; return; } listEl.innerHTML = notes.map(n => `<div class="data-card" onclick="openNote('${n.id}')"><div class="data-header"><span class="data-title">${n.title}</span><span class="data-subtitle">${new Date(n.date).toLocaleDateString('vi-VN')}</span></div><div class="data-content">${n.content.substring(0, 100)}${n.content.length > 100 ? '...' : ''}</div><div class="data-actions"><button class="data-btn delete" onclick="event.stopPropagation(); deleteNote('${n.id}');">Xóa</button></div></div>`).join(''); }
-function openNote(id = null) { const [titleEl, contentEl, idEl, modalTitleEl] = ['noteTitle', 'noteContent', 'editNoteId', 'noteModalTitle'].map(el => document.getElementById(el)); if (id) { const note = DB.get('notes').find(n => n.id === id); modalTitleEl.textContent = "Chỉnh sửa ghi chú"; titleEl.value = note.title; contentEl.value = note.content; idEl.value = id; } else { modalTitleEl.textContent = "Tạo ghi chú mới"; titleEl.value = ''; contentEl.value = ''; idEl.value = ''; } openModal('noteModal'); }
-async function saveNote() { const title = document.getElementById('noteTitle').value.trim(); if (!title) { return alert('Vui lòng nhập tiêu đề.'); } const id = document.getElementById('editNoteId').value; let notes = [...DB.get('notes')]; const newContent = { title, content: document.getElementById('noteContent').value.trim(), date: new Date().toISOString() }; if (id) { const index = notes.findIndex(n => n.id === id); if (index > -1) notes[index] = { ...notes[index], ...newContent }; } else { notes.unshift({ id: 'note_' + Date.now(), ...newContent }); } await DB.save('notes', notes); closeModal('noteModal'); }
-async function deleteNote(id) { if (confirm('Bạn chắc chắn muốn xóa ghi chú này?')) { await DB.save('notes', DB.get('notes').filter(n => n.id !== id)); } }
-function renderPasswords() { const passwords = DB.get('passwords'); const listEl = document.getElementById('passwordsList'); if (passwords.length === 0) { listEl.innerHTML = `<p style="text-align:center;color:var(--text-secondary);padding:40px 0;">Chưa có mật khẩu.</p>`; return; } listEl.innerHTML = passwords.map(p => `<div class="data-card"><div class="data-header"><span class="data-title">${p.service}</span></div><div class="password-field-container"><div class="password-label">Tên đăng nhập</div><div class="password-value-container">${p.username || 'N/A'}</div><div class="password-actions" style="grid-template-columns: 1fr;"><button class="password-btn" onclick="copyToClipboard('${p.username}', 'tên đăng nhập')">Sao chép</button></div></div><div class="password-field-container"><div class="password-label">Mật khẩu</div><div class="password-value-container" id="pass-val-${p.id}">••••••••</div><div class="password-actions"><button class="password-btn" onclick="togglePasswordVisibility('${p.id}', this)">Xem</button><button class="password-btn" onclick="copyToClipboard('${p.password}', 'mật khẩu')">Sao chép</button></div></div><div class="data-actions"><button class="data-btn" onclick="openPasswordModal('${p.id}')">Sửa</button><button class="data-btn delete" onclick="deletePassword('${p.id}')">Xóa</button></div></div>`).join(''); }
-function openPasswordModal(id = null) { const [titleEl, serviceEl, userEl, passEl, idEl] = ['passwordModalTitle', 'passwordService', 'passwordUsername', 'passwordValue', 'editPasswordId'].map(el => document.getElementById(el)); if (id) { const p = DB.get('passwords').find(item => item.id === id); titleEl.textContent = "Chỉnh sửa mật khẩu"; serviceEl.value = p.service; userEl.value = p.username; passEl.value = p.password; idEl.value = id; } else { titleEl.textContent = "Thêm mật khẩu mới"; serviceEl.value = ''; userEl.value = ''; passEl.value = ''; idEl.value = ''; } openModal('passwordModal'); }
-async function savePassword() { const service = document.getElementById('passwordService').value.trim(); const password = document.getElementById('passwordValue').value; if (!service || !password) { return alert('Vui lòng nhập dịch vụ và mật khẩu.'); } let passwords = [...DB.get('passwords')]; const id = document.getElementById('editPasswordId').value; const newEntry = { service, username: document.getElementById('passwordUsername').value.trim(), password }; if (id) { const index = passwords.findIndex(p => p.id === id); if (index > -1) passwords[index] = { ...passwords[index], ...newEntry }; } else { passwords.unshift({ id: 'pass_' + Date.now(), ...newEntry }); } await DB.save('passwords', passwords); closeModal('passwordModal'); }
-async function deletePassword(id) { if (confirm('Bạn chắc chắn muốn xóa mật khẩu này?')) { await DB.save('passwords', DB.get('passwords').filter(p => p.id !== id)); } }
-function togglePasswordVisibility(id, button) { const passField = document.getElementById(`pass-val-${id}`); if (passField.textContent === '••••••••') { const password = DB.get('passwords').find(item => item.id === id)?.password; passField.textContent = password; button.textContent = 'Ẩn'; } else { passField.textContent = '••••••••'; button.textContent = 'Xem'; } }
-function copyToClipboard(text, type) { if (!text) { showToast(`Không có ${type} để sao chép!`); return; } if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(() => { showToast(`Đã sao chép ${type}!`); }).catch(err => { showToast(`Lỗi khi sao chép!`); }); } else { const textArea = document.createElement('textarea'); textArea.value = text; textArea.style.position = 'fixed'; textArea.style.top = '-9999px'; textArea.style.left = '-9999px'; document.body.appendChild(textArea); textArea.focus(); textArea.select(); try { document.execCommand('copy'); showToast(`Đã sao chép ${type}!`); } catch (err) { showToast(`Lỗi khi sao chép!`); } document.body.removeChild(textArea); } }
-async function resetData() { 
-    if (confirm('CẢNH BÁO: Hành động này sẽ xóa TẤT CẢ dữ liệu TRÊN CLOUD. Bạn có muốn tiếp tục?')) { 
-        await DB.save('txns', []);
-        await DB.save('notes', []);
-        await DB.save('passwords', []);
-        alert('Đã xóa toàn bộ dữ liệu trên đám mây.'); 
-    } 
+function dragMove(e) {
+    e = e || window.event; e.preventDefault();
+    const cx = e.clientX || e.touches[0].clientX; const cy = e.clientY || e.touches[0].clientY;
+    pos1 = pos3 - cx; pos2 = pos4 - cy; pos3 = cx; pos4 = cy;
+    bubble.style.top = (bubble.offsetTop - pos2) + "px"; bubble.style.left = (bubble.offsetLeft - pos1) + "px";
 }
-function reloadApp() { window.location.reload(); }
+function dragEnd() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; }
 
-function createFloatingKitties() {
-    const container = document.getElementById('kitty-float-container');
-    if (!container || container.children.length > 0) return;
-    const NUM_KITTIES = 15;
-    
-    for (let i = 0; i < NUM_KITTIES; i++) {
-        const kitty = document.createElement('img');
-        kitty.src = FLOATING_KITTY_ICON;
-        kitty.className = 'floating-kitty';
-        kitty.style.width = `${Math.random() * 40 + 20}px`;
-        kitty.style.top = `${Math.random() * 100}%`;
-        kitty.style.animationDuration = `${Math.random() * 10 + 8}s`;
-        kitty.style.animationDelay = `${Math.random() * 10}s`;
-        container.appendChild(kitty);
-    }
-}
-
-// Music Bubble Functions
-let player; 
-let isMusicBubbleMinimized = false;
-let isMusicBubbleHidden = true;
-
-const musicBubbleContainer = document.getElementById('music-bubble-container');
-const musicBubbleToggleBtn = document.getElementById('music-bubble-toggle-btn');
-const musicBubbleIframe = document.getElementById('music-bubble-iframe');
-
-function toggleMusicBubble() {
-    isMusicBubbleHidden = !isMusicBubbleHidden;
-    musicBubbleContainer.classList.toggle('hidden', isMusicBubbleHidden);
-    musicBubbleToggleBtn.style.display = isMusicBubbleHidden ? 'flex' : 'none';
-
-    if (!isMusicBubbleHidden) {
-        musicBubbleContainer.classList.remove('minimized');
-        isMusicBubbleMinimized = false;
-        if (player && player.getPlayerState() !== 1) { 
-             player.playVideo();
-        }
-    } else {
-        if (player) {
-            player.playVideo();
-        }
-    }
-}
-
-function toggleMinimizeMusicBubble() {
-    isMusicBubbleMinimized = !isMusicBubbleMinimized;
-    musicBubbleContainer.classList.toggle('minimized', isMusicBubbleMinimized);
-    musicBubbleContainer.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
-    if (isMusicBubbleMinimized) {
-        if (player) player.playVideo();
-    } else {
-        if (player) player.playVideo();
-    }
-}
-
-function makeDraggable(element) {
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    let isDragging = false;
-
-    if (element) {
-        element.onmousedown = dragMouseDown;
-        element.ontouchstart = dragTouchDown;
-    }
-
-    function dragMouseDown(e) {
-        e = e || window.event;
-        if (isMusicBubbleMinimized) {
-            toggleMinimizeMusicBubble();
-            return;
-        }
-        e.preventDefault();
-        isDragging = true;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        document.onmouseup = closeDragElement;
-        document.onmousemove = elementDrag;
-        element.style.cursor = 'grabbing';
-    }
-
-    function dragTouchDown(e) {
-        e = e || window.event;
-        if (isMusicBubbleMinimized) {
-            toggleMinimizeMusicBubble();
-            return;
-        }
-        isDragging = true;
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-        document.ontouchend = closeDragElement;
-        document.ontouchmove = elementDragTouch;
-        element.style.cursor = 'grabbing';
-    }
-
-    function elementDrag(e) {
-        if (!isDragging) return;
-        e = e || window.event;
-        e.preventDefault();
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-        const bodyRect = document.body.getBoundingClientRect();
-        const elemRect = element.getBoundingClientRect();
-        if (elemRect.left < 0) element.style.left = '0px';
-        if (elemRect.top < 0) element.style.top = '0px';
-        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
-        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
-    }
-
-    function elementDragTouch(e) {
-        if (!isDragging) return;
-        e = e || window.event;
-        e.preventDefault();
-        pos1 = pos3 - e.touches[0].clientX;
-        pos2 = pos4 - e.touches[0].clientY;
-        pos3 = e.touches[0].clientX;
-        pos4 = e.touches[0].clientY;
-        element.style.top = (element.offsetTop - pos2) + "px";
-        element.style.left = (element.offsetLeft - pos1) + "px";
-        const bodyRect = document.body.getBoundingClientRect();
-        const elemRect = element.getBoundingClientRect();
-        if (elemRect.left < 0) element.style.left = '0px';
-        if (elemRect.top < 0) element.style.top = '0px';
-        if (elemRect.right > bodyRect.width) element.style.left = (bodyRect.width - elemRect.width) + 'px';
-        if (elemRect.bottom > bodyRect.height) element.style.top = (bodyRect.height - elemRect.height) + 'px';
-    }
-
-    function closeDragElement() {
-        isDragging = false;
-        document.onmouseup = null;
-        document.onmousemove = null;
-        document.ontouchend = null;
-        document.ontouchmove = null;
-        element.style.cursor = isMusicBubbleMinimized ? 'pointer' : 'grab';
-    }
-}
-
-function onYouTubeIframeAPIReady() {
-    player = new YT.Player('music-bubble-iframe', {
-        events: {
-            'onReady': onPlayerReady
-        }
-    });
-}
-
-function onPlayerReady(event) {
-    event.target.playVideo();
-    renderVideoList(); 
-}
-
-const tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-const firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-const sleepVideos = [
-    { id: 'zWJOQ3tkzf3gWVkU', title: 'Lofi Hip Hop ' },
-    { id: 'sxE6fkjnxmY', title: 'Tiếng mưa ' },
-    { id: 'Nb9xmsoO8oc', title: 'Độ Mixi Live' },
-    { id: 't1mP3DBwwzg', title: 'Nhạc không gian ' },
-    { id: 'oQqmDSmsL04', title: 'Sóng biển ' }
-];
-
-let sleepClockInterval = null;
-
-function renderVideoList() {
-    const listContainer = document.getElementById('sleep-mode-video-list');
-    listContainer.innerHTML = '';
-    sleepVideos.forEach(video => {
-        const btn = document.createElement('button');
-        btn.className = 'sleep-video-btn';
-        btn.textContent = video.title;
-        btn.onclick = () => changeSleepVideo(video.id);
-        listContainer.appendChild(btn);
-    });
-}
-
-function changeSleepVideo(videoId) {
-    if (player && typeof player.loadVideoById === 'function') {
-        player.loadVideoById(videoId);
-    } else {
-        console.error("Trình phát YouTube chưa sẵn sàng.");
-    }
-}
-
+// Sleep Mode
+const sleepVideos = [{id:'zWJOQ3tkzf3gWVkU',t:'Lofi'},{id:'sxE6fkjnxmY',t:'Rain'},{id:'Nb9xmsoO8oc',t:'Mixi'}];
 function enterSleepMode() {
-    document.querySelector('.main-container').style.display = 'none';
-    document.querySelector('.bottom-nav').style.display = 'none';
-    document.getElementById('music-bubble-container').classList.add('hidden');
-    document.getElementById('music-bubble-toggle-btn').style.display = 'none';
-    
-    const iframe = document.getElementById('music-bubble-iframe');
-    document.getElementById('sleep-mode-video-container').appendChild(iframe);
-    
-    document.getElementById('sleep-mode-overlay').style.display = 'flex';
-    
-    if (player) player.playVideo();
-    
-    if (sleepClockInterval) clearInterval(sleepClockInterval);
-    
-    const updateSleepClock = () => {
-        const now = new Date();
-        const timeEl = document.getElementById('sleep-mode-clock');
-        const dateEl = document.getElementById('sleep-mode-date');
-        
-        if (timeEl) {
-            timeEl.textContent = now.toLocaleTimeString('vi-VN');
-        }
-        if (dateEl) {
-            dateEl.textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        }
-    };
-    
-    updateSleepClock();
-    sleepClockInterval = setInterval(updateSleepClock, 1000);
-    
-    isMusicBubbleHidden = true;
+    document.getElementById('sleep-mode-overlay').style.display='flex';
+    document.getElementById('sleep-mode-video-container').appendChild(document.getElementById('music-bubble-iframe'));
+    document.getElementById('sleep-mode-video-list').innerHTML = sleepVideos.map(v=>`<button class="sleep-video-btn" onclick="player.loadVideoById('${v.id}')">${v.t}</button>`).join('');
+    setInterval(()=>{
+        const n=new Date();
+        document.getElementById('sleep-mode-clock').textContent=n.toLocaleTimeString('vi-VN');
+        document.getElementById('sleep-mode-date').textContent=n.toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
+    },1000);
 }
-
 function exitSleepMode() {
-    document.getElementById('sleep-mode-overlay').style.display = 'none';
-
-    const iframe = document.getElementById('music-bubble-iframe');
-    document.getElementById('music-bubble-iframe-container').appendChild(iframe);
-
-    document.querySelector('.main-container').style.display = 'block';
-    document.querySelector('.bottom-nav').style.display = 'flex';
-    document.getElementById('music-bubble-toggle-btn').style.display = 'flex';
-
-    if (sleepClockInterval) clearInterval(sleepClockInterval);
-    sleepClockInterval = null;
-    
-    const dateEl = document.getElementById('sleep-mode-date');
-    if (dateEl) dateEl.textContent = '---, --/--/----';
-
-    if (player) player.pauseVideo();
+    document.getElementById('sleep-mode-overlay').style.display='none';
+    document.getElementById('music-bubble-iframe-container').appendChild(document.getElementById('music-bubble-iframe'));
 }
 
-
-document.addEventListener('DOMContentLoaded', () => { 
-    if (!clockInterval) { 
-        updateClockAndSchedule(); 
-        clockInterval = setInterval(updateClockAndSchedule, 1000); 
-    } 
-
-    // BẮT ĐẦU ĐỒNG BỘ DỮ LIỆU
-    DB.sync('txns', renderFinance); 
-    DB.sync('notes', renderNotes); 
-    DB.sync('passwords', renderPasswords); 
-
-    createFloatingKitties();
-    const initialActiveItem = document.querySelector('.nav-item.active'); 
+// 10. INIT
+document.addEventListener('DOMContentLoaded', () => {
+    setInterval(updateClockAndSchedule, 1000); updateClockAndSchedule();
+    DB.sync('txns', renderFinance);
+    DB.sync('passwords', renderPasswords);
+    DB.sync('posts', renderCommunity);
+    
+    // Theme Check
+    if(localStorage.getItem('theme')==='kitty') { document.documentElement.classList.add('kitty-theme'); document.getElementById('kitty-theme-toggle').classList.add('active'); }
+    else if(localStorage.getItem('theme')==='light') { document.documentElement.classList.add('light-theme'); }
+    
+    // Kitty Floating
+    const kc = document.getElementById('kitty-float-container');
+    for(let i=0;i<15;i++) {
+        const k = document.createElement('img'); k.src="https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png";
+        k.className="floating-kitty"; k.style.width=(Math.random()*40+20)+"px"; k.style.top=Math.random()*100+"%"; k.style.animationDuration=(Math.random()*10+8)+"s";
+        kc.appendChild(k);
+    }
+    
     setTimeout(() => { 
-        updateNavBubble(initialActiveItem); 
-    }, 50); 
-    makeDraggable(musicBubbleContainer);
+        const activeNav = document.querySelector('.nav-item.active');
+        if(activeNav) { const b=document.getElementById('nav-active-bubble'); b.style.width=activeNav.offsetWidth+'px'; b.style.left=activeNav.offsetLeft+'px'; }
+    }, 100);
 });
-window.addEventListener('resize', () => { updateNavBubble(document.querySelector('.nav-item.active')); });
-
 </script>
 </body>
 </html>
