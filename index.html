@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Trợ Lý Cá Nhân</title>
+    <title>Trợ Lý Cá Nhân - XingFace</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
     <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1375475716371775499/1467762343151669288/IMG_5241.png">
     
@@ -321,7 +322,8 @@
 <script type="text/javascript">
 'use strict';
 
-// 1. CONFIG FIREBASE
+// 1. CONFIG FIREBASE (XINGFACE - Updated)
+// Lưu ý: Đã chuyển đổi sang cấu hình Compat để chạy được với code hiện tại
 const firebaseConfig = {
   apiKey: "AIzaSyC4RZXkpXUoogacdxeRSVxcpcH1MouIEuI",
   authDomain: "xingface.firebaseapp.com",
@@ -333,9 +335,11 @@ const firebaseConfig = {
   measurementId: "G-MJ3QRQV9VW"
 };
 
+// Initialize Firebase (Compat Mode)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
+const analytics = firebase.analytics(); // Đã thêm Analytics
 
 let currentUser = null;
 let isLoginMode = true;
@@ -489,8 +493,6 @@ function submitPost() {
 }
 
 // 5. SCHEDULE & FINANCE & PASSWORDS (GIỮ NGUYÊN)
-// (Giản lược code phần này để tập trung vào Chat, logic vẫn chạy ngầm từ HTML cũ nếu cần)
-// Code Schedule, Finance, Password y hệt phiên bản trước.
 const scheduleData=[{dayName:'Chủ Nhật',morning:['','','','',''],afternoon:['','','','','']},{dayName:'Thứ Hai',morning:['LS&ĐL (Sử) – Giang','Toán – Đ. Mai','Toán – Đ. Mai','Tin – Ánh','KHTN (Sinh) – P. Nhung'],afternoon:['C.Nghệ – H. Vân','LS&ĐL (Địa) – H. Nhung','Nghệ thuật (AN) – T. Nga','','','']},{dayName:'Thứ Ba',morning:['Toán – Đ. Mai','T.Anh - Đ.Oanh','GDCD – Huệ','KHTN (Hóa) – P. Nhung','KHTN (Lý) – T. Thùy'],afternoon:['Nghệ thuật (MT) – Thùy','GDTC – Tuấn','C.Nghệ – H. Vân','','','']},{dayName:'Thứ Tư',morning:['Văn – Đ. Hoa','Văn – Đ. Hoa','LS&ĐL (Sử) – Giang','T.Anh – D. Oanh','KHTN (Lý) – T. Thùy'],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','','']},{dayName:'Thứ Năm',morning:['HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhungg',''],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','']},{dayName:'Thứ Sáu',morning:['GDTC – Tuấn','Văn – D. Hoa','GDĐP – H. Vân','T.Anh – D. Oanh','KHTN (Hóa) – P. Nhung'],afternoon:['','','','','']},{dayName:'Thứ Bảy',morning:['','','','',''],afternoon:['','','','','']}];
 let lastRenderedDay=-1;
 function updateClockAndSchedule(){const n=new Date();document.getElementById('clock-time').textContent=n.toLocaleTimeString('vi-VN');if(n.getDay()!==lastRenderedDay){renderFullSchedule(n);lastRenderedDay=n.getDay()}}
