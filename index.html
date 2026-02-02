@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title> XingFace Pro</title>
+    <title>Trợ Lý Cá Nhân - XingFace</title>
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -11,10 +11,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 
     <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1375475716371775499/1467762343151669288/IMG_5241.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* GIỮ NGUYÊN CSS GỐC */
+        /* =================================================================
+           CSS CƠ BẢN
+           ================================================================= */
         :root { --bg-primary: #111111; --bg-secondary: #1c1c1e; --card-bg: #1c1c1e; --text-primary: #f5f5f7; --text-secondary: #8e8e93; --accent-primary: #0a84ff; --accent-red: #ff453a; --accent-green: #30d158; --accent-orange: #ff9f0a; --border-color: #38383a; --font-family: 'Quicksand', sans-serif; }
         html.light-theme { --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --card-bg: #ffffff; --text-primary: #000000; --text-secondary: #636366; --accent-primary: #007aff; --border-color: #e5e5ea; }
         html.kitty-theme { --bg-primary: #fff0f5; --bg-secondary: #ffffff; --card-bg: rgba(255, 255, 255, 0.9); --text-primary: #5c3c54; --text-secondary: #d17fb4; --accent-primary: #ff85a2; --accent-red: #f75d72; --accent-green: #61d3a3; --accent-orange: #ffb480; --border-color: #f7d6e0; --font-family: 'Quicksand', cursive; }
@@ -23,11 +28,14 @@
         html.light-theme, html.kitty-theme { color-scheme: light; }
         body { font-family: var(--font-family); background-color: var(--bg-primary); color: var(--text-primary); padding-bottom: 120px; min-height: 100vh; transition: background-color 0.3s ease, color 0.3s ease; }
         html.kitty-theme body { background-image: url('https://i.pinimg.com/originals/a8/60/a3/a860a340a2353a2f7334f64797a7a42b.jpg'); background-size: cover; background-position: center center; background-attachment: fixed; }
+        
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
         .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
         .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
+        
+        /* BOTTOM NAV */
         .bottom-nav { position: fixed; bottom: calc(15px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); width: calc(100% - 32px); max-width: 450px; background-color: rgba(28, 28, 30, 0.75); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: 30px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); display: flex; padding: 6px; z-index: 1000; }
         html.light-theme .bottom-nav { background-color: rgba(248, 248, 248, 0.75); } html.kitty-theme .bottom-nav { background-color: rgba(255, 230, 240, 0.8); }
         .nav-item { flex: 1; text-align: center; padding: 10px 0 8px 0; cursor: pointer; color: var(--text-secondary); transition: color 0.3s ease, transform 0.15s ease; z-index: 1; }
@@ -36,6 +44,8 @@
         .nav-item .nav-label { font-size: 11px; font-weight: 600; }
         #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
         html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
+
+        /* GENERAL UI ELEMENTS */
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
         .btn:active { opacity: 0.8; transform: scale(0.97); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -48,6 +58,8 @@
         .data-subtitle { font-size: 14px; color: var(--text-secondary); }
         .data-btn { background-color: var(--bg-secondary); color: var(--text-primary); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 14px; font-weight: 600; cursor: pointer; }
         .data-btn.delete { color: var(--accent-red); }
+
+        /* MODAL */
         .modal { display: flex; align-items: flex-end; justify-content: center; position: fixed; inset: 0; background-color: rgba(0, 0, 0, 0.4); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.4s; backdrop-filter: blur(5px); }
         .modal.show { opacity: 1; pointer-events: auto; }
         .modal-content { background-color: var(--bg-secondary); border-radius: 18px 18px 0 0; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); transform: translateY(100%); transition: 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
@@ -61,6 +73,8 @@
         .form-textarea { min-height: 120px; }
         .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
+        
+        /* SCHEDULE & FINANCE */
         #clock-time { font-size: 56px; font-weight: 700; text-align: center; }
         #clock-date { font-size: 17px; color: var(--text-secondary); text-align: center; margin-bottom: 30px; }
         .schedule-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 16px 20px; border-radius: 12px; margin-bottom: 12px; font-size: 17px; font-weight: 600; border-left: 5px solid var(--accent-green); display: flex; justify-content: space-between; align-items: center; }
@@ -79,6 +93,7 @@
         .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
+        /* HELLO KITTY */
         #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         #kitty-transition-overlay.show { display: flex; pointer-events: auto; }
         #kitty-logo { font-family: 'Pacifico', cursive; font-size: 15vw; color: #ff85a2; opacity: 0; transform: scale(0.8); transition: 1.5s; }
@@ -88,7 +103,7 @@
         .floating-kitty { position: absolute; left: -100px; opacity: 0.7; animation: floatAcross linear infinite; }
         @keyframes floatAcross { 0% { transform: translateX(0) rotate(0deg); left: -100px; } 100% { transform: translateX(100vw) rotate(360deg); left: 100vw; } }
 
-        /* POST & COMMUNITY */
+        /* COMMUNITY & AUTH */
         .post-input-container { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; cursor: pointer; }
         .post-input-header { display: flex; align-items: center; gap: 10px; }
         .user-avatar-small { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
@@ -99,28 +114,20 @@
         .post-time { font-size: 12px; color: var(--text-secondary); }
         .post-content { font-size: 16px; line-height: 1.5; margin-bottom: 12px; white-space: pre-wrap; }
         .post-actions { border-top: 1px solid var(--border-color); padding-top: 10px; display: flex; gap: 20px; }
-        /* SVG Action Btn */
-        .action-btn { background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--font-family); transition: 0.2s; }
-        .action-btn.active { color: var(--accent-red); }
-        .action-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
-        .action-btn.active svg { fill: currentColor; }
-        
+        .action-btn { background: none; border: none; color: var(--text-secondary); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; font-family: var(--font-family); }
+        .action-btn:hover { color: var(--accent-primary); }
         .auth-status-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 16px; }
         .status-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
         .status-offline { background: #3a3a3c; color: #8e8e93; }
         .status-online { background: rgba(48, 209, 88, 0.2); color: #30d158; border: 1px solid #30d158; }
 
-        /* NOTIFICATIONS & BELL */
+        /* ============================
+           CHAT BUBBLE (NÂNG CẤP)
+           ============================ */
         #notification-bell { position: fixed; top: 15px; right: 20px; z-index: 2000; color: var(--text-primary); cursor: pointer; }
-        #notif-badge { position: absolute; top: -5px; right: -5px; background: var(--accent-red); color: white; border-radius: 50%; width: 18px; height: 18px; display: none; font-size: 10px; text-align: center; line-height: 18px; font-weight: bold; }
+        #notif-badge { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: white; border-radius: 50%; width: 10px; height: 10px; display: none; }
         #notif-badge.active { display: block; }
-        #notification-list { position: absolute; top: 40px; right: 0; width: 300px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; display: none; max-height: 300px; overflow-y: auto; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 2001; }
-        #notification-list.show { display: block; }
-        .notif-item { padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; gap: 10px; align-items: start; }
-        .notif-item:hover { background: var(--bg-primary); }
-        .notif-btn-group { margin-top: 5px; display: flex; gap: 5px; }
 
-        /* CHAT BUBBLE NEW */
         #chat-bubble-container { position: fixed; bottom: 100px; right: 16px; width: 350px; height: 550px; border-radius: 18px; background-color: var(--bg-secondary); box-shadow: 0 8px 30px rgba(0,0,0,0.3); overflow: hidden; z-index: 2500; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom right; }
         #chat-bubble-container.minimized { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; }
         #chat-bubble-container.hidden { display: none; }
@@ -130,48 +137,34 @@
         .chat-back-btn { background:none; border:none; color:var(--text-primary); cursor:pointer; font-size:18px; display:none; }
         .chat-controls button { background: none; border: none; color: var(--text-secondary); font-size: 18px; cursor: pointer; margin-left: 10px; }
 
-        /* USER LIST & GROUP */
+        /* VIEW: USER LIST */
         #chat-user-list { flex: 1; overflow-y: auto; padding: 10px; background: var(--bg-primary); display: block; }
-        .chat-group-create-btn { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px dashed var(--border-color); border-radius: 10px; background: var(--card-bg); color: var(--accent-primary); font-weight: bold; cursor: pointer; }
         .chat-user-item { display: flex; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; background: var(--card-bg); margin-bottom: 8px; border: 1px solid var(--border-color); transition: 0.2s; }
         .chat-user-item:hover { background: var(--border-color); }
         .chat-user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; position: relative; }
         .chat-user-status-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; position: absolute; bottom: 0; right: 0; border: 2px solid var(--card-bg); }
         .chat-user-status-dot.online { background: var(--accent-green); }
         .chat-user-info h4 { font-size: 14px; margin: 0 0 2px 0; }
-        .chat-user-info p { font-size: 11px; color: var(--text-secondary); margin: 0; }
+        .chat-user-info p { font-size: 12px; color: var(--text-secondary); margin: 0; }
 
-        /* CHAT MESSAGES */
-        #chat-conversation { flex: 1; display: none; flex-direction: column; background: var(--bg-primary); height: 100%; position: relative; }
+        /* VIEW: CONVERSATION */
+        #chat-conversation { flex: 1; display: none; flex-direction: column; background: var(--bg-primary); height: 100%; }
         #chat-messages-area { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; display: flex; flex-direction: column; }
+        .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; }
         .chat-msg.me { align-self: flex-end; background: var(--accent-primary); color: white; border-bottom-right-radius: 4px; }
         .chat-msg.other { align-self: flex-start; background: var(--card-bg); border: 1px solid var(--border-color); border-bottom-left-radius: 4px; }
-        .chat-msg-seen { font-size: 10px; color: rgba(255,255,255,0.7); align-self: flex-end; margin-top: 2px; }
-        .chat-msg.other .chat-msg-seen { color: var(--text-secondary); }
 
-        /* TYPING INDICATOR */
-        #typing-indicator { font-size: 12px; color: var(--text-secondary); padding: 5px 16px; display: none; font-style: italic; }
-        .typing-dots::after { content: ' .'; animation: dots 1.5s steps(5, end) infinite; }
-        @keyframes dots { 0%, 20% { content: ' .'; } 40% { content: ' ..'; } 60% { content: ' ...'; } 80%, 100% { content: ''; } }
-
-        /* CHAT INPUT */
-        .chat-input-bar { padding: 10px; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; gap: 8px; align-items: center; }
-        .chat-input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 14px; color: var(--text-primary); outline: none; }
-        .chat-send-btn { background: var(--accent-primary); color: white; border: none; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-        .chat-add-btn { background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border-color); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 20px; }
+        .chat-input-bar { padding: 10px; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
+        .chat-input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 14px; color: var(--text-primary); outline: none; }
+        .chat-send-btn { background: var(--accent-primary); color: white; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         
         #chat-toggle-btn { position: fixed; bottom: 100px; right: 16px; background-color: var(--accent-primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 2400; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        #chat-bubble-container.minimized * { display: none !important; }
-        #chat-bubble-container.minimized::after { content: '💬'; font-size: 24px; display: flex !important; align-items: center; justify-content: center; height: 100%; width: 100%; color: white; }
+        #chat-bubble-container.minimized #chat-user-list,
+        #chat-bubble-container.minimized #chat-conversation,
+        #chat-bubble-container.minimized .chat-header { display: none !important; }
+        #chat-bubble-container.minimized::after { content: '💬'; font-size: 24px; display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; }
 
-        /* COMMENT SECTION */
-        .comment-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-color); display: none; }
-        .comment-item { font-size: 13px; margin-bottom: 5px; }
-        .comment-author { font-weight: bold; margin-right: 5px; }
-        .comment-input-wrap { display: flex; gap: 5px; margin-top: 8px; }
-        
     </style>
 </head>
 <body>
@@ -179,12 +172,9 @@
 <div id="kitty-float-container"></div>
 <div id="kitty-transition-overlay"><h1 id="kitty-logo">Hello Kitty</h1></div>
 
-<div id="notification-bell" onclick="toggleNotifList()">
+<div id="notification-bell" onclick="showToast('Kiểm tra tin nhắn hoặc bài viết mới!')">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 28px; height: 28px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-    <div id="notif-badge">0</div>
-    <div id="notification-list">
-        <div style="padding:10px; text-align:center; color:var(--text-secondary);">Không có thông báo mới.</div>
-    </div>
+    <div id="notif-badge"></div>
 </div>
 
 <div class="main-container">
@@ -243,7 +233,7 @@
         <div class="auth-status-card">
             <div id="authStatusText" class="status-badge status-offline">Chưa đăng nhập</div>
             <h3 id="authEmailDisplay" style="margin-bottom: 10px;">Khách</h3>
-            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">Đăng nhập để hiển thị tên và chat.</p>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">Đăng nhập để hiển thị trong danh sách chat.</p>
             <button class="btn" id="btnLoginNav" onclick="openAuthModal('login')">Đăng nhập / Đăng ký</button>
             <button class="btn btn-danger" id="btnLogoutNav" style="display:none;" onclick="handleLogout()">Đăng xuất</button>
         </div>
@@ -280,7 +270,7 @@
             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg><div class="nav-label">Mật khẩu</div>
         </div>
         <div class="nav-item" onclick="goTo('settings', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><div class="nav-label">Cài đặt</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><div class="nav-label">Cài đặt</div>
         </div>
     </div>
 </div>
@@ -289,7 +279,7 @@
     <div class="chat-header">
         <div class="chat-title">
             <button id="chatBackBtn" class="chat-back-btn" onclick="backToUserList()">⬅</button>
-            <span id="chatTitleText">XingFace Chat</span>
+            <span id="chatTitleText">Thành viên</span>
         </div>
         <div class="chat-controls">
             <button onclick="toggleMinimizeChat()">_</button>
@@ -298,21 +288,14 @@
     </div>
     
     <div id="chat-user-list">
-        <button class="chat-group-create-btn" onclick="openGroupCreate()">+ Tạo Nhóm Mới</button>
-        <div id="chat-users-content">
-            <div style="text-align:center; padding:10px; font-size:12px; color:var(--text-secondary);">Đang tải danh sách...</div>
-        </div>
+        <div style="text-align:center; padding:10px; font-size:12px; color:var(--text-secondary);">Đang tải danh sách thành viên...</div>
     </div>
 
     <div id="chat-conversation">
         <div id="chat-messages-area"></div>
-        <div id="typing-indicator">Đang soạn tin<span class="typing-dots"></span></div>
         <div class="chat-input-bar">
-            <button class="chat-add-btn" onclick="sendScheduleToChat()">+</button>
-            <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleChatEnter(event)" oninput="handleTyping()">
-            <button class="chat-send-btn" onclick="sendChatMessage()">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:24px;height:24px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-            </button>
+            <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleChatEnter(event)">
+            <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
         </div>
     </div>
 </div>
@@ -321,14 +304,13 @@
 </button>
 
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
-<div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" id="btnSavePw" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
+<div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
 <div id="postModal" class="modal"><div class="modal-content"><h2 class="modal-title">Tạo bài viết</h2><div class="form-group"><textarea class="form-textarea" id="postContent" placeholder="Bạn đang thắc mắc gì? Chia sẻ với cộng đồng ngay..."></textarea></div><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('postModal')" style="flex:1;">Hủy</button><button class="btn" id="btnSubmitPost" onclick="submitPost()" style="flex:1;">Đăng bài</button></div></div></div>
 
 <div id="authModal" class="modal"><div class="modal-content">
     <h2 class="modal-title" id="authTitle">Đăng nhập</h2>
     <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="authEmail" placeholder="example@gmail.com"></div>
-    <div class="form-group" id="groupNameDiv" style="display:none;"><label class="form-label">Tên hiển thị</label><input type="text" class="form-input" id="authName" placeholder="Tên của bạn"></div>
     <div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="authPass" placeholder="••••••••"></div>
     <div style="text-align:right; margin-bottom:15px;"><span style="color:var(--text-secondary); font-size:14px; cursor:pointer; text-decoration:underline;" onclick="handleForgotPassword()">Quên mật khẩu?</span></div>
     <div id="authMessage" style="color:var(--accent-red); margin-bottom:10px; font-size:14px; display:none;"></div>
@@ -340,6 +322,8 @@
 <script type="text/javascript">
 'use strict';
 
+// 1. CONFIG FIREBASE (XINGFACE - Updated)
+// Lưu ý: Đã chuyển đổi sang cấu hình Compat để chạy được với code hiện tại
 const firebaseConfig = {
   apiKey: "AIzaSyC4RZXkpXUoogacdxeRSVxcpcH1MouIEuI",
   authDomain: "xingface.firebaseapp.com",
@@ -351,17 +335,17 @@ const firebaseConfig = {
   measurementId: "G-MJ3QRQV9VW"
 };
 
+// Initialize Firebase (Compat Mode)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
-const analytics = firebase.analytics();
+const analytics = firebase.analytics(); // Đã thêm Analytics
 
 let currentUser = null;
 let isLoginMode = true;
-let currentChatId = null;
+// NEW: For 1-on-1 Chat
+let currentChatPartnerId = null; 
 let currentChatRef = null;
-let typingTimeout = null;
-let forgotPassCooldown = 0;
 
 // 2. DATA MANAGEMENT
 const DATA_CACHE = { txns: [], passwords: [], posts: [] };
@@ -372,8 +356,7 @@ const DB = {
         db.ref(key).on('value', (snapshot) => {
             const val = snapshot.val();
             if (key === 'posts') {
-                const arr = [];
-                if(val) Object.keys(val).forEach(k => arr.push({id:k, ...val[k]}));
+                const arr = val ? Object.values(val) : [];
                 DATA_CACHE[key] = arr;
                 callback(arr);
             } else {
@@ -390,14 +373,14 @@ auth.onAuthStateChanged((user) => {
     currentUser = user;
     updateAuthUI();
     if (user) {
-        db.ref('users/' + user.uid).update({
+        // Lưu user vào danh sách chung để mọi người nhìn thấy
+        db.ref('users/' + user.uid).set({
             email: user.email,
-            name: user.displayName || user.email.split('@')[0],
             status: 'online',
             lastSeen: firebase.database.ServerValue.TIMESTAMP
         });
-        db.ref('users/' + user.uid).onDisconnect().update({ status: 'offline', lastSeen: firebase.database.ServerValue.TIMESTAMP });
-        loadNotifications(); // Load thông báo
+        // Khi thoát thì set offline
+        db.ref('users/' + user.uid).onDisconnect().update({ status: 'offline' });
     }
 });
 
@@ -411,10 +394,10 @@ function updateAuthUI() {
     if (currentUser) {
         statusText.textContent = "Online";
         statusText.className = "status-badge status-online";
-        emailDisplay.textContent = currentUser.displayName || currentUser.email;
+        emailDisplay.textContent = currentUser.email;
         btnLogin.style.display = 'none';
         btnLogout.style.display = 'inline-block';
-        if (myAvatar) myAvatar.textContent = (currentUser.displayName || currentUser.email).charAt(0).toUpperCase();
+        if (myAvatar) myAvatar.textContent = currentUser.email.charAt(0).toUpperCase();
     } else {
         statusText.textContent = "Chưa đăng nhập";
         statusText.className = "status-badge status-offline";
@@ -426,152 +409,63 @@ function updateAuthUI() {
     }
 }
 
-function openAuthModal(mode) { 
-    isLoginMode = (mode === 'login'); 
-    renderAuthModal(); 
-    openModal('authModal'); 
-}
+function openAuthModal(mode) { isLoginMode = (mode === 'login'); renderAuthModal(); openModal('authModal'); }
 function toggleAuthMode() { isLoginMode = !isLoginMode; renderAuthModal(); }
 function renderAuthModal() {
     const title = document.getElementById('authTitle'); const btn = document.getElementById('btnAuthAction');
     const switchText = document.getElementById('authSwitchText'); const switchBtn = document.getElementById('authSwitchBtn');
-    const nameDiv = document.getElementById('groupNameDiv');
     document.getElementById('authMessage').style.display = 'none';
-    
-    if (isLoginMode) { 
-        title.textContent = "Đăng nhập"; btn.textContent = "Đăng nhập"; 
-        switchText.textContent = "Chưa có tài khoản? "; switchBtn.textContent = "Đăng ký ngay";
-        nameDiv.style.display = 'none';
-    } else { 
-        title.textContent = "Đăng ký tài khoản"; btn.textContent = "Đăng ký"; 
-        switchText.textContent = "Đã có tài khoản? "; switchBtn.textContent = "Đăng nhập"; 
-        nameDiv.style.display = 'block';
-    }
+    if (isLoginMode) { title.textContent = "Đăng nhập"; btn.textContent = "Đăng nhập"; switchText.textContent = "Chưa có tài khoản? "; switchBtn.textContent = "Đăng ký ngay"; }
+    else { title.textContent = "Đăng ký tài khoản"; btn.textContent = "Đăng ký"; switchText.textContent = "Đã có tài khoản? "; switchBtn.textContent = "Đăng nhập"; }
 }
 async function handleAuthAction() {
     const email = document.getElementById('authEmail').value;
     const pass = document.getElementById('authPass').value;
-    const name = document.getElementById('authName').value;
     const msg = document.getElementById('authMessage');
-    
     if (!email || !pass) { msg.textContent = "Nhập đủ thông tin."; msg.style.display = 'block'; return; }
-    if (!isLoginMode && !name) { msg.textContent = "Vui lòng nhập Tên hiển thị."; msg.style.display = 'block'; return; }
-
     try {
         if (isLoginMode) {
             await auth.signInWithEmailAndPassword(email, pass);
             closeModal('authModal'); showToast("Đăng nhập thành công!");
         } else {
-            const cred = await auth.createUserWithEmailAndPassword(email, pass);
-            await cred.user.updateProfile({ displayName: name });
+            await auth.createUserWithEmailAndPassword(email, pass);
+            // Tự động đăng nhập sau khi đăng ký
             closeModal('authModal'); showToast("Đăng ký thành công!");
         }
     } catch (error) { msg.textContent = error.message; msg.style.display = 'block'; }
 }
 function handleLogout() { if(confirm("Đăng xuất?")) { 
+    // Set offline trước khi out
     if(currentUser) db.ref('users/' + currentUser.uid).update({ status: 'offline' });
     auth.signOut(); 
 }}
 async function handleForgotPassword() {
-    if (Date.now() < forgotPassCooldown) {
-        alert(`Vui lòng chờ ${Math.ceil((forgotPassCooldown - Date.now())/1000)}s nữa để gửi lại.`);
-        return;
-    }
     const email = document.getElementById('authEmail').value;
     if(!email) { alert("Nhập Email trước."); return; }
-    try { 
-        await auth.sendPasswordResetEmail(email); 
-        alert("Đã gửi email đặt lại mật khẩu.\nLƯU Ý: Nếu không thấy, hãy kiểm tra mục THƯ RÁC (SPAM) hoặc tìm từ khóa 'XingFace'."); 
-        forgotPassCooldown = Date.now() + 60000; // 60s cooldown
-    } catch(e) { alert("Lỗi: " + e.message); }
+    try { await auth.sendPasswordResetEmail(email); alert("Đã gửi email đặt lại mật khẩu."); } catch(e) { alert("Lỗi: " + e.message); }
 }
 
-// 4. POST LOGIC (LIKE & COMMENT & NOTIFICATION)
+// 4. POST LOGIC (VỚI TIMEOUT FIX)
 function renderCommunity(posts) {
     const list = document.getElementById('postsList');
     const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     if (sortedPosts.length === 0) { list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-secondary)">Chưa có bài viết nào.</div>`; return; }
-    
     list.innerHTML = sortedPosts.map(p => {
         const date = new Date(p.createdAt);
         const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
         const dateStr = `${date.getDate()}/${date.getMonth()+1}`;
-        const shortName = p.authorName || p.authorEmail.split('@')[0];
-        
-        // Check like status
-        const isLiked = p.likes && currentUser && p.likes[currentUser.uid];
-        const likeCount = p.likes ? Object.keys(p.likes).length : 0;
-        
-        // Render comments
-        let commentsHtml = '';
-        if(p.comments) {
-            Object.values(p.comments).forEach(c => {
-                commentsHtml += `<div class="comment-item"><span class="comment-author">${c.authorName}:</span>${c.text}</div>`;
-            });
-        }
-
-        return `
-        <div class="post-card" id="post-${p.id}">
-            <div class="post-header">
-                <div class="user-avatar-small" style="background:#555;">${shortName.charAt(0).toUpperCase()}</div>
-                <div><div class="post-author-name">${shortName}</div><div class="post-time">${timeStr} • ${dateStr}</div></div>
-            </div>
-            <div class="post-content">${p.content}</div>
-            <div class="post-actions">
-                <button class="action-btn ${isLiked?'active':''}" onclick="toggleLike('${p.id}', '${p.authorId}')">
-                    <svg viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                    <span>${likeCount}</span>
-                </button>
-                <button class="action-btn" onclick="toggleCommentSection('${p.id}')">
-                    <svg viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    <span>Bình luận</span>
-                </button>
-            </div>
-            <div class="comment-section" id="comment-sec-${p.id}">
-                <div id="comments-list-${p.id}">${commentsHtml}</div>
-                <div class="comment-input-wrap">
-                    <input type="text" class="form-input" style="padding:8px;font-size:13px;" id="comment-in-${p.id}" placeholder="Viết bình luận...">
-                    <button class="btn btn-small" style="margin:0;width:auto;" onclick="sendComment('${p.id}', '${p.authorId}')">Gửi</button>
-                </div>
-            </div>
-        </div>`;
+        const shortName = p.authorEmail ? p.authorEmail.split('@')[0] : 'Ẩn danh';
+        return `<div class="post-card"><div class="post-header"><div class="user-avatar-small" style="background:#555;">${shortName.charAt(0).toUpperCase()}</div><div><div class="post-author-name">${shortName}</div><div class="post-time">${timeStr} • ${dateStr}</div></div></div><div class="post-content">${p.content}</div><div class="post-actions"><button class="action-btn">👍 Thích</button><button class="action-btn">💬 Bình luận</button></div></div>`;
     }).join('');
-}
-
-function toggleLike(postId, authorId) {
-    if(!currentUser) return openAuthModal('login');
-    const ref = db.ref(`posts/${postId}/likes/${currentUser.uid}`);
-    ref.once('value', snap => {
-        if(snap.exists()) {
-            ref.remove(); // Unlike
-        } else {
-            ref.set(true); // Like
-            if(authorId !== currentUser.uid) pushNotification(authorId, 'like', 'đã thích bài viết của bạn.');
-        }
-    });
-}
-
-function toggleCommentSection(postId) {
-    const el = document.getElementById(`comment-sec-${postId}`);
-    el.style.display = el.style.display === 'block' ? 'none' : 'block';
-}
-
-function sendComment(postId, authorId) {
-    if(!currentUser) return openAuthModal('login');
-    const input = document.getElementById(`comment-in-${postId}`);
-    const text = input.value.trim();
-    if(!text) return;
     
-    db.ref(`posts/${postId}/comments`).push({
-        text: text,
-        authorName: currentUser.displayName || 'Ẩn danh',
-        uid: currentUser.uid,
-        timestamp: Date.now()
-    });
-    input.value = '';
-    if(authorId !== currentUser.uid) pushNotification(authorId, 'comment', 'đã bình luận bài viết của bạn.');
+    // Check notification for posts
+    if(posts.length > 0) {
+        const lastPost = posts[0]; // Newest because sorted
+        if(currentUser && lastPost.authorId !== currentUser.uid) {
+             // Logic thông báo đơn giản
+        }
+    }
 }
-
 function openCreatePost() {
     if (!currentUser) { alert("Bạn cần đăng nhập để đăng bài."); openAuthModal('login'); return; }
     document.getElementById('postContent').value = ''; openModal('postModal');
@@ -589,11 +483,7 @@ function submitPost() {
     }, 5000);
 
     db.ref('posts').push({
-        content: content, 
-        authorEmail: currentUser.email, 
-        authorName: currentUser.displayName || 'User',
-        authorId: currentUser.uid, 
-        createdAt: new Date().toISOString()
+        content: content, authorEmail: currentUser.email, authorId: currentUser.uid, createdAt: new Date().toISOString()
     }, (error) => {
         clearTimeout(failsafe);
         btn.textContent = oldText; btn.disabled = false; btn.style.opacity = "1";
@@ -602,314 +492,19 @@ function submitPost() {
     });
 }
 
-// 5. NOTIFICATIONS
-function pushNotification(targetUid, type, msg) {
-    db.ref(`notifications/${targetUid}`).push({
-        fromName: currentUser.displayName || 'Ai đó',
-        type: type,
-        message: msg,
-        read: false,
-        timestamp: Date.now()
-    });
-}
-
-function loadNotifications() {
-    if(!currentUser) return;
-    db.ref(`notifications/${currentUser.uid}`).limitToLast(20).on('value', snap => {
-        const list = document.getElementById('notification-list');
-        const badge = document.getElementById('notif-badge');
-        let html = '';
-        let count = 0;
-        
-        if(!snap.val()) {
-            list.innerHTML = '<div style="padding:10px;text-align:center;">Không có thông báo.</div>';
-            badge.style.display = 'none';
-            return;
-        }
-
-        const notifs = [];
-        snap.forEach(c => notifs.push({id:c.key, ...c.val()}));
-        notifs.reverse().forEach(n => {
-            if(!n.read) count++;
-            let extra = '';
-            if(n.type === 'invite') {
-                extra = `<div class="notif-btn-group">
-                    <button class="btn btn-small" onclick="acceptGroup('${n.id}', '${n.groupId}')">Chấp nhận</button>
-                </div>`;
-            }
-            html += `<div class="notif-item">
-                <div style="font-weight:bold;">${n.fromName}</div>
-                <div>${n.message}${extra}</div>
-            </div>`;
-        });
-
-        list.innerHTML = html || 'Không có thông báo.';
-        if(count > 0) { badge.textContent = count; badge.style.display = 'block'; }
-        else badge.style.display = 'none';
-    });
-}
-
-function toggleNotifList() {
-    const l = document.getElementById('notification-list');
-    l.classList.toggle('show');
-    if(l.classList.contains('show') && currentUser) {
-        // Mark all as read visual (thực tế nên update db)
-        document.getElementById('notif-badge').style.display = 'none';
-    }
-}
-
-// 6. CHAT SYSTEM (1-1 & GROUP)
-function toggleChatBubble() { 
-    const c = document.getElementById('chat-bubble-container');
-    c.classList.toggle('hidden'); 
-    if(!c.classList.contains('hidden') && !currentChatId) loadUserList();
-}
-function toggleMinimizeChat() { document.getElementById('chat-bubble-container').classList.toggle('minimized'); }
-
-function loadUserList() {
-    document.getElementById('chat-user-list').style.display = 'block';
-    document.getElementById('chat-conversation').style.display = 'none';
-    document.getElementById('chatBackBtn').style.display = 'none';
-    document.getElementById('chatTitleText').textContent = 'XingFace Chat';
-    
-    if(currentChatRef) { currentChatRef.off(); currentChatRef = null; }
-
-    // Load Users
-    db.ref('users').once('value', snapshot => {
-        let html = '';
-        snapshot.forEach(child => {
-            const u = child.val();
-            u.uid = child.key;
-            if(currentUser && u.uid === currentUser.uid) return;
-            
-            const isOnline = u.status === 'online';
-            let timeText = isOnline ? 'Đang hoạt động' : 'Offline';
-            if(!isOnline && u.lastSeen) {
-                const diff = Math.floor((Date.now() - u.lastSeen)/60000);
-                timeText = diff < 60 ? `${diff} phút trước` : `Hơn 1 giờ trước`;
-            }
-
-            html += `
-            <div class="chat-user-item" onclick="openPrivateChat('${u.uid}', '${u.name}')">
-                <div class="chat-user-avatar">
-                    ${u.name.charAt(0).toUpperCase()}
-                    <div class="chat-user-status-dot ${isOnline?'online':''}"></div>
-                </div>
-                <div class="chat-user-info">
-                    <h4>${u.name}</h4>
-                    <p>${timeText}</p>
-                </div>
-            </div>`;
-        });
-        
-        // Load Groups
-        if(currentUser) {
-            db.ref(`user_groups/${currentUser.uid}`).once('value', gSnap => {
-                gSnap.forEach(g => {
-                    html = `
-                    <div class="chat-user-item" style="border-left:4px solid var(--accent-orange)" onclick="openGroupChat('${g.key}', '${g.val().name}')">
-                        <div class="chat-user-avatar" style="background:var(--accent-orange)">G</div>
-                        <div class="chat-user-info"><h4>${g.val().name}</h4><p>Nhóm</p></div>
-                    </div>` + html;
-                });
-                document.getElementById('chat-users-content').innerHTML = html || '<div style="text-align:center;padding:20px;">Chưa có ai.</div>';
-            });
-        } else {
-            document.getElementById('chat-users-content').innerHTML = html;
-        }
-    });
-}
-
-// 1-1 Chat
-function openPrivateChat(partnerUid, partnerName) {
-    if(!currentUser) return openAuthModal('login');
-    const chatId = currentUser.uid < partnerUid ? `${currentUser.uid}_${partnerUid}` : `${partnerUid}_${currentUser.uid}`;
-    setupChatInterface(chatId, partnerName, false);
-}
-
-// Group Chat
-function openGroupChat(groupId, groupName) {
-    setupChatInterface(groupId, groupName, true);
-}
-
-function setupChatInterface(chatId, title, isGroup) {
-    currentChatId = chatId;
-    document.getElementById('chat-user-list').style.display = 'none';
-    document.getElementById('chat-conversation').style.display = 'flex';
-    document.getElementById('chatBackBtn').style.display = 'block';
-    document.getElementById('chatTitleText').textContent = title + (isGroup ? ' (Nhóm)' : '');
-    
-    const messagesArea = document.getElementById('chat-messages-area');
-    messagesArea.innerHTML = '';
-    
-    // Listen for Typing
-    db.ref(`typing/${chatId}`).on('value', snap => {
-        const val = snap.val();
-        const indicator = document.getElementById('typing-indicator');
-        let isTyping = false;
-        if(val) {
-            Object.keys(val).forEach(uid => {
-                if(uid !== currentUser.uid && val[uid]) isTyping = true;
-            });
-        }
-        indicator.style.display = isTyping ? 'block' : 'none';
-    });
-
-    // Listen messages
-    currentChatRef = db.ref(`chats/${chatId}/messages`);
-    currentChatRef.limitToLast(50).on('child_added', snapshot => {
-        const msg = snapshot.val();
-        const msgKey = snapshot.key;
-        appendChatMessage(msg, msgKey);
-        
-        // Mark seen if not me
-        if(msg.senderId !== currentUser.uid && !msg.seen) {
-            db.ref(`chats/${chatId}/messages/${msgKey}`).update({seen: true});
-        }
-    });
-    
-    // Listen for seen updates
-    currentChatRef.limitToLast(50).on('child_changed', snapshot => {
-        const msg = snapshot.val();
-        if(msg.seen && msg.senderId === currentUser.uid) {
-            const el = document.getElementById(`seen-${snapshot.key}`);
-            if(el) el.textContent = 'Đã xem';
-        }
-    });
-}
-
-function backToUserList() {
-    loadUserList();
-}
-
-function appendChatMessage(msg, key) {
-    const area = document.getElementById('chat-messages-area');
-    const isMe = currentUser && msg.senderId === currentUser.uid;
-    
-    const div = document.createElement('div');
-    div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
-    
-    let content = msg.text;
-    // Check if it's a schedule
-    if(msg.type === 'schedule') {
-        content = `<div style="background:rgba(0,0,0,0.1);padding:5px;border-radius:5px;">📅 <b>Thời khóa biểu</b><br>${msg.text}</div>`;
-    }
-
-    div.innerHTML = `
-        ${!isMe ? `<div style="font-size:10px;font-weight:bold;margin-bottom:2px;">${msg.senderName}</div>` : ''}
-        ${content}
-        ${isMe ? `<div class="chat-msg-seen" id="seen-${key}">${msg.seen ? 'Đã xem' : ''}</div>` : ''}
-    `;
-    
-    area.appendChild(div);
-    area.scrollTop = area.scrollHeight;
-}
-
-function sendChatMessage() {
-    if(!currentUser || !currentChatId) return;
-    const input = document.getElementById('chatInput');
-    const text = input.value.trim();
-    if(!text) return;
-
-    db.ref(`chats/${currentChatId}/messages`).push({
-        text: text,
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName,
-        type: 'text',
-        seen: false,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    });
-    
-    input.value = '';
-    // Clear typing
-    db.ref(`typing/${currentChatId}/${currentUser.uid}`).remove();
-}
-
-function handleTyping() {
-    if(!currentUser || !currentChatId) return;
-    db.ref(`typing/${currentChatId}/${currentUser.uid}`).set(true);
-    
-    if(typingTimeout) clearTimeout(typingTimeout);
-    typingTimeout = setTimeout(() => {
-        db.ref(`typing/${currentChatId}/${currentUser.uid}`).remove();
-    }, 2000);
-}
-
-function handleChatEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
-
-// Schedule Sharing
-function sendScheduleToChat() {
-    if(!currentUser || !currentChatId) return;
-    const d = new Date().getDay();
-    const todaySch = scheduleData[d];
-    let text = `Thứ ${d===0?'Chủ Nhật':d+1}:<br>- Sáng: ${todaySch.morning.filter(x=>x).join(', ') || 'Nghỉ'}<br>- Chiều: ${todaySch.afternoon.filter(x=>x).join(', ') || 'Nghỉ'}`;
-    
-    db.ref(`chats/${currentChatId}/messages`).push({
-        text: text,
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName,
-        type: 'schedule',
-        seen: false,
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    });
-}
-
-// Group Features
-function openGroupCreate() {
-    if(!currentUser) return openAuthModal('login');
-    const name = prompt("Nhập tên nhóm:");
-    if(!name) return;
-    
-    const newGroupRef = db.ref('groups').push();
-    const groupId = newGroupRef.key;
-    
-    newGroupRef.set({
-        name: name,
-        owner: currentUser.uid,
-        members: { [currentUser.uid]: true }
-    }).then(() => {
-        db.ref(`user_groups/${currentUser.uid}/${groupId}`).set({name: name});
-        loadUserList();
-    });
-}
-
-function acceptGroup(notifId, groupId) {
-    // Add user to group
-    db.ref(`groups/${groupId}/members/${currentUser.uid}`).set(true);
-    // Get group name first
-    db.ref(`groups/${groupId}/name`).once('value', s => {
-        db.ref(`user_groups/${currentUser.uid}/${groupId}`).set({name: s.val()});
-        // Remove notification
-        db.ref(`notifications/${currentUser.uid}/${notifId}`).remove();
-        alert("Đã vào nhóm!");
-        loadNotifications();
-    });
-}
-
-// 7. OTHER UTILS (FIXED PASSWORD SAVE)
-async function savePassword(){
-    const s=document.getElementById('passwordService').value,u=document.getElementById('passwordUsername').value,p=document.getElementById('passwordValue').value;
-    if(!s||!p)return alert("Thiếu thông tin");
-    
-    // FIX: Lock button
-    const btn = document.getElementById('btnSavePw');
-    btn.disabled = true; btn.textContent = "Đang lưu...";
-    
-    const a=[...DB.get('passwords')];
-    a.unshift({id:Date.now(),service:s,username:u,password:p});
-    await DB.save('passwords',a);
-    
-    btn.disabled = false; btn.textContent = "Lưu";
-    closeModal('passwordModal');
-}
-
-// ... (Các hàm Schedule, Finance, Theme giữ nguyên như cũ để tiết kiệm chỗ, logic vẫn chạy tốt)
+// 5. SCHEDULE & FINANCE & PASSWORDS (GIỮ NGUYÊN)
+const scheduleData=[{dayName:'Chủ Nhật',morning:['','','','',''],afternoon:['','','','','']},{dayName:'Thứ Hai',morning:['LS&ĐL (Sử) – Giang','Toán – Đ. Mai','Toán – Đ. Mai','Tin – Ánh','KHTN (Sinh) – P. Nhung'],afternoon:['C.Nghệ – H. Vân','LS&ĐL (Địa) – H. Nhung','Nghệ thuật (AN) – T. Nga','','','']},{dayName:'Thứ Ba',morning:['Toán – Đ. Mai','T.Anh - Đ.Oanh','GDCD – Huệ','KHTN (Hóa) – P. Nhung','KHTN (Lý) – T. Thùy'],afternoon:['Nghệ thuật (MT) – Thùy','GDTC – Tuấn','C.Nghệ – H. Vân','','','']},{dayName:'Thứ Tư',morning:['Văn – Đ. Hoa','Văn – Đ. Hoa','LS&ĐL (Sử) – Giang','T.Anh – D. Oanh','KHTN (Lý) – T. Thùy'],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','','']},{dayName:'Thứ Năm',morning:['HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhungg',''],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','']},{dayName:'Thứ Sáu',morning:['GDTC – Tuấn','Văn – D. Hoa','GDĐP – H. Vân','T.Anh – D. Oanh','KHTN (Hóa) – P. Nhung'],afternoon:['','','','','']},{dayName:'Thứ Bảy',morning:['','','','',''],afternoon:['','','','','']}];
+let lastRenderedDay=-1;
+function updateClockAndSchedule(){const n=new Date();document.getElementById('clock-time').textContent=n.toLocaleTimeString('vi-VN');if(n.getDay()!==lastRenderedDay){renderFullSchedule(n);lastRenderedDay=n.getDay()}}
+function renderFullSchedule(n){const d=n.getDay();document.getElementById('clock-date').textContent=n.toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});const t=scheduleData[d];let h=`<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin-bottom:16px;font-size:20px;font-weight:600;">Hôm nay</h3><button class="data-btn" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;const o=t.morning.every(s=>!s)&&t.afternoon.every(s=>!s);if(o)h+=`<div class="schedule-item schedule-item-off"><div>Được nghỉ</div><span>Nghỉ</span></div>`;else{h+=`<h3 style="font-size:16px;margin:0 0 10px 4px;">Sáng</h3>`;t.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div><span>Sáng</span></div>`);h+=`<h3 style="font-size:16px;margin:20px 0 10px 4px;">Chiều</h3>`;t.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div><span>Chiều</span></div>`)}document.getElementById('today-schedule').innerHTML=h;document.getElementById('future-schedule').innerHTML=`<h3>Sắp tới</h3>`+[1,2,3,4,5,6].map(k=>{const f=scheduleData[(d+k)%7];const x=f.morning.some(s=>s)||f.afternoon.some(s=>s);return`<div class="schedule-item ${!x?'schedule-item-off':''}"><div>${f.dayName}</div><span>${x?'Đi học':'Nghỉ'}</span></div>`}).join('')}
+function toggleTomorrowSchedule(){const c=document.getElementById('tomorrow-details-container'),b=document.getElementById('toggle-tomorrow-btn');if(c.style.display==='block'){c.style.display='none';b.textContent='Xem ngày mai'}else{const t=scheduleData[(new Date().getDay()+1)%7];let h=`<h3>Ngày mai (${t.dayName})</h3>`;if(t.morning.every(s=>!s)&&t.afternoon.every(s=>!s))h+=`<div class="schedule-item schedule-item-off"><div>Nghỉ</div><span>Nghỉ</span></div>`;else{h+=`<h4>Sáng</h4>`;t.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div></div>`);h+=`<h4>Chiều</h4>`;t.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div></div>`)}c.innerHTML=h;c.style.display='block';b.textContent='Ẩn chi tiết'}}
 function renderFinance(txns){const n=new Date();const c=txns.filter(t=>new Date(t.date).getMonth()===n.getMonth());let i=0,e=0;c.forEach(t=>t.type==='income'?i+=t.amount:e+=t.amount);const f=v=>new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(v);document.getElementById('bal').textContent=f(i-e);document.getElementById('inc').textContent=f(i);document.getElementById('exp').textContent=f(e);document.getElementById('histList').innerHTML=c.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(t=>`<div class="txn-item"><div><div class="data-title">${t.category}</div><div class="data-subtitle">${t.note||''}</div></div><div class="txn-amount ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`).join('')}
 function openTxn(t){document.getElementById('type').value=t;openModal('txnModal')}
 async function saveTxn(){const a=parseFloat(document.getElementById('amt').value);if(!a)return;const t=[...DB.get('txns')];t.push({id:Date.now(),date:new Date().toISOString(),amount:a,category:document.getElementById('cat').value,note:document.getElementById('note').value,type:document.getElementById('type').value});await DB.save('txns',t);closeModal('txnModal')}
 function showLastMonthSummary(){const n=new Date();const p=new Date(n.getFullYear(),n.getMonth()-1,1);const e=DB.get('txns').filter(t=>t.type==='expense'&&new Date(t.date).getMonth()===p.getMonth());const s=document.getElementById('summaryContent');if(e.length===0)s.innerHTML='<p style="text-align:center">Không có dữ liệu.</p>';else{const c={};e.forEach(t=>c[t.category]=(c[t.category]||0)+t.amount);s.innerHTML=Object.entries(c).sort(([,a],[,b])=>b-a).map(([k,v])=>`<div class="txn-item"><div>${k}</div><div class="red">-${new Intl.NumberFormat('vi-VN').format(v)}₫</div></div>`).join('')}openModal('summaryModal')}
 function renderPasswords(a){document.getElementById('passwordsList').innerHTML=a.map(p=>`<div class="data-card"><div class="data-title">${p.service}</div><div class="password-value-container">${p.username}</div><div class="password-value-container">${p.password}</div><button class="data-btn delete" onclick="if(confirm('Xóa?')) DB.save('passwords',DB.get('passwords').filter(x=>x.id!=${p.id}))">Xóa</button></div>`).join('')}
 function openPasswordModal(){document.getElementById('passwordService').value='';document.getElementById('passwordUsername').value='';document.getElementById('passwordValue').value='';openModal('passwordModal')}
+async function savePassword(){const s=document.getElementById('passwordService').value,u=document.getElementById('passwordUsername').value,p=document.getElementById('passwordValue').value;if(!s||!p)return alert("Thiếu thông tin");const a=[...DB.get('passwords')];a.unshift({id:Date.now(),service:s,username:u,password:p});await DB.save('passwords',a);closeModal('passwordModal')}
 function goTo(s,e){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(s).classList.add('active');document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));e.classList.add('active');const b=document.getElementById('nav-active-bubble');b.style.width=e.offsetWidth+'px';b.style.left=e.offsetLeft+'px'}
 function toggleTheme(){const l=document.documentElement.classList.toggle('light-theme');localStorage.setItem('theme',l?'light':'dark')}
 function toggleKittyTheme(){const h=document.documentElement;const k=h.classList.contains('kitty-theme');const o=document.getElementById('kitty-transition-overlay');const l=document.getElementById('kitty-logo');o.classList.add('show');setTimeout(()=>{o.style.opacity='1';l.classList.add('show')},10);setTimeout(()=>{if(k){h.classList.remove('kitty-theme');localStorage.setItem('theme','dark')}else{h.classList.add('kitty-theme');localStorage.setItem('theme','kitty')}o.style.opacity='0';setTimeout(()=>{o.classList.remove('show');l.classList.remove('show')},500)},2000)}
@@ -918,6 +513,128 @@ function closeModal(id){document.getElementById(id).classList.remove('show')}
 function showToast(m){const t=document.createElement('div');t.className='copy-toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2000)}
 async function resetData(){if(confirm("Xóa toàn bộ dữ liệu?")){await DB.save('txns',[]);await DB.save('passwords',[]);alert("Đã xóa.")}}
 
+
+// ============================================
+// 6. CHAT 1-ON-1 SYSTEM (NEW)
+// ============================================
+const chatContainer = document.getElementById('chat-bubble-container');
+const userListView = document.getElementById('chat-user-list');
+const convoView = document.getElementById('chat-conversation');
+const chatTitle = document.getElementById('chatTitleText');
+const backBtn = document.getElementById('chatBackBtn');
+
+// Toggle Chat Bubble
+function toggleChatBubble() { 
+    chatContainer.classList.toggle('hidden'); 
+    document.getElementById('notif-badge').classList.remove('active');
+    // Mở lên thì hiện list user đầu tiên
+    if(!chatContainer.classList.contains('hidden') && !currentChatPartnerId) {
+        loadUserList();
+    }
+}
+function toggleMinimizeChat() { chatContainer.classList.toggle('minimized'); }
+
+// Load danh sách Users
+function loadUserList() {
+    userListView.style.display = 'block';
+    convoView.style.display = 'none';
+    backBtn.style.display = 'none';
+    chatTitle.textContent = 'Thành viên';
+    currentChatPartnerId = null;
+    
+    // Reset listener cũ
+    if(currentChatRef) { currentChatRef.off(); currentChatRef = null; }
+
+    db.ref('users').once('value', snapshot => {
+        const users = [];
+        snapshot.forEach(child => {
+            const u = child.val();
+            u.uid = child.key;
+            if(currentUser && u.uid === currentUser.uid) return; // Bỏ qua bản thân
+            users.push(u);
+        });
+
+        if(users.length === 0) {
+            userListView.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Chưa có thành viên khác online/đăng ký.</div>';
+            return;
+        }
+
+        userListView.innerHTML = users.map(u => {
+            const shortName = u.email.split('@')[0];
+            const isOnline = u.status === 'online';
+            return `
+            <div class="chat-user-item" onclick="openChatWith('${u.uid}', '${shortName}')">
+                <div class="chat-user-avatar">
+                    ${shortName.charAt(0).toUpperCase()}
+                    <div class="chat-user-status-dot ${isOnline?'online':''}"></div>
+                </div>
+                <div class="chat-user-info">
+                    <h4>${shortName}</h4>
+                    <p>${isOnline ? 'Đang hoạt động' : 'Offline'}</p>
+                </div>
+            </div>`;
+        }).join('');
+    });
+}
+
+// Mở chat với 1 người
+function openChatWith(partnerUid, partnerName) {
+    if(!currentUser) { alert("Vui lòng đăng nhập để chat."); openAuthModal('login'); return; }
+    
+    currentChatPartnerId = partnerUid;
+    userListView.style.display = 'none';
+    convoView.style.display = 'flex';
+    backBtn.style.display = 'block';
+    chatTitle.textContent = partnerName;
+    
+    const messagesArea = document.getElementById('chat-messages-area');
+    messagesArea.innerHTML = ''; // Xóa chat cũ
+    
+    // Tạo Chat ID (Unique ID giữa 2 người: luôn là uid nhỏ hơn + uid lớn hơn)
+    const chatId = currentUser.uid < partnerUid ? `${currentUser.uid}_${partnerUid}` : `${partnerUid}_${currentUser.uid}`;
+    
+    // Listen to messages
+    currentChatRef = db.ref('chats/' + chatId);
+    currentChatRef.limitToLast(50).on('child_added', snapshot => {
+        const msg = snapshot.val();
+        appendChatMessage(msg);
+    });
+}
+
+function backToUserList() {
+    loadUserList();
+}
+
+function appendChatMessage(msg) {
+    const area = document.getElementById('chat-messages-area');
+    const isMe = currentUser && msg.senderId === currentUser.uid;
+    
+    const div = document.createElement('div');
+    div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
+    div.textContent = msg.text;
+    
+    area.appendChild(div);
+    area.scrollTop = area.scrollHeight;
+}
+
+function sendChatMessage() {
+    if(!currentUser || !currentChatPartnerId) return;
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if(!text) return;
+
+    const chatId = currentUser.uid < currentChatPartnerId ? `${currentUser.uid}_${currentChatPartnerId}` : `${currentChatPartnerId}_${currentUser.uid}`;
+    
+    db.ref('chats/' + chatId).push({
+        text: text,
+        senderId: currentUser.uid,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    });
+    
+    input.value = '';
+}
+function handleChatEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
+
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClockAndSchedule, 1000); updateClockAndSchedule();
@@ -925,10 +642,9 @@ document.addEventListener('DOMContentLoaded', () => {
     DB.sync('passwords', renderPasswords);
     DB.sync('posts', renderCommunity);
 
+    // Theme logic & Kitty Float (Giữ nguyên)
     if(localStorage.getItem('theme')==='kitty') { document.documentElement.classList.add('kitty-theme'); document.getElementById('kitty-theme-toggle').classList.add('active'); }
     else if(localStorage.getItem('theme')==='light') { document.documentElement.classList.add('light-theme'); }
-    
-    // Kitty Float
     const kc = document.getElementById('kitty-float-container');
     for(let i=0;i<15;i++) {
         const k = document.createElement('img'); k.src="https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png";
