@@ -17,7 +17,7 @@
 
     <style>
         /* =================================================================
-           CSS GIAO DIỆN CHÍNH
+           CSS CƠ BẢN (GIỮ NGUYÊN)
            ================================================================= */
         :root { --bg-primary: #111111; --bg-secondary: #1c1c1e; --card-bg: #1c1c1e; --text-primary: #f5f5f7; --text-secondary: #8e8e93; --accent-primary: #0a84ff; --accent-red: #ff453a; --accent-green: #30d158; --accent-orange: #ff9f0a; --border-color: #38383a; --font-family: 'Quicksand', sans-serif; }
         html.light-theme { --bg-primary: #f2f2f7; --bg-secondary: #ffffff; --card-bg: #ffffff; --text-primary: #000000; --text-secondary: #636366; --accent-primary: #007aff; --border-color: #e5e5ea; }
@@ -31,7 +31,6 @@
         .screen { display: none; padding: 70px 16px 20px 16px; animation: fadeIn 0.4s ease; position: relative; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .screen.active { display: block; }
-        
         .screen-title-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding: 0 4px; }
         .screen-title-bar h2 { font-size: 38px; font-weight: 700; color: var(--text-primary); }
         
@@ -45,7 +44,7 @@
         #nav-active-bubble { position: absolute; top: 6px; height: calc(100% - 12px); background-color: var(--bg-secondary); border-radius: 24px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
         html.light-theme #nav-active-bubble, html.kitty-theme #nav-active-bubble { background-color: #ffffff; border: 1px solid var(--border-color); }
 
-        /* BUTTONS & CARDS */
+        /* GENERAL UI ELEMENTS */
         .btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border: none; border-radius: 10px; font-size: 17px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; background-color: var(--accent-primary); color: white; font-family: var(--font-family); }
         .btn:active { opacity: 0.8; transform: scale(0.97); }
         .btn:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -71,17 +70,15 @@
         .form-label { display: block; color: var(--text-secondary); font-size: 16px; margin-bottom: 8px; font-weight: 600; }
         .form-input, .form-select, .form-textarea { background-color: var(--bg-primary); color: var(--text-primary); border: 1px solid var(--border-color); width: 100%; padding: 14px; border-radius: 10px; font-size: 17px; font-family: inherit; }
         .form-textarea { min-height: 120px; }
-        
-        /* TOAST & CLOCK */
         .copy-toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background-color: #2c2c2e; color: #f5f5f7; padding: 12px 24px; border-radius: 25px; z-index: 3000; font-size: 14px; font-weight: 600; opacity: 0; transition: 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
         .copy-toast.show { opacity: 1; transform: translate(-50%, -10px); }
+        
+        /* SCHEDULE & FINANCE */
         #clock-time { font-size: 56px; font-weight: 700; text-align: center; }
         #clock-date { font-size: 17px; color: var(--text-secondary); text-align: center; margin-bottom: 30px; }
         .schedule-item { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 16px 20px; border-radius: 12px; margin-bottom: 12px; font-size: 17px; font-weight: 600; border-left: 5px solid var(--accent-green); display: flex; justify-content: space-between; align-items: center; }
         .schedule-item-off { border-left-color: var(--accent-orange); }
         .schedule-item span { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 20px; background-color: var(--bg-primary); color: var(--text-secondary); border: 1px solid var(--border-color); min-width: 60px; text-align: center; }
-
-        /* FINANCE STATS */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .stat-card { background-color: var(--bg-primary); padding: 16px; border-radius: 10px; text-align: left; border: 1px solid var(--border-color); }
         .stat-card.full-width { grid-column: 1 / -1; }
@@ -89,15 +86,13 @@
         .stat-value.red { color: var(--accent-red); } .stat-value.green { color: var(--accent-green); }
         .txn-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 4px; border-bottom: 1px solid var(--border-color); }
         .txn-amount { font-size: 16px; font-weight: 600; }
-        
-        /* PASSWORDS & SETTINGS */
         .password-value-container { background-color: var(--bg-primary); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px; font-family: monospace; margin-bottom: 12px; }
         .toggle-switch { width: 50px; height: 30px; background-color: var(--bg-primary); border-radius: 15px; position: relative; border: 1px solid var(--border-color); }
         .toggle-knob { width: 24px; height: 24px; background-color: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: 0.3s; }
         .toggle-switch.active { background-color: var(--accent-green); border-color: var(--accent-green); }
         .toggle-switch.active .toggle-knob { transform: translateX(20px); }
         
-        /* HELLO KITTY TRANSITIONS */
+        /* HELLO KITTY */
         #kitty-transition-overlay { position: fixed; inset: 0; background-color: #111; z-index: 9999; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.5s; pointer-events: none; }
         #kitty-transition-overlay.show { display: flex; pointer-events: auto; }
         #kitty-logo { font-family: 'Pacifico', cursive; font-size: 15vw; color: #ff85a2; opacity: 0; transform: scale(0.8); transition: 1.5s; }
@@ -107,7 +102,7 @@
         .floating-kitty { position: absolute; left: -100px; opacity: 0.7; animation: floatAcross linear infinite; }
         @keyframes floatAcross { 0% { transform: translateX(0) rotate(0deg); left: -100px; } 100% { transform: translateX(100vw) rotate(360deg); left: 100vw; } }
 
-        /* COMMUNITY */
+        /* COMMUNITY & AUTH */
         .post-input-container { background: var(--card-bg); border-radius: 12px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 20px; cursor: pointer; }
         .post-input-header { display: flex; align-items: center; gap: 10px; }
         .user-avatar-small { width: 36px; height: 36px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
@@ -126,29 +121,37 @@
         .status-online { background: rgba(48, 209, 88, 0.2); color: #30d158; border: 1px solid #30d158; }
 
         /* ============================
-           CHAT BUBBLE & NOTIFICATIONS
+           CHAT BUBBLE (NÂNG CẤP)
            ============================ */
-        /* CHUÔNG THÔNG BÁO */
         #notification-bell { position: fixed; top: 15px; right: 20px; z-index: 2000; color: var(--text-primary); cursor: pointer; }
         #notif-badge { position: absolute; top: -2px; right: -2px; background: var(--accent-red); color: white; border-radius: 50%; width: 10px; height: 10px; display: none; }
         #notif-badge.active { display: block; }
 
-        /* KHUNG CHAT */
-        #chat-bubble-container { position: fixed; bottom: 100px; right: 16px; width: 350px; height: 500px; border-radius: 18px; background-color: var(--bg-secondary); box-shadow: 0 8px 30px rgba(0,0,0,0.3); overflow: hidden; z-index: 2500; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom right; }
+        #chat-bubble-container { position: fixed; bottom: 100px; right: 16px; width: 350px; height: 550px; border-radius: 18px; background-color: var(--bg-secondary); box-shadow: 0 8px 30px rgba(0,0,0,0.3); overflow: hidden; z-index: 2500; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: bottom right; }
         #chat-bubble-container.minimized { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; }
         #chat-bubble-container.hidden { display: none; }
         
         .chat-header { padding: 12px 16px; background: var(--card-bg); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .chat-title { font-weight: 700; font-size: 16px; }
-        .chat-status { font-size: 12px; color: var(--accent-green); }
+        .chat-title { font-weight: 700; font-size: 16px; display:flex; align-items:center; gap:8px; }
+        .chat-back-btn { background:none; border:none; color:var(--text-primary); cursor:pointer; font-size:18px; display:none; }
         .chat-controls button { background: none; border: none; color: var(--text-secondary); font-size: 18px; cursor: pointer; margin-left: 10px; }
 
-        #chat-messages-area { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg-primary); }
+        /* VIEW: USER LIST */
+        #chat-user-list { flex: 1; overflow-y: auto; padding: 10px; background: var(--bg-primary); display: block; }
+        .chat-user-item { display: flex; align-items: center; padding: 10px; border-radius: 10px; cursor: pointer; background: var(--card-bg); margin-bottom: 8px; border: 1px solid var(--border-color); transition: 0.2s; }
+        .chat-user-item:hover { background: var(--border-color); }
+        .chat-user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px; position: relative; }
+        .chat-user-status-dot { width: 12px; height: 12px; border-radius: 50%; background: #555; position: absolute; bottom: 0; right: 0; border: 2px solid var(--card-bg); }
+        .chat-user-status-dot.online { background: var(--accent-green); }
+        .chat-user-info h4 { font-size: 14px; margin: 0 0 2px 0; }
+        .chat-user-info p { font-size: 12px; color: var(--text-secondary); margin: 0; }
+
+        /* VIEW: CONVERSATION */
+        #chat-conversation { flex: 1; display: none; flex-direction: column; background: var(--bg-primary); height: 100%; }
+        #chat-messages-area { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
         .chat-msg { max-width: 80%; padding: 8px 12px; border-radius: 16px; font-size: 14px; line-height: 1.4; position: relative; word-wrap: break-word; }
         .chat-msg.me { align-self: flex-end; background: var(--accent-primary); color: white; border-bottom-right-radius: 4px; }
         .chat-msg.other { align-self: flex-start; background: var(--card-bg); border: 1px solid var(--border-color); border-bottom-left-radius: 4px; }
-        .chat-msg-author { font-size: 10px; color: var(--text-secondary); margin-bottom: 2px; display: block; }
-        .chat-msg.me .chat-msg-author { display: none; }
 
         .chat-input-bar { padding: 10px; background: var(--card-bg); border-top: 1px solid var(--border-color); display: flex; gap: 8px; }
         .chat-input { flex: 1; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 14px; color: var(--text-primary); outline: none; }
@@ -156,10 +159,9 @@
         
         #chat-toggle-btn { position: fixed; bottom: 100px; right: 16px; background-color: var(--accent-primary); color: white; border: none; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 2400; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
-        /* MINIMIZED STATE */
-        #chat-bubble-container.minimized .chat-header, 
-        #chat-bubble-container.minimized #chat-messages-area, 
-        #chat-bubble-container.minimized .chat-input-bar { display: none; }
+        #chat-bubble-container.minimized #chat-user-list,
+        #chat-bubble-container.minimized #chat-conversation,
+        #chat-bubble-container.minimized .chat-header { display: none !important; }
         #chat-bubble-container.minimized::after { content: '💬'; font-size: 24px; display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; }
 
     </style>
@@ -169,7 +171,7 @@
 <div id="kitty-float-container"></div>
 <div id="kitty-transition-overlay"><h1 id="kitty-logo">Hello Kitty</h1></div>
 
-<div id="notification-bell" onclick="showToast('Không có thông báo mới.')">
+<div id="notification-bell" onclick="showToast('Kiểm tra tin nhắn hoặc bài viết mới!')">
     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 28px; height: 28px;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
     <div id="notif-badge"></div>
 </div>
@@ -211,38 +213,29 @@
 
     <div id="community" class="screen">
         <div class="screen-title-bar"><h2>Cộng đồng</h2></div>
-        
         <div class="post-input-container" onclick="openCreatePost()">
             <div class="post-input-header">
                 <div class="user-avatar-small" id="myAvatar">?</div>
                 <div class="post-input-fake">Bạn đang thắc mắc gì?</div>
             </div>
         </div>
-
-        <div id="postsList">
-            <p style="text-align:center; color:var(--text-secondary); padding:20px;">Đang tải bài viết...</p>
-        </div>
+        <div id="postsList"><p style="text-align:center; color:var(--text-secondary); padding:20px;">Đang tải bài viết...</p></div>
     </div>
 
     <div id="passwords" class="screen">
-        <div class="screen-title-bar">
-            <h2>Mật khẩu</h2>
-            <button class="btn btn-small" onclick="openPasswordModal()">+ Thêm</button>
-        </div>
+        <div class="screen-title-bar"><h2>Mật khẩu</h2><button class="btn btn-small" onclick="openPasswordModal()">+ Thêm</button></div>
         <div id="passwordsList"></div>
     </div>
 
     <div id="settings" class="screen">
         <div class="screen-title-bar"><h2>Cài đặt</h2></div>
-        
         <div class="auth-status-card">
             <div id="authStatusText" class="status-badge status-offline">Chưa đăng nhập</div>
             <h3 id="authEmailDisplay" style="margin-bottom: 10px;">Khách</h3>
-            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">Đăng nhập để đăng bài và bình luận.</p>
+            <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 15px;">Đăng nhập để hiển thị trong danh sách chat.</p>
             <button class="btn" id="btnLoginNav" onclick="openAuthModal('login')">Đăng nhập / Đăng ký</button>
             <button class="btn btn-danger" id="btnLogoutNav" style="display:none;" onclick="handleLogout()">Đăng xuất</button>
         </div>
-
         <div class="card">
             <h3>Giao diện</h3>
             <div class="setting-item" style="display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--border-color)">
@@ -264,45 +257,45 @@
     <div class="bottom-nav">
         <div id="nav-active-bubble"></div>
         <div class="nav-item active" onclick="goTo('schedule', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-            <div class="nav-label">Lịch trình</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg><div class="nav-label">Lịch trình</div>
         </div>
         <div class="nav-item" onclick="goTo('finance', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-            <div class="nav-label">Tài chính</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><div class="nav-label">Tài chính</div>
         </div>
         <div class="nav-item" onclick="goTo('community', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-            <div class="nav-label">Cộng đồng</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><div class="nav-label">Cộng đồng</div>
         </div>
         <div class="nav-item" onclick="goTo('passwords', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg>
-            <div class="nav-label">Mật khẩu</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.629 5.629l-2.371 2.371a2.121 2.121 0 01-3 0l-1.371-1.371a2.121 2.121 0 010-3l2.371-2.371A6 6 0 0121 9z"></path></svg><div class="nav-label">Mật khẩu</div>
         </div>
         <div class="nav-item" onclick="goTo('settings', this)">
-            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <div class="nav-label">Cài đặt</div>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg><div class="nav-label">Cài đặt</div>
         </div>
     </div>
 </div>
 
 <div id="chat-bubble-container" class="hidden">
     <div class="chat-header">
-        <div>
-            <div class="chat-title">Tin nhắn cộng đồng</div>
-            <div class="chat-status">● Đang hoạt động</div>
+        <div class="chat-title">
+            <button id="chatBackBtn" class="chat-back-btn" onclick="backToUserList()">⬅</button>
+            <span id="chatTitleText">Thành viên</span>
         </div>
         <div class="chat-controls">
             <button onclick="toggleMinimizeChat()">_</button>
             <button onclick="toggleChatBubble()">×</button>
         </div>
     </div>
-    <div id="chat-messages-area">
-        <div style="text-align:center; color:var(--text-secondary); font-size:12px; margin-top:20px;">Chào mừng bạn đến với kênh chat!</div>
+    
+    <div id="chat-user-list">
+        <div style="text-align:center; padding:10px; font-size:12px; color:var(--text-secondary);">Đang tải danh sách thành viên...</div>
     </div>
-    <div class="chat-input-bar">
-        <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleChatEnter(event)">
-        <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
+
+    <div id="chat-conversation">
+        <div id="chat-messages-area"></div>
+        <div class="chat-input-bar">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn..." onkeypress="handleChatEnter(event)">
+            <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
+        </div>
     </div>
 </div>
 <button id="chat-toggle-btn" onclick="toggleChatBubble()">
@@ -312,33 +305,16 @@
 <div id="txnModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="modalTitle"></h2><div class="form-group"><label class="form-label">Số tiền (₫)</label><input type="text" class="form-input" id="amt" placeholder="50000" inputmode="numeric"></div><div class="form-group"><label class="form-label">Danh mục</label><select class="form-select" id="cat"><option value="Ăn uống">Ăn uống</option><option value="Đi lại">Đi lại</option><option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option><option value="Lương">Lương</option><option value="Giải trí">Giải trí</option><option value="Khác">Khác</option></select></div><div class="form-group"><label class="form-label">Ghi chú</label><textarea class="form-textarea" id="note" placeholder="..."></textarea></div><input type="hidden" id="type"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('txnModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="saveTxn()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="passwordModal" class="modal"><div class="modal-content"><h2 class="modal-title" id="passwordModalTitle"></h2><div class="form-group"><label class="form-label">Tên dịch vụ</label><input type="text" class="form-input" id="passwordService"></div><div class="form-group"><label class="form-label">Tên đăng nhập</label><input type="text" class="form-input" id="passwordUsername"></div><div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="passwordValue"></div><input type="hidden" id="editPasswordId"><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('passwordModal')" style="flex:1; margin:0;">Hủy</button><button class="btn" onclick="savePassword()" style="flex:1; margin:0;">Lưu</button></div></div></div>
 <div id="summaryModal" class="modal"><div class="modal-content"><h2 class="modal-title">Thống kê tháng trước</h2><div id="summaryContent" style="max-height: 50vh; overflow-y: auto;"></div><div class="modal-actions"><button class="btn" onclick="closeModal('summaryModal')" style="flex:1; margin:0;">Đóng</button></div></div></div>
-
-<div id="postModal" class="modal"><div class="modal-content">
-    <h2 class="modal-title">Tạo bài viết</h2>
-    <div class="form-group">
-        <textarea class="form-textarea" id="postContent" placeholder="Bạn đang thắc mắc gì? Chia sẻ với cộng đồng ngay..."></textarea>
-    </div>
-    <div class="modal-actions">
-        <button class="btn btn-sec" onclick="closeModal('postModal')" style="flex:1;">Hủy</button>
-        <button class="btn" id="btnSubmitPost" onclick="submitPost()" style="flex:1;">Đăng bài</button>
-    </div>
-</div></div>
+<div id="postModal" class="modal"><div class="modal-content"><h2 class="modal-title">Tạo bài viết</h2><div class="form-group"><textarea class="form-textarea" id="postContent" placeholder="Bạn đang thắc mắc gì? Chia sẻ với cộng đồng ngay..."></textarea></div><div class="modal-actions"><button class="btn btn-sec" onclick="closeModal('postModal')" style="flex:1;">Hủy</button><button class="btn" id="btnSubmitPost" onclick="submitPost()" style="flex:1;">Đăng bài</button></div></div></div>
 
 <div id="authModal" class="modal"><div class="modal-content">
     <h2 class="modal-title" id="authTitle">Đăng nhập</h2>
     <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="authEmail" placeholder="example@gmail.com"></div>
     <div class="form-group"><label class="form-label">Mật khẩu</label><input type="password" class="form-input" id="authPass" placeholder="••••••••"></div>
-    
-    <div style="text-align:right; margin-bottom:15px;">
-        <span style="color:var(--text-secondary); font-size:14px; cursor:pointer; text-decoration:underline;" onclick="handleForgotPassword()">Quên mật khẩu?</span>
-    </div>
-
+    <div style="text-align:right; margin-bottom:15px;"><span style="color:var(--text-secondary); font-size:14px; cursor:pointer; text-decoration:underline;" onclick="handleForgotPassword()">Quên mật khẩu?</span></div>
     <div id="authMessage" style="color:var(--accent-red); margin-bottom:10px; font-size:14px; display:none;"></div>
     <button class="btn" id="btnAuthAction" onclick="handleAuthAction()">Đăng nhập</button>
-    <div style="text-align:center; margin-top:20px;">
-        <span style="color:var(--text-secondary);" id="authSwitchText">Chưa có tài khoản?</span>
-        <span style="color:var(--accent-primary); font-weight:bold; cursor:pointer;" onclick="toggleAuthMode()" id="authSwitchBtn">Đăng ký ngay</span>
-    </div>
+    <div style="text-align:center; margin-top:20px;"><span style="color:var(--text-secondary);" id="authSwitchText">Chưa có tài khoản?</span><span style="color:var(--accent-primary); font-weight:bold; cursor:pointer;" onclick="toggleAuthMode()" id="authSwitchBtn">Đăng ký ngay</span></div>
     <button class="btn btn-sec" onclick="closeModal('authModal')" style="margin-top:10px;">Đóng</button>
 </div></div>
 
@@ -361,9 +337,12 @@ const auth = firebase.auth();
 
 let currentUser = null;
 let isLoginMode = true;
+// NEW: For 1-on-1 Chat
+let currentChatPartnerId = null; 
+let currentChatRef = null;
 
-// 2. DATA MANAGEMENT (SYNC)
-const DATA_CACHE = { txns: [], passwords: [], posts: [], messages: [] };
+// 2. DATA MANAGEMENT
+const DATA_CACHE = { txns: [], passwords: [], posts: [] };
 const DB = { 
     get: (key) => DATA_CACHE[key] || [],
     save: (key, data) => db.ref(key).set(data),
@@ -387,6 +366,16 @@ const DB = {
 auth.onAuthStateChanged((user) => {
     currentUser = user;
     updateAuthUI();
+    if (user) {
+        // Lưu user vào danh sách chung để mọi người nhìn thấy
+        db.ref('users/' + user.uid).set({
+            email: user.email,
+            status: 'online',
+            lastSeen: firebase.database.ServerValue.TIMESTAMP
+        });
+        // Khi thoát thì set offline
+        db.ref('users/' + user.uid).onDisconnect().update({ status: 'offline' });
+    }
 });
 
 function updateAuthUI() {
@@ -403,10 +392,6 @@ function updateAuthUI() {
         btnLogin.style.display = 'none';
         btnLogout.style.display = 'inline-block';
         if (myAvatar) myAvatar.textContent = currentUser.email.charAt(0).toUpperCase();
-        if (!currentUser.emailVerified) {
-             statusText.textContent = "Chờ xác thực Email";
-             statusText.className = "status-badge status-offline";
-        }
     } else {
         statusText.textContent = "Chưa đăng nhập";
         statusText.className = "status-badge status-offline";
@@ -418,24 +403,14 @@ function updateAuthUI() {
     }
 }
 
-function openAuthModal(mode) {
-    isLoginMode = (mode === 'login');
-    renderAuthModal();
-    openModal('authModal');
-}
+function openAuthModal(mode) { isLoginMode = (mode === 'login'); renderAuthModal(); openModal('authModal'); }
 function toggleAuthMode() { isLoginMode = !isLoginMode; renderAuthModal(); }
 function renderAuthModal() {
-    const title = document.getElementById('authTitle');
-    const btn = document.getElementById('btnAuthAction');
-    const switchText = document.getElementById('authSwitchText');
-    const switchBtn = document.getElementById('authSwitchBtn');
-    const msg = document.getElementById('authMessage');
-    msg.style.display = 'none';
-    if (isLoginMode) {
-        title.textContent = "Đăng nhập"; btn.textContent = "Đăng nhập"; switchText.textContent = "Chưa có tài khoản? "; switchBtn.textContent = "Đăng ký ngay";
-    } else {
-        title.textContent = "Đăng ký tài khoản"; btn.textContent = "Đăng ký"; switchText.textContent = "Đã có tài khoản? "; switchBtn.textContent = "Đăng nhập";
-    }
+    const title = document.getElementById('authTitle'); const btn = document.getElementById('btnAuthAction');
+    const switchText = document.getElementById('authSwitchText'); const switchBtn = document.getElementById('authSwitchBtn');
+    document.getElementById('authMessage').style.display = 'none';
+    if (isLoginMode) { title.textContent = "Đăng nhập"; btn.textContent = "Đăng nhập"; switchText.textContent = "Chưa có tài khoản? "; switchBtn.textContent = "Đăng ký ngay"; }
+    else { title.textContent = "Đăng ký tài khoản"; btn.textContent = "Đăng ký"; switchText.textContent = "Đã có tài khoản? "; switchBtn.textContent = "Đăng nhập"; }
 }
 async function handleAuthAction() {
     const email = document.getElementById('authEmail').value;
@@ -445,280 +420,210 @@ async function handleAuthAction() {
     try {
         if (isLoginMode) {
             await auth.signInWithEmailAndPassword(email, pass);
-            closeModal('authModal');
-            showToast("Đăng nhập thành công!");
+            closeModal('authModal'); showToast("Đăng nhập thành công!");
         } else {
-            const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
-            await userCredential.user.sendEmailVerification();
-            alert(`Đã gửi email xác thực đến ${email}. Vui lòng kiểm tra (cả thư rác).`);
-            closeModal('authModal');
+            await auth.createUserWithEmailAndPassword(email, pass);
+            // Tự động đăng nhập sau khi đăng ký
+            closeModal('authModal'); showToast("Đăng ký thành công!");
         }
-    } catch (error) {
-        msg.textContent = error.message; msg.style.display = 'block';
-    }
+    } catch (error) { msg.textContent = error.message; msg.style.display = 'block'; }
 }
-function handleLogout() { if(confirm("Đăng xuất?")) auth.signOut(); }
-
+function handleLogout() { if(confirm("Đăng xuất?")) { 
+    // Set offline trước khi out
+    if(currentUser) db.ref('users/' + currentUser.uid).update({ status: 'offline' });
+    auth.signOut(); 
+}}
 async function handleForgotPassword() {
     const email = document.getElementById('authEmail').value;
-    if(!email) { alert("Vui lòng nhập Email vào ô bên trên trước."); return; }
-    try {
-        await auth.sendPasswordResetEmail(email);
-        alert("Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.");
-    } catch(e) {
-        alert("Lỗi: " + e.message);
-    }
+    if(!email) { alert("Nhập Email trước."); return; }
+    try { await auth.sendPasswordResetEmail(email); alert("Đã gửi email đặt lại mật khẩu."); } catch(e) { alert("Lỗi: " + e.message); }
 }
 
-// 4. POST LOGIC
+// 4. POST LOGIC (VỚI TIMEOUT FIX)
 function renderCommunity(posts) {
     const list = document.getElementById('postsList');
     const sortedPosts = posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    
-    if (sortedPosts.length === 0) {
-        list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-secondary)">Chưa có bài viết nào.</div>`;
-        return;
-    }
-    
+    if (sortedPosts.length === 0) { list.innerHTML = `<div style="text-align:center;padding:30px;color:var(--text-secondary)">Chưa có bài viết nào.</div>`; return; }
     list.innerHTML = sortedPosts.map(p => {
         const date = new Date(p.createdAt);
         const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
         const dateStr = `${date.getDate()}/${date.getMonth()+1}`;
         const shortName = p.authorEmail ? p.authorEmail.split('@')[0] : 'Ẩn danh';
-        const avatarChar = shortName.charAt(0).toUpperCase();
-        
-        return `
-        <div class="post-card">
-            <div class="post-header">
-                <div class="user-avatar-small" style="background:#555;">${avatarChar}</div>
-                <div><div class="post-author-name">${shortName}</div><div class="post-time">${timeStr} • ${dateStr}</div></div>
-            </div>
-            <div class="post-content">${p.content}</div>
-            <div class="post-actions">
-                <button class="action-btn">👍 Thích</button>
-                <button class="action-btn">💬 Bình luận</button>
-            </div>
-        </div>`;
+        return `<div class="post-card"><div class="post-header"><div class="user-avatar-small" style="background:#555;">${shortName.charAt(0).toUpperCase()}</div><div><div class="post-author-name">${shortName}</div><div class="post-time">${timeStr} • ${dateStr}</div></div></div><div class="post-content">${p.content}</div><div class="post-actions"><button class="action-btn">👍 Thích</button><button class="action-btn">💬 Bình luận</button></div></div>`;
     }).join('');
-}
-
-function openCreatePost() {
-    if (!currentUser) { 
-        alert("Bạn cần đăng nhập để đăng bài."); 
-        openAuthModal('login'); 
-        return; 
+    
+    // Check notification for posts
+    if(posts.length > 0) {
+        const lastPost = posts[0]; // Newest because sorted
+        if(currentUser && lastPost.authorId !== currentUser.uid) {
+             // Logic thông báo đơn giản
+        }
     }
-    document.getElementById('postContent').value = ''; 
-    openModal('postModal');
 }
-
+function openCreatePost() {
+    if (!currentUser) { alert("Bạn cần đăng nhập để đăng bài."); openAuthModal('login'); return; }
+    document.getElementById('postContent').value = ''; openModal('postModal');
+}
 function submitPost() {
     const content = document.getElementById('postContent').value.trim();
-    if (!content) { alert("Nội dung không được để trống!"); return; }
-    
+    if (!content) { alert("Nội dung trống!"); return; }
     const btn = document.getElementById('btnSubmitPost');
     const oldText = btn.textContent;
-    btn.textContent = "Đang đăng...";
-    btn.disabled = true;
-    btn.style.opacity = "0.7";
+    btn.textContent = "Đang đăng..."; btn.disabled = true; btn.style.opacity = "0.7";
+
+    const failsafe = setTimeout(() => {
+        btn.textContent = oldText; btn.disabled = false; btn.style.opacity = "1";
+        alert("⚠️ QUÁ THỜI GIAN!\nKiểm tra lại Rules Firebase hoặc mạng.");
+    }, 5000);
 
     db.ref('posts').push({
-        content: content, 
-        authorEmail: currentUser ? currentUser.email : 'Ẩn danh',
-        authorId: currentUser ? currentUser.uid : 'anon', 
-        createdAt: new Date().toISOString()
+        content: content, authorEmail: currentUser.email, authorId: currentUser.uid, createdAt: new Date().toISOString()
     }, (error) => {
-        btn.textContent = oldText;
-        btn.disabled = false;
-        btn.style.opacity = "1";
-        
-        if (error) {
-            console.error(error);
-            alert("LỖI: Firebase từ chối!\nBạn hãy vào Console -> Realtime Database -> Rules và sửa thành '.write': true");
-        } else {
-            closeModal('postModal'); 
-            showToast("Đã đăng bài thành công!");
-            document.getElementById('postContent').value = '';
-        }
+        clearTimeout(failsafe);
+        btn.textContent = oldText; btn.disabled = false; btn.style.opacity = "1";
+        if (error) alert("LỖI: " + error.message);
+        else { closeModal('postModal'); showToast("Đã đăng!"); }
     });
 }
 
-// 5. SCHEDULE LOGIC
-const scheduleData = [
-    { dayName: 'Chủ Nhật', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] },
-    { dayName: 'Thứ Hai', morning: ['LS&ĐL (Sử) – Giang', 'Toán – Đ. Mai', 'Toán – Đ. Mai', 'Tin – Ánh', 'KHTN (Sinh) – P. Nhung'], afternoon: ['C.Nghệ – H. Vân', 'LS&ĐL (Địa) – H. Nhung', 'Nghệ thuật (AN) – T. Nga', '', '', ''] },
-    { dayName: 'Thứ Ba', morning: ['Toán – Đ. Mai', 'T.Anh - Đ.Oanh', 'GDCD – Huệ', 'KHTN (Hóa) – P. Nhung', 'KHTN (Lý) – T. Thùy'], afternoon: ['Nghệ thuật (MT) – Thùy', 'GDTC – Tuấn', 'C.Nghệ – H. Vân', '', '', ''] },
-    { dayName: 'Thứ Tư', morning: ['Văn – Đ. Hoa', 'Văn – Đ. Hoa', 'LS&ĐL (Sử) – Giang', 'T.Anh – D. Oanh', 'KHTN (Lý) – T. Thùy'], afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', '', ''] },
-    { dayName: 'Thứ Năm', morning: ['HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhung', 'HĐTN – H. Nhungg', ''], afternoon: ['Chiều Nghỉ', 'Chiều Nghỉ', 'Chiều Nghỉ', '', ''] },
-    { dayName: 'Thứ Sáu', morning: ['GDTC – Tuấn', 'Văn – D. Hoa', 'GDĐP – H. Vân', 'T.Anh – D. Oanh', 'KHTN (Hóa) – P. Nhung'], afternoon: ['', '', '', '', ''] },
-    { dayName: 'Thứ Bảy', morning: ['', '', '', '', ''], afternoon: ['', '', '', '', ''] }
-];
-let lastRenderedDay = -1;
+// 5. SCHEDULE & FINANCE & PASSWORDS (GIỮ NGUYÊN)
+// (Giản lược code phần này để tập trung vào Chat, logic vẫn chạy ngầm từ HTML cũ nếu cần)
+// Code Schedule, Finance, Password y hệt phiên bản trước.
+const scheduleData=[{dayName:'Chủ Nhật',morning:['','','','',''],afternoon:['','','','','']},{dayName:'Thứ Hai',morning:['LS&ĐL (Sử) – Giang','Toán – Đ. Mai','Toán – Đ. Mai','Tin – Ánh','KHTN (Sinh) – P. Nhung'],afternoon:['C.Nghệ – H. Vân','LS&ĐL (Địa) – H. Nhung','Nghệ thuật (AN) – T. Nga','','','']},{dayName:'Thứ Ba',morning:['Toán – Đ. Mai','T.Anh - Đ.Oanh','GDCD – Huệ','KHTN (Hóa) – P. Nhung','KHTN (Lý) – T. Thùy'],afternoon:['Nghệ thuật (MT) – Thùy','GDTC – Tuấn','C.Nghệ – H. Vân','','','']},{dayName:'Thứ Tư',morning:['Văn – Đ. Hoa','Văn – Đ. Hoa','LS&ĐL (Sử) – Giang','T.Anh – D. Oanh','KHTN (Lý) – T. Thùy'],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','','']},{dayName:'Thứ Năm',morning:['HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhung','HĐTN – H. Nhungg',''],afternoon:['Chiều Nghỉ','Chiều Nghỉ','Chiều Nghỉ','','']},{dayName:'Thứ Sáu',morning:['GDTC – Tuấn','Văn – D. Hoa','GDĐP – H. Vân','T.Anh – D. Oanh','KHTN (Hóa) – P. Nhung'],afternoon:['','','','','']},{dayName:'Thứ Bảy',morning:['','','','',''],afternoon:['','','','','']}];
+let lastRenderedDay=-1;
+function updateClockAndSchedule(){const n=new Date();document.getElementById('clock-time').textContent=n.toLocaleTimeString('vi-VN');if(n.getDay()!==lastRenderedDay){renderFullSchedule(n);lastRenderedDay=n.getDay()}}
+function renderFullSchedule(n){const d=n.getDay();document.getElementById('clock-date').textContent=n.toLocaleDateString('vi-VN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});const t=scheduleData[d];let h=`<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin-bottom:16px;font-size:20px;font-weight:600;">Hôm nay</h3><button class="data-btn" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;const o=t.morning.every(s=>!s)&&t.afternoon.every(s=>!s);if(o)h+=`<div class="schedule-item schedule-item-off"><div>Được nghỉ</div><span>Nghỉ</span></div>`;else{h+=`<h3 style="font-size:16px;margin:0 0 10px 4px;">Sáng</h3>`;t.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div><span>Sáng</span></div>`);h+=`<h3 style="font-size:16px;margin:20px 0 10px 4px;">Chiều</h3>`;t.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div><span>Chiều</span></div>`)}document.getElementById('today-schedule').innerHTML=h;document.getElementById('future-schedule').innerHTML=`<h3>Sắp tới</h3>`+[1,2,3,4,5,6].map(k=>{const f=scheduleData[(d+k)%7];const x=f.morning.some(s=>s)||f.afternoon.some(s=>s);return`<div class="schedule-item ${!x?'schedule-item-off':''}"><div>${f.dayName}</div><span>${x?'Đi học':'Nghỉ'}</span></div>`}).join('')}
+function toggleTomorrowSchedule(){const c=document.getElementById('tomorrow-details-container'),b=document.getElementById('toggle-tomorrow-btn');if(c.style.display==='block'){c.style.display='none';b.textContent='Xem ngày mai'}else{const t=scheduleData[(new Date().getDay()+1)%7];let h=`<h3>Ngày mai (${t.dayName})</h3>`;if(t.morning.every(s=>!s)&&t.afternoon.every(s=>!s))h+=`<div class="schedule-item schedule-item-off"><div>Nghỉ</div><span>Nghỉ</span></div>`;else{h+=`<h4>Sáng</h4>`;t.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div></div>`);h+=`<h4>Chiều</h4>`;t.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div></div>`)}c.innerHTML=h;c.style.display='block';b.textContent='Ẩn chi tiết'}}
+function renderFinance(txns){const n=new Date();const c=txns.filter(t=>new Date(t.date).getMonth()===n.getMonth());let i=0,e=0;c.forEach(t=>t.type==='income'?i+=t.amount:e+=t.amount);const f=v=>new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(v);document.getElementById('bal').textContent=f(i-e);document.getElementById('inc').textContent=f(i);document.getElementById('exp').textContent=f(e);document.getElementById('histList').innerHTML=c.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(t=>`<div class="txn-item"><div><div class="data-title">${t.category}</div><div class="data-subtitle">${t.note||''}</div></div><div class="txn-amount ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`).join('')}
+function openTxn(t){document.getElementById('type').value=t;openModal('txnModal')}
+async function saveTxn(){const a=parseFloat(document.getElementById('amt').value);if(!a)return;const t=[...DB.get('txns')];t.push({id:Date.now(),date:new Date().toISOString(),amount:a,category:document.getElementById('cat').value,note:document.getElementById('note').value,type:document.getElementById('type').value});await DB.save('txns',t);closeModal('txnModal')}
+function showLastMonthSummary(){const n=new Date();const p=new Date(n.getFullYear(),n.getMonth()-1,1);const e=DB.get('txns').filter(t=>t.type==='expense'&&new Date(t.date).getMonth()===p.getMonth());const s=document.getElementById('summaryContent');if(e.length===0)s.innerHTML='<p style="text-align:center">Không có dữ liệu.</p>';else{const c={};e.forEach(t=>c[t.category]=(c[t.category]||0)+t.amount);s.innerHTML=Object.entries(c).sort(([,a],[,b])=>b-a).map(([k,v])=>`<div class="txn-item"><div>${k}</div><div class="red">-${new Intl.NumberFormat('vi-VN').format(v)}₫</div></div>`).join('')}openModal('summaryModal')}
+function renderPasswords(a){document.getElementById('passwordsList').innerHTML=a.map(p=>`<div class="data-card"><div class="data-title">${p.service}</div><div class="password-value-container">${p.username}</div><div class="password-value-container">${p.password}</div><button class="data-btn delete" onclick="if(confirm('Xóa?')) DB.save('passwords',DB.get('passwords').filter(x=>x.id!=${p.id}))">Xóa</button></div>`).join('')}
+function openPasswordModal(){document.getElementById('passwordService').value='';document.getElementById('passwordUsername').value='';document.getElementById('passwordValue').value='';openModal('passwordModal')}
+async function savePassword(){const s=document.getElementById('passwordService').value,u=document.getElementById('passwordUsername').value,p=document.getElementById('passwordValue').value;if(!s||!p)return alert("Thiếu thông tin");const a=[...DB.get('passwords')];a.unshift({id:Date.now(),service:s,username:u,password:p});await DB.save('passwords',a);closeModal('passwordModal')}
+function goTo(s,e){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(s).classList.add('active');document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));e.classList.add('active');const b=document.getElementById('nav-active-bubble');b.style.width=e.offsetWidth+'px';b.style.left=e.offsetLeft+'px'}
+function toggleTheme(){const l=document.documentElement.classList.toggle('light-theme');localStorage.setItem('theme',l?'light':'dark')}
+function toggleKittyTheme(){const h=document.documentElement;const k=h.classList.contains('kitty-theme');const o=document.getElementById('kitty-transition-overlay');const l=document.getElementById('kitty-logo');o.classList.add('show');setTimeout(()=>{o.style.opacity='1';l.classList.add('show')},10);setTimeout(()=>{if(k){h.classList.remove('kitty-theme');localStorage.setItem('theme','dark')}else{h.classList.add('kitty-theme');localStorage.setItem('theme','kitty')}o.style.opacity='0';setTimeout(()=>{o.classList.remove('show');l.classList.remove('show')},500)},2000)}
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showToast(m){const t=document.createElement('div');t.className='copy-toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.classList.add('show'),10);setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2000)}
+async function resetData(){if(confirm("Xóa toàn bộ dữ liệu?")){await DB.save('txns',[]);await DB.save('passwords',[]);alert("Đã xóa.")}}
 
-function updateClockAndSchedule() {
-    const now = new Date();
-    document.getElementById('clock-time').textContent = now.toLocaleTimeString('vi-VN');
-    if (now.getDay() !== lastRenderedDay) { renderFullSchedule(now); lastRenderedDay = now.getDay(); }
-}
-function renderFullSchedule(now) {
-    const dayIndex = now.getDay();
-    document.getElementById('clock-date').textContent = now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const today = scheduleData[dayIndex];
-    let html = `<div style="display:flex;justify-content:space-between;align-items:center;"><h3 style="margin-bottom:16px;font-size:20px;font-weight:600;">Hôm nay</h3><button class="data-btn" id="toggle-tomorrow-btn" onclick="toggleTomorrowSchedule()">Xem ngày mai</button></div>`;
-    const isOff = today.morning.every(s=>!s) && today.afternoon.every(s=>!s);
-    if (isOff) html += `<div class="schedule-item schedule-item-off"><div>Được nghỉ</div><span>Nghỉ</span></div>`;
-    else {
-        html += `<h3 style="font-size:16px;margin:0 0 10px 4px;">Sáng</h3>`;
-        today.morning.forEach((s,i) => html += `<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div><span>Sáng</span></div>`);
-        html += `<h3 style="font-size:16px;margin:20px 0 10px 4px;">Chiều</h3>`;
-        today.afternoon.forEach((s,i) => html += `<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div><span>Chiều</span></div>`);
-    }
-    document.getElementById('today-schedule').innerHTML = html;
-    document.getElementById('future-schedule').innerHTML = `<h3>Sắp tới</h3>` + [1,2,3,4,5,6].map(o => {
-        const d = scheduleData[(dayIndex+o)%7];
-        const has = d.morning.some(s=>s) || d.afternoon.some(s=>s);
-        return `<div class="schedule-item ${!has?'schedule-item-off':''}"><div>${d.dayName}</div><span>${has?'Đi học':'Nghỉ'}</span></div>`;
-    }).join('');
-}
-function toggleTomorrowSchedule() {
-    const con = document.getElementById('tomorrow-details-container');
-    const btn = document.getElementById('toggle-tomorrow-btn');
-    if (con.style.display === 'block') { con.style.display = 'none'; btn.textContent = 'Xem ngày mai'; }
-    else {
-        const tomorrow = scheduleData[(new Date().getDay()+1)%7];
-        let h = `<h3>Ngày mai (${tomorrow.dayName})</h3>`;
-        const isOff = tomorrow.morning.every(s=>!s) && tomorrow.afternoon.every(s=>!s);
-        if(isOff) h += `<div class="schedule-item schedule-item-off"><div>Nghỉ</div><span>Nghỉ</span></div>`;
-        else {
-            h += `<h4>Sáng</h4>`; tomorrow.morning.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+1}: ${s||'Nghỉ'}</div></div>`);
-            h += `<h4>Chiều</h4>`; tomorrow.afternoon.forEach((s,i)=>h+=`<div class="schedule-item ${!s?'schedule-item-off':''}"><div>Tiết ${i+6}: ${s||'Nghỉ'}</div></div>`);
-        }
-        con.innerHTML = h; con.style.display = 'block'; btn.textContent = 'Ẩn chi tiết';
-    }
-}
 
-// 6. FINANCE LOGIC
-function renderFinance(txns) {
-    const now = new Date();
-    const curTxns = txns.filter(t => new Date(t.date).getMonth() === now.getMonth());
-    let inc = 0, exp = 0;
-    curTxns.forEach(t => t.type==='income' ? inc+=t.amount : exp+=t.amount);
-    const fmt = v => new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VND'}).format(v);
-    document.getElementById('bal').textContent = fmt(inc-exp);
-    document.getElementById('inc').textContent = fmt(inc);
-    document.getElementById('exp').textContent = fmt(exp);
-    document.getElementById('histList').innerHTML = curTxns.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(t => `
-        <div class="txn-item"><div><div class="data-title">${t.category}</div><div class="data-subtitle">${t.note||''}</div></div><div class="txn-amount ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'}${new Intl.NumberFormat('vi-VN').format(t.amount)}₫</div></div>`).join('');
-}
-function openTxn(type) { document.getElementById('type').value=type; openModal('txnModal'); }
-async function saveTxn() {
-    const amt = parseFloat(document.getElementById('amt').value);
-    if (!amt) return;
-    const txns = [...DB.get('txns')];
-    txns.push({id:Date.now(), date:new Date().toISOString(), amount:amt, category:document.getElementById('cat').value, note:document.getElementById('note').value, type:document.getElementById('type').value});
-    await DB.save('txns', txns); closeModal('txnModal');
-}
-function showLastMonthSummary() {
-    const now = new Date(); const prevMonth = new Date(now.getFullYear(), now.getMonth()-1, 1);
-    const exps = DB.get('txns').filter(t => t.type === 'expense' && new Date(t.date).getMonth() === prevMonth.getMonth());
-    const sumEl = document.getElementById('summaryContent');
-    if (exps.length === 0) sumEl.innerHTML = '<p style="text-align:center">Không có dữ liệu.</p>';
-    else {
-        const cats = {}; exps.forEach(t => cats[t.category] = (cats[t.category]||0) + t.amount);
-        sumEl.innerHTML = Object.entries(cats).sort(([,a],[,b])=>b-a).map(([k,v]) => `<div class="txn-item"><div>${k}</div><div class="red">-${new Intl.NumberFormat('vi-VN').format(v)}₫</div></div>`).join('');
-    }
-    openModal('summaryModal');
-}
+// ============================================
+// 6. CHAT 1-ON-1 SYSTEM (NEW)
+// ============================================
+const chatContainer = document.getElementById('chat-bubble-container');
+const userListView = document.getElementById('chat-user-list');
+const convoView = document.getElementById('chat-conversation');
+const chatTitle = document.getElementById('chatTitleText');
+const backBtn = document.getElementById('chatBackBtn');
 
-// 7. PASSWORDS
-function renderPasswords(arr) {
-    document.getElementById('passwordsList').innerHTML = arr.map(p => `
-        <div class="data-card">
-            <div class="data-title">${p.service}</div>
-            <div class="password-value-container">${p.username}</div>
-            <div class="password-value-container">${p.password}</div>
-            <button class="data-btn delete" onclick="if(confirm('Xóa?')) DB.save('passwords', DB.get('passwords').filter(x=>x.id!=${p.id}))">Xóa</button>
-        </div>`).join('');
-}
-function openPasswordModal() { document.getElementById('passwordService').value=''; document.getElementById('passwordUsername').value=''; document.getElementById('passwordValue').value=''; openModal('passwordModal'); }
-async function savePassword() {
-    const s=document.getElementById('passwordService').value, u=document.getElementById('passwordUsername').value, p=document.getElementById('passwordValue').value;
-    if(!s||!p) return alert("Thiếu thông tin");
-    const arr = [...DB.get('passwords')]; arr.unshift({id:Date.now(), service:s, username:u, password:p});
-    await DB.save('passwords', arr); closeModal('passwordModal');
-}
-
-// 8. OTHER UTILS
-function goTo(screenId, el) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(screenId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-    const bubble = document.getElementById('nav-active-bubble');
-    bubble.style.width = el.offsetWidth + 'px'; bubble.style.left = el.offsetLeft + 'px';
-}
-function toggleTheme() {
-    const isLight = document.documentElement.classList.toggle('light-theme');
-    localStorage.setItem('theme', isLight?'light':'dark');
-}
-function toggleKittyTheme() {
-    const html = document.documentElement;
-    const isKitty = html.classList.contains('kitty-theme');
-    const overlay = document.getElementById('kitty-transition-overlay');
-    const logo = document.getElementById('kitty-logo');
-    overlay.classList.add('show');
-    setTimeout(() => { overlay.style.opacity = '1'; logo.classList.add('show'); }, 10);
-    setTimeout(() => {
-        if(isKitty) { html.classList.remove('kitty-theme'); localStorage.setItem('theme','dark'); }
-        else { html.classList.add('kitty-theme'); localStorage.setItem('theme','kitty'); }
-        overlay.style.opacity = '0';
-        setTimeout(() => { overlay.classList.remove('show'); logo.classList.remove('show'); }, 500);
-    }, 2000);
-}
-function openModal(id){ document.getElementById(id).classList.add('show'); }
-function closeModal(id){ document.getElementById(id).classList.remove('show'); }
-function showToast(msg) {
-    const t = document.createElement('div'); t.className = 'copy-toast'; t.textContent = msg; document.body.appendChild(t);
-    setTimeout(()=>t.classList.add('show'),10); setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300)},2000);
-}
-async function resetData() { if(confirm("Xóa toàn bộ dữ liệu?")) { await DB.save('txns',[]); await DB.save('passwords',[]); alert("Đã xóa."); } }
-
-// 9. CHAT FEATURE (REALTIME DATABASE VERSION)
+// Toggle Chat Bubble
 function toggleChatBubble() { 
-    document.getElementById('chat-bubble-container').classList.toggle('hidden'); 
+    chatContainer.classList.toggle('hidden'); 
     document.getElementById('notif-badge').classList.remove('active');
+    // Mở lên thì hiện list user đầu tiên
+    if(!chatContainer.classList.contains('hidden') && !currentChatPartnerId) {
+        loadUserList();
+    }
 }
-function toggleMinimizeChat() { document.getElementById('chat-bubble-container').classList.toggle('minimized'); }
+function toggleMinimizeChat() { chatContainer.classList.toggle('minimized'); }
+
+// Load danh sách Users
+function loadUserList() {
+    userListView.style.display = 'block';
+    convoView.style.display = 'none';
+    backBtn.style.display = 'none';
+    chatTitle.textContent = 'Thành viên';
+    currentChatPartnerId = null;
+    
+    // Reset listener cũ
+    if(currentChatRef) { currentChatRef.off(); currentChatRef = null; }
+
+    db.ref('users').once('value', snapshot => {
+        const users = [];
+        snapshot.forEach(child => {
+            const u = child.val();
+            u.uid = child.key;
+            if(currentUser && u.uid === currentUser.uid) return; // Bỏ qua bản thân
+            users.push(u);
+        });
+
+        if(users.length === 0) {
+            userListView.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Chưa có thành viên khác online/đăng ký.</div>';
+            return;
+        }
+
+        userListView.innerHTML = users.map(u => {
+            const shortName = u.email.split('@')[0];
+            const isOnline = u.status === 'online';
+            return `
+            <div class="chat-user-item" onclick="openChatWith('${u.uid}', '${shortName}')">
+                <div class="chat-user-avatar">
+                    ${shortName.charAt(0).toUpperCase()}
+                    <div class="chat-user-status-dot ${isOnline?'online':''}"></div>
+                </div>
+                <div class="chat-user-info">
+                    <h4>${shortName}</h4>
+                    <p>${isOnline ? 'Đang hoạt động' : 'Offline'}</p>
+                </div>
+            </div>`;
+        }).join('');
+    });
+}
+
+// Mở chat với 1 người
+function openChatWith(partnerUid, partnerName) {
+    if(!currentUser) { alert("Vui lòng đăng nhập để chat."); openAuthModal('login'); return; }
+    
+    currentChatPartnerId = partnerUid;
+    userListView.style.display = 'none';
+    convoView.style.display = 'flex';
+    backBtn.style.display = 'block';
+    chatTitle.textContent = partnerName;
+    
+    const messagesArea = document.getElementById('chat-messages-area');
+    messagesArea.innerHTML = ''; // Xóa chat cũ
+    
+    // Tạo Chat ID (Unique ID giữa 2 người: luôn là uid nhỏ hơn + uid lớn hơn)
+    const chatId = currentUser.uid < partnerUid ? `${currentUser.uid}_${partnerUid}` : `${partnerUid}_${currentUser.uid}`;
+    
+    // Listen to messages
+    currentChatRef = db.ref('chats/' + chatId);
+    currentChatRef.limitToLast(50).on('child_added', snapshot => {
+        const msg = snapshot.val();
+        appendChatMessage(msg);
+    });
+}
+
+function backToUserList() {
+    loadUserList();
+}
 
 function appendChatMessage(msg) {
     const area = document.getElementById('chat-messages-area');
-    // Xóa dòng "Chưa có tin nhắn" nếu có
-    if(area.querySelector('div[style*="text-align:center"]')) {
-        area.innerHTML = '';
-    }
-    
-    const isMe = currentUser && msg.uid === currentUser.uid;
-    const shortName = msg.email ? msg.email.split('@')[0] : 'User';
+    const isMe = currentUser && msg.senderId === currentUser.uid;
     
     const div = document.createElement('div');
     div.className = `chat-msg ${isMe ? 'me' : 'other'}`;
-    div.innerHTML = `<span class="chat-msg-author">${shortName}</span>${msg.text}`;
+    div.textContent = msg.text;
     
     area.appendChild(div);
     area.scrollTop = area.scrollHeight;
 }
 
 function sendChatMessage() {
-    if(!currentUser) return alert("Vui lòng đăng nhập để chat.");
+    if(!currentUser || !currentChatPartnerId) return;
     const input = document.getElementById('chatInput');
     const text = input.value.trim();
     if(!text) return;
+
+    const chatId = currentUser.uid < currentChatPartnerId ? `${currentUser.uid}_${currentChatPartnerId}` : `${currentChatPartnerId}_${currentUser.uid}`;
     
-    // Gửi lên Realtime Database (Thay vì Firestore addDoc)
-    db.ref('messages').push({
+    db.ref('chats/' + chatId).push({
         text: text,
-        uid: currentUser.uid,
-        email: currentUser.email,
+        senderId: currentUser.uid,
         timestamp: firebase.database.ServerValue.TIMESTAMP
     });
     
@@ -726,61 +631,23 @@ function sendChatMessage() {
 }
 function handleChatEnter(e) { if(e.key === 'Enter') sendChatMessage(); }
 
-// DRAGGABLE CHAT
-const chatBubble = document.getElementById('chat-bubble-container');
-let isDrag = false, p1=0, p2=0, p3=0, p4=0;
-chatBubble.onmousedown = dragStart; chatBubble.ontouchstart = dragStart;
-
-function dragStart(e) {
-    if(document.getElementById('chat-bubble-container').classList.contains('minimized')) return toggleMinimizeChat();
-    if(!e.target.closest('.chat-header') && !document.getElementById('chat-bubble-container').classList.contains('minimized')) return;
-    e = e || window.event; 
-    p3 = e.clientX || e.touches[0].clientX; p4 = e.clientY || e.touches[0].clientY;
-    document.onmouseup = dragEnd; document.onmousemove = dragMove;
-    document.ontouchend = dragEnd; document.ontouchmove = dragMove;
-}
-function dragMove(e) {
-    e = e || window.event; 
-    const cx = e.clientX || e.touches[0].clientX; const cy = e.clientY || e.touches[0].clientY;
-    p1 = p3 - cx; p2 = p4 - cy; p3 = cx; p4 = cy;
-    chatBubble.style.top = (chatBubble.offsetTop - p2) + "px"; chatBubble.style.left = (chatBubble.offsetLeft - p1) + "px";
-}
-function dragEnd() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; }
-
-// 10. INIT
+// INIT
 document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClockAndSchedule, 1000); updateClockAndSchedule();
     DB.sync('txns', renderFinance);
     DB.sync('passwords', renderPasswords);
     DB.sync('posts', renderCommunity);
-    
-    // LOGIC NHẬN TIN NHẮN REALTIME (Thay vì onSnapshot của Firestore)
-    db.ref('messages').limitToLast(50).on('child_added', (snapshot) => {
-        const msg = snapshot.val();
-        appendChatMessage(msg);
-        
-        // Notification
-        if(currentUser && msg.uid !== currentUser.uid) {
-            document.getElementById('notif-badge').classList.add('active');
-        }
-    });
 
-    // Theme Check
+    // Theme logic & Kitty Float (Giữ nguyên)
     if(localStorage.getItem('theme')==='kitty') { document.documentElement.classList.add('kitty-theme'); document.getElementById('kitty-theme-toggle').classList.add('active'); }
     else if(localStorage.getItem('theme')==='light') { document.documentElement.classList.add('light-theme'); }
-    
-    // Kitty Floating
     const kc = document.getElementById('kitty-float-container');
     for(let i=0;i<15;i++) {
         const k = document.createElement('img'); k.src="https://clipart-library.com/images_k/hello-kitty-transparent-background/hello-kitty-transparent-background-4.png";
         k.className="floating-kitty"; k.style.width=(Math.random()*40+20)+"px"; k.style.top=Math.random()*100+"%"; k.style.animationDuration=(Math.random()*10+8)+"s";
         kc.appendChild(k);
     }
-    
-    setTimeout(() => { 
-        const activeNav = document.querySelector('.nav-item.active');
-        if(activeNav) { const b=document.getElementById('nav-active-bubble'); b.style.width=activeNav.offsetWidth+'px'; b.style.left=activeNav.offsetLeft+'px'; }
-    }, 100);
+    setTimeout(() => { const a = document.querySelector('.nav-item.active'); if(a) { const b=document.getElementById('nav-active-bubble'); b.style.width=a.offsetWidth+'px'; b.style.left=a.offsetLeft+'px'; } }, 100);
 });
 </script>
 </body>
